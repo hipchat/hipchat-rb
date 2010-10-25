@@ -1,0 +1,22 @@
+h1. HipChat Wrapper
+
+A very basic wrapper for the HipChat HTTP API.
+
+h2. Usage
+
+bc.. client = HipChat::Client.new(api_token)
+notify_users = false
+client['my room'].send('username', 'A message!', notify_users)
+
+h2. Capistrano
+
+bc.. require 'hipchat/capistrano'
+
+set :hipchat_token, "<your token>"
+set :hipchat_user, "Deploy"
+set :hipchat_room_name, "Your room"
+set :hipchat_announce, false # notify users
+
+h2. Copyright
+
+Copyright (c) 2010 David Leal. See LICENSE for details.
