@@ -14,13 +14,13 @@ Gem::Specification.new do |s|
   s.email = %q{dgleal@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE",
-     "README.rdoc"
+     "README.textile"
   ]
   s.files = [
     ".document",
      ".gitignore",
      "LICENSE",
-     "README.rdoc",
+     "README.textile",
      "Rakefile",
      "VERSION",
      "hipchat.gemspec",
