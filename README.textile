@@ -16,6 +16,21 @@ set :hipchat_token, "<your token>"
 set :hipchat_room_name, "Your room"
 set :hipchat_announce, false # notify users
 
+h3. Who did it?
+
+To determine the user that is currently running the deploy, the capistrano tasks will look for the following:
+
+# The $HIPCHAT_USER environment variable
+# The hipchat_human capistrano var.
+# The $USER environment variable.
+
+If you set
+
+bc. set :hipchat_human, :from_git
+
+the user name will be taken from your git config (user.name). Note that whatever you put in
+@hipchat_human@, @$HIPCHAT_USER@ always prevails.
+
 h2. Copyright
 
 Copyright (c) 2010 Mojo Tech. See LICENSE for details.
