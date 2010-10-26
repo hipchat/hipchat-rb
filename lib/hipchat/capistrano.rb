@@ -7,15 +7,13 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
 
     task :notify_deploy_started do
-      rails_env = fetch(:hipchat_env, fetch(:rails_env, "production"))
-
       hipchat_client[hipchat_room_name].
         send(deploy_user, "#{human} is deploying #{application} to #{rails_env}.", hipchat_announce)
     end
 
     task :notify_deploy_finished do
       hipchat_client[hipchat_room_name].
-        send(deploy_user, "#{human} finished deploying #{application}.", hipchat_announce)
+        send(deploy_user, "#{human} finished deploying #{application} to #{rails_env}.", hipchat_announce)
     end
 
     def deploy_user
@@ -30,6 +28,10 @@ Capistrano::Configuration.instance(:must_exist).load do
       else
         user
       end
+    end
+
+    def rails_env
+      fetch(:hipchat_env, fetch(:rails_env, "production"))
     end
   end
 
