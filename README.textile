@@ -13,7 +13,6 @@ h2. Capistrano
 bc.. require 'hipchat/capistrano'
 
 set :hipchat_token, "<your token>"
-set :hipchat_user, "Deploy"
 set :hipchat_room_name, "Your room"
 set :hipchat_announce, false # notify users
 

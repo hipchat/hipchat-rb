@@ -19,7 +19,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
 
     def deploy_user
-      fetch(:hipchat_user, "Deploy")
+      fetch(:hipchat_deploy_user, "Deploy")
     end
   end
 
