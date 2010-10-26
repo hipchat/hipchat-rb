@@ -2,7 +2,7 @@ require 'hipchat'
 
 Capistrano::Configuration.instance(:must_exist).load do
   namespace :hipchat do
-    task :set_hipchat_client do
+    task :set_client do
       set :hipchat_client, HipChat::Client.new(hipchat_token)
     end
 
@@ -19,7 +19,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
   end
 
-  before "hipchat:notify_deploy_started", "hipchat:set_hipchat_client"
+  before "hipchat:notify_deploy_started", "hipchat:set_client"
   before "deploy", "hipchat:notify_deploy_started"
   after  "deploy", "hipchat:notify_deploy_finished"
 end
