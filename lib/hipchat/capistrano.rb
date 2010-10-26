@@ -10,16 +10,26 @@ Capistrano::Configuration.instance(:must_exist).load do
       rails_env = fetch(:hipchat_env, fetch(:rails_env, "production"))
 
       hipchat_client[hipchat_room_name].
-        send(deploy_user, "Started deploying #{application} (#{rails_env}).", hipchat_announce)
+        send(deploy_user, "#{human} is deploying #{application} to #{rails_env}.", hipchat_announce)
     end
 
     task :notify_deploy_finished do
       hipchat_client[hipchat_room_name].
-        send(deploy_user, "Finished deploying #{application}.", hipchat_announce)
+        send(deploy_user, "#{human} finished deploying #{application}.", hipchat_announce)
     end
 
     def deploy_user
       fetch(:hipchat_deploy_user, "Deploy")
+    end
+
+    def human
+      user = ENV['HIPCHAT_USER'] || fetch(:hipchat_human, ENV['USER'])
+
+      if user == :from_git
+        %x{git config user.name}.strip
+      else
+        user
+      end
     end
   end
 
