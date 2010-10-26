@@ -10,12 +10,16 @@ Capistrano::Configuration.instance(:must_exist).load do
       rails_env = fetch(:hipchat_env, fetch(:rails_env, "production"))
 
       hipchat_client[hipchat_room_name].
-        send(hipchat_user, "Started deploying #{application} (#{rails_env}).", hipchat_announce)
+        send(deploy_user, "Started deploying #{application} (#{rails_env}).", hipchat_announce)
     end
 
     task :notify_deploy_finished do
       hipchat_client[hipchat_room_name].
-        send(hipchat_user, "Finished deploying #{application}.", hipchat_announce)
+        send(deploy_user, "Finished deploying #{application}.", hipchat_announce)
+    end
+
+    def deploy_user
+      fetch(:hipchat_user, "Deploy")
     end
   end
 
