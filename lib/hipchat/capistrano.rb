@@ -21,13 +21,15 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
 
     def human
-      user = ENV['HIPCHAT_USER'] || fetch(:hipchat_human, ENV['USER'])
-
-      if user == :from_git
-        %x{git config user.name}.strip
-      else
-        user
-      end
+      ENV['HIPCHAT_USER'] ||
+        fetch(:hipchat_human,
+              if (u = %x{git config user.name}.strip) != ""
+                u
+              elsif (u = ENV['USER']) != ""
+                u
+              else
+                "Someone"
+              end)
     end
 
     def rails_env
