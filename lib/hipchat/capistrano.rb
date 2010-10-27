@@ -2,6 +2,7 @@ require 'hipchat'
 
 Capistrano::Configuration.instance(:must_exist).load do
   set :hipchat_send_notification, false
+  set :hipchat_with_migrations, false
 
   namespace :hipchat do
     task :set_client do
@@ -12,6 +13,10 @@ Capistrano::Configuration.instance(:must_exist).load do
       set :hipchat_send_notification, true
     end
 
+    task :configure_for_migrations do
+      set :hipchat_with_migrations, true
+    end
+
     task :notify_deploy_started do
       if hipchat_send_notification
         on_rollback do
@@ -19,8 +24,12 @@ Capistrano::Configuration.instance(:must_exist).load do
             send(deploy_user, "#{human} cancelled deployment of #{application} to #{rails_env}.", hipchat_announce)
         end
 
+        message = "#{human} is deploying #{application} to #{rails_env}"
+        message << " (with migrations)" if hipchat_with_migrations
+        message << "."
+
         hipchat_client[hipchat_room_name].
-          send(deploy_user, "#{human} is deploying #{application} to #{rails_env}.", hipchat_announce)
+          send(deploy_user, message, hipchat_announce)
       end
     end
 
@@ -52,6 +61,7 @@ Capistrano::Configuration.instance(:must_exist).load do
 
   before "hipchat:notify_deploy_started", "hipchat:set_client"
   before "deploy", "hipchat:trigger_notification"
+  before "deploy:migrations", "hipchat:trigger_notification", "hipchat:configure_for_migrations"
   before "deploy:update_code", "hipchat:notify_deploy_started"
   after  "deploy", "hipchat:notify_deploy_finished"
 end
