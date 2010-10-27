@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{hipchat}
-  s.version = "0.0.2"
+  s.version = "0.0.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["david"]
-  s.date = %q{2010-10-26}
+  s.date = %q{2010-10-27}
   s.description = %q{Ruby library to interact with HipChat}
   s.email = %q{dgleal@gmail.com}
   s.extra_rdoc_files = [
