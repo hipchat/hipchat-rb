@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
      "hipchat.gemspec",
      "lib/hipchat.rb",
      "lib/hipchat/capistrano.rb",
+     "lib/hipchat/chef.rb",
      "spec/hipchat_spec.rb",
      "spec/spec.opts",
      "spec/spec_helper.rb"
