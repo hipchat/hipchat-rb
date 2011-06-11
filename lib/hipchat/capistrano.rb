@@ -55,7 +55,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
 
     def env
-      fetch(:hipchat_env, fetch(:rails_env, "production"))
+      fetch(:hipchat_env, fetch(:rack_env, fetch(:rails_env, "production")))
     end
   end
 
