@@ -21,10 +21,10 @@ Capistrano::Configuration.instance(:must_exist).load do
       if hipchat_send_notification
         on_rollback do
           hipchat_client[hipchat_room_name].
-            send(deploy_user, "#{human} cancelled deployment of #{application} to #{rails_env}.", hipchat_announce)
+            send(deploy_user, "#{human} cancelled deployment of #{application} to #{env}.", hipchat_announce)
         end
 
-        message = "#{human} is deploying #{application} to #{rails_env}"
+        message = "#{human} is deploying #{application} to #{env}"
         message << " (with migrations)" if hipchat_with_migrations
         message << "."
 
@@ -35,7 +35,7 @@ Capistrano::Configuration.instance(:must_exist).load do
 
     task :notify_deploy_finished do
       hipchat_client[hipchat_room_name].
-        send(deploy_user, "#{human} finished deploying #{application} to #{rails_env}.", hipchat_announce)
+        send(deploy_user, "#{human} finished deploying #{application} to #{env}.", hipchat_announce)
     end
 
     def deploy_user
@@ -54,7 +54,7 @@ Capistrano::Configuration.instance(:must_exist).load do
               end)
     end
 
-    def rails_env
+    def env
       fetch(:hipchat_env, fetch(:rails_env, "production"))
     end
   end
