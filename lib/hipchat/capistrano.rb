@@ -6,7 +6,7 @@ Capistrano::Configuration.instance(:must_exist).load do
 
   namespace :hipchat do
     task :set_client do
-      set :hipchat_client, HipChat::Client.new(hipchat_token)
+      set :hipchat_client, HipChat::Room.new(hipchat_token, :room_id => hipchat_room_name)
     end
 
     task :trigger_notification do
@@ -20,7 +20,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     task :notify_deploy_started do
       if hipchat_send_notification
         on_rollback do
-          hipchat_client[hipchat_room_name].
+          hipchat_client.
             send(deploy_user, "#{human} cancelled deployment of #{application} to #{env}.", hipchat_announce)
         end
 
@@ -28,13 +28,13 @@ Capistrano::Configuration.instance(:must_exist).load do
         message << " (with migrations)" if hipchat_with_migrations
         message << "."
 
-        hipchat_client[hipchat_room_name].
+        hipchat_client.
           send(deploy_user, message, hipchat_announce)
       end
     end
 
     task :notify_deploy_finished do
-      hipchat_client[hipchat_room_name].
+      hipchat_client.
         send(deploy_user, "#{human} finished deploying #{application} to #{env}.", hipchat_announce)
     end
 
