@@ -26,5 +26,13 @@ describe HipChat do
 
       lambda { room.send "", "" }.should raise_error(HipChat::UnknownRoom)
     end
+
+    it "but fails when we're not allowed to do so" do
+      mock(HipChat::Room).post(anything, anything) {
+        OpenStruct.new(:code => 401)
+      }
+
+      lambda { room.send "", "" }.should raise_error(HipChat::Unauthorized)
+    end
   end
 end

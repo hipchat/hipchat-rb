@@ -2,7 +2,8 @@ require 'httparty'
 require 'ostruct'
 
 module HipChat
-  class UnknownRoom < StandardError; end
+  class UnknownRoom  < StandardError; end
+  class Unauthorized < StandardError; end
 
   class Client
     include HTTParty
@@ -46,7 +47,8 @@ module HipChat
 
       case response.code
       when 200; # weee
-      when 404; raise UnknownRoom, "Unknown room: `#{room_id}'"
+      when 404; raise UnknownRoom,  "Unknown room: `#{room_id}'"
+      when 401; raise Unauthorized, "Access denied to room `#{room_id}'"
       end
     end
   end
