@@ -12,9 +12,19 @@ describe HipChat do
                                :body  => {:room_id => "Hipchat",
                                           :from    => "Dude",
                                           :message => "Hello world",
-                                          :notify  => 0})
+                                          :notify  => 0}) {
+        OpenStruct.new(:code => 200)
+      }
 
       room.send "Dude", "Hello world"
+    end
+
+    it "but fails when the room doesn't exist" do
+      mock(HipChat::Room).post(anything, anything) {
+        OpenStruct.new(:code => 404)
+      }
+
+      lambda { room.send "", "" }.should raise_error(HipChat::UnknownRoom)
     end
   end
 end

@@ -2,6 +2,8 @@ require 'httparty'
 require 'ostruct'
 
 module HipChat
+  class UnknownRoom < StandardError; end
+
   class Client
     include HTTParty
 
@@ -35,14 +37,17 @@ module HipChat
     end
 
     def send(from, message, notify = false)
-      self.class.post('/message',
-           :query => { :auth_token => @token },
-           :body => {
-             :room_id => room_id,
-             :from => from,
-             :message => message,
-             :notify => notify ? 1 : 0
-           })
+      response = self.class.post('/message',
+                                 :query => { :auth_token => @token },
+                                 :body => {:room_id => room_id,
+                                           :from => from,
+                                           :message => message,
+                                           :notify => notify ? 1 : 0})
+
+      case response.code
+      when 200; # weee
+      when 404; raise UnknownRoom, "Unknown room: `#{room_id}'"
+      end
     end
   end
 end
