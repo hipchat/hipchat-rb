@@ -18,7 +18,7 @@ module HipChat
     end
 
     def [](name)
-      rooms.find { |r| r.name == name }
+      Room.new(@token, :room_id => name)
     end
   end
 
