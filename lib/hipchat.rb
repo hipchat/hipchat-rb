@@ -30,7 +30,6 @@ module HipChat
     include HTTParty
 
     base_uri 'https://api.hipchat.com/v1/rooms'
-    format :json
 
     def initialize(token, params)
       @token = token
