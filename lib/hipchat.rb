@@ -5,7 +5,7 @@ module HipChat
   class Client
     include HTTParty
 
-    base_uri 'http://api.hipchat.com/v1/rooms'
+    base_uri 'https://api.hipchat.com/v1/rooms'
     format :json
 
     def initialize(token)
@@ -25,7 +25,7 @@ module HipChat
   class Room < OpenStruct
     include HTTParty
 
-    base_uri 'http://api.hipchat.com/v1/rooms'
+    base_uri 'https://api.hipchat.com/v1/rooms'
     format :json
 
     def initialize(token, params)
