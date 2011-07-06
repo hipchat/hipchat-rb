@@ -34,5 +34,14 @@ describe HipChat do
 
       lambda { room.send "", "" }.should raise_error(HipChat::Unauthorized)
     end
+
+    it "but fails if we get an unknown response code" do
+      mock(HipChat::Room).post(anything, anything) {
+        OpenStruct.new(:code => 403)
+      }
+
+      lambda { room.send "", "" }.
+        should raise_error(HipChat::UnknownResponseCode)
+    end
   end
 end
