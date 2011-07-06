@@ -5,5 +5,5 @@ require 'rspec'
 require 'rspec/autorun'
 
 RSpec.configure do |config|
-
+  config.mock_with :rr
 end
