@@ -25,6 +25,25 @@ To determine the user that is currently running the deploy, the capistrano tasks
 # The git user.name var.
 # The $USER environment variable.
 
+h2. Engine Yard
+
+Use a "deploy hook":http://bit.ly/qnbIkP to send messages from Engine Yard's Cloud platform.
+
+RAILS_ROOT/deploy/after_restart.rb:
+
+bc.. if @configuration[:environment] == "production"
+  client = HipChat::Client.new(ENV['HIPCHAT_TOKEN'])
+  person = `whoami`
+
+  message  = "#{person} is deploying"
+  message += " revision #{@configuration[:revision]}"
+  message += " to #{@configuration[:environment]}"
+  message += " (with migrations)" if migrate?
+  message += "."
+
+  client[ENV['HIPCHAT_ROOM']].send(person, message, true)
+end
+
 h2. Copyright
 
 Copyright (c) 2010 Mojo Tech. See LICENSE for details.
