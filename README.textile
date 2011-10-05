@@ -31,17 +31,20 @@ Use a "deploy hook":http://bit.ly/qnbIkP to send messages from Engine Yard's Clo
 
 RAILS_ROOT/deploy/after_restart.rb:
 
-bc.. if @configuration[:environment] == "production"
-  client = HipChat::Client.new(ENV['HIPCHAT_TOKEN'])
-  person = `whoami`
+bc.. on_app_master do
+  if @configuration[:environment] == 'production'
+    config = YAML.load_file File.join(release_path, 'config', 'hipchat.yml')
+    client = HipChat::Client.new config['token']
+    person = `whoami`
 
-  message  = "#{person} is deploying"
-  message += " revision #{@configuration[:revision]}"
-  message += " to #{@configuration[:environment]}"
-  message += " (with migrations)" if migrate?
-  message += "."
+    message  = "#{person} is deploying"
+    message += " revision #{@configuration[:revision]}"
+    message += " to #{@configuration[:environment]}"
+    message += " (with migrations)" if migrate?
+    message += "."
 
-  client[ENV['HIPCHAT_ROOM']].send(person, message, true)
+    client[config['room']].send(person, message, true)
+  end
 end
 
 h2. Copyright
