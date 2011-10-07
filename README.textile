@@ -25,6 +25,21 @@ To determine the user that is currently running the deploy, the capistrano tasks
 # The git user.name var.
 # The $USER environment variable.
 
+h2. Rails 3 Rake Task
+
+Send a message using a rake task:
+
+bc.. rake hipchat:send["hello world"]
+
+Options like the room, API token, user name and notification flag can be set in YAML.
+
+RAILS_ROOT/config/hipchat.yml:
+
+bc.. token: "<your token>"
+room: "Your room"
+user: "Your name" # Default to `whoami`
+notify: true # Defaults to false
+
 h2. Engine Yard
 
 Use a "deploy hook":http://bit.ly/qnbIkP to send messages from Engine Yard's Cloud platform.
@@ -32,19 +47,13 @@ Use a "deploy hook":http://bit.ly/qnbIkP to send messages from Engine Yard's Clo
 RAILS_ROOT/deploy/after_restart.rb:
 
 bc.. on_app_master do
-  if @configuration[:environment] == 'production'
-    config = YAML.load_file File.join(release_path, 'config', 'hipchat.yml')
-    client = HipChat::Client.new config['token']
-    person = `whoami`
+  message  = "Deploying revision #{@configuration[:revision]}"
+  message += " to #{@configuration[:environment]}"
+  message += " (with migrations)" if migrate?
+  message += "."
 
-    message  = "#{person} is deploying"
-    message += " revision #{@configuration[:revision]}"
-    message += " to #{@configuration[:environment]}"
-    message += " (with migrations)" if migrate?
-    message += "."
-
-    client[config['room']].send(person, message, true)
-  end
+  # Send a message via rake task assuming a hipchat.yml in your config like above
+  run "cd #{release_path} && rake hipchat:send MESSAGE=#{message}"
 end
 
 h2. Copyright
