@@ -8,10 +8,10 @@ Gem::Specification.new do |s|
   s.version = "0.4.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["david"]
+  s.authors = ["MojoTech"]
   s.date = "2011-10-07"
   s.description = "Ruby library to interact with HipChat"
-  s.email = "dgleal@gmail.com"
+  s.email = "gems@mojotech.com"
   s.extra_rdoc_files = [
     "LICENSE",
     "README.textile"
@@ -32,7 +32,7 @@ Gem::Specification.new do |s|
     "spec/spec.opts",
     "spec/spec_helper.rb"
   ]
-  s.homepage = "http://github.com/david/hipchat"
+  s.homepage = "http://github.com/mojotech/hipchat"
   s.require_paths = ["lib"]
   s.rubygems_version = "1.8.10"
   s.summary = "Ruby library to interact with HipChat"
