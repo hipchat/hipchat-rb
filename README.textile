@@ -6,6 +6,7 @@ h2. Usage
 
 bc.. client = HipChat::Client.new(api_token)
 client['my room'].send('username', 'I talk')
+
 # Lets hipchat send notifications to users (default false)
 client['my room'].send('username', 'I quit!', :notify => true)
 
