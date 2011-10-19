@@ -7,14 +7,11 @@ h2. Usage
 bc.. client = HipChat::Client.new(api_token)
 client['my room'].send('username', 'I talk')
 
-# Lets hipchat send notifications to users (default false)
+# Send notifications to users (default false)
 client['my room'].send('username', 'I quit!', :notify => true)
 
-# Color it red. or "yellow", "green", "purple", "random". Default: "yellow"
+# Color it red. or "yellow", "green", "purple", "random" (default "yellow")
 client['my room'].send('username', 'Build failed!', :color => 'red')
-
-# Legacy mode, notifies users but you can't change colors :)
-client['my room'].send('username', 'I quit!', true)
 
 h2. Capistrano
 
