@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["MojoTech"]
-  s.date = "2011-10-07"
+  s.date = "2011-10-19"
   s.description = "Ruby library to interact with HipChat"
   s.email = "gems@mojotech.com"
   s.extra_rdoc_files = [
