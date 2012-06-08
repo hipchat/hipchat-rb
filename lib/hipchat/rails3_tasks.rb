@@ -8,15 +8,21 @@ namespace :hipchat do
 
     options = {
       :message => ENV['MESSAGE'],
-      :user    => ENV['USER'],
+      :user    => ENV['HIPCHAT_USER'],
       :notify  => ENV['NOTIFY'],
       :room    => ENV['ROOM'],
       :token   => ENV['TOKEN']
+    }.reject { |k, v| v.blank? }
+    
+    system_options = {
+      :user    => ENV['USER']
     }.reject { |k, v| v.blank? }
 
     if File.exists? config_file
       options.reverse_merge! YAML.load_file(config_file).symbolize_keys
     end
+    
+    options.reverse_merge! system_options
 
     options[:notify] = options[:notify].to_s != 'false'
 
