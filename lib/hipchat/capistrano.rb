@@ -2,7 +2,7 @@ require 'hipchat'
 
 Capistrano::Configuration.instance(:must_exist).load do
   set :hipchat_send_notification, false
-  set :hipchat_with_migrations, false
+  set :hipchat_with_migrations, ''
 
   namespace :hipchat do
     task :set_client do
@@ -14,32 +14,38 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
 
     task :configure_for_migrations do
-      set :hipchat_with_migrations, true
+      set :hipchat_with_migrations, ' (with migrations)'
     end
 
     task :notify_deploy_started do
       if hipchat_send_notification
         on_rollback do
-          hipchat_client[hipchat_room_name].
-            send(deploy_user, "#{human} cancelled deployment of #{deployment_name} to #{env}.", send_options)
+          send("#{human} cancelled deployment of #{deployment_name} to #{env}.")
         end
 
-        message = "#{human} is deploying #{deployment_name} to #{env}"
-        message << " (with migrations)" if hipchat_with_migrations
-        message << "."
-
-        hipchat_client[hipchat_room_name].send(deploy_user, message, send_options)
+        send("#{human} is deploying #{deployment_name} to #{env}#{fetch(:hipchat_with_migrations, '')}.")
       end
     end
 
     task :notify_deploy_finished do
-      hipchat_client[hipchat_room_name].
-        send(deploy_user, "#{human} finished deploying #{deployment_name} to #{env}.", send_options)
+      send("#{human} finished deploying #{deployment_name} to #{env}#{fetch(:hipchat_with_migrations, '')}.")
     end
 
-    def send_options
+    def send(message)
       options = message_color ? {:color => message_color} : {}
       options.merge(:notify => message_notification)
+
+      if hipchat_room_name.is_a?(String)
+        rooms = [hipchat_room_name]
+      elsif hipchat_room_name.is_a?(Symbol)
+        rooms = [hipchat_room_name.to_s]
+      else
+        rooms = hipchat_room_name
+      end
+
+      rooms.each { |room|
+        hipchat_client[room].send(deploy_user, message, options)
+      }
     end
 
     def deployment_name
