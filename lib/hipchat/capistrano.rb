@@ -5,10 +5,6 @@ Capistrano::Configuration.instance(:must_exist).load do
   set :hipchat_with_migrations, ''
 
   namespace :hipchat do
-    task :set_client do
-      set :hipchat_client, HipChat::Client.new(hipchat_token)
-    end
-
     task :trigger_notification do
       set :hipchat_send_notification, true
     end
@@ -32,6 +28,8 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
 
     def send(message)
+      set :hipchat_client, HipChat::Client.new(hipchat_token) if fetch(:hipchat_client, nil).nil?
+
       options = message_color ? {:color => message_color} : {}
       options.merge(:notify => message_notification)
 
@@ -85,7 +83,6 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
   end
 
-  before "hipchat:notify_deploy_started", "hipchat:set_client"
   before "deploy", "hipchat:trigger_notification"
   before "deploy:migrations", "hipchat:trigger_notification", "hipchat:configure_for_migrations"
   before "deploy:update_code", "hipchat:notify_deploy_started"
