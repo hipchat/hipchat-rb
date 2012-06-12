@@ -20,6 +20,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     task :notify_deploy_started do
       if hipchat_send_notification
         on_rollback do
+          send_options.merge!(:color => failed_message_color)
           hipchat_client[hipchat_room_name].
             send(deploy_user, "#{human} cancelled deployment of #{deployment_name} to #{env}.", send_options)
         end
@@ -38,8 +39,10 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
 
     def send_options
-      options = message_color ? {:color => message_color} : {}
-      options.merge(:notify => message_notification)
+      return @send_options if defined?(@send_options)
+      @send_options = message_color ? {:color => message_color} : {}
+      @send_options.merge!(:notify => message_notification)
+      @send_options
     end
 
     def deployment_name
@@ -52,6 +55,10 @@ Capistrano::Configuration.instance(:must_exist).load do
 
     def message_color
       fetch(:hipchat_color, nil)
+    end
+
+    def failed_message_color
+      fetch(:hipchat_failed_color, "red")
     end
 
     def message_notification
