@@ -36,7 +36,7 @@ h2. Rails 3 Rake Task
 
 Send a message using a rake task:
 
-bc.. rake hipchat:send["hello world"]
+bc.. rake hipchat:send MESSAGE="hello world"
 
 Options like the room, API token, user name and notification flag can be set in YAML.
 
