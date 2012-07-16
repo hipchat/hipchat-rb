@@ -73,7 +73,7 @@ module HipChat
         :body  => {
           :room_id => room_id,
           :from    => from,
-          :message => message,
+          :message => CGI.escapeHTML(message),
           :color   => options[:color],
           :notify  => options[:notify] ? 1 : 0
         }
