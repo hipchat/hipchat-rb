@@ -74,7 +74,7 @@ module HipChat
           :room_id        => room_id,
           :from           => from,
           :message        => message,
-          :message_format => options[:message_format] || 'text',
+          :message_format => options[:message_format] || 'html',
           :color          => options[:color],
           :notify         => options[:notify] ? 1 : 0
         }
