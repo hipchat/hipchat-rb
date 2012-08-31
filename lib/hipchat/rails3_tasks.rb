@@ -7,11 +7,12 @@ namespace :hipchat do
     config_file      = Rails.root.join 'config', 'hipchat.yml'
 
     options = {
-      :message => ENV['MESSAGE'],
-      :user    => ENV['HIPCHAT_USER'],
-      :notify  => ENV['NOTIFY'],
-      :room    => ENV['ROOM'],
-      :token   => ENV['TOKEN']
+      :message        => ENV['MESSAGE'],
+      :message_format => ENV['MESSAGE_FORMAT'],
+      :user           => ENV['HIPCHAT_USER'],
+      :notify         => ENV['NOTIFY'],
+      :room           => ENV['ROOM'],
+      :token          => ENV['TOKEN']
     }.reject { |k, v| v.blank? }
     
     system_options = {
