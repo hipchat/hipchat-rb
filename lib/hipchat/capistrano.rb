@@ -55,7 +55,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     def deployment_name
       if branch
         name = "#{application}/#{branch}"
-        name += " (revision #{current_revision[0..7]})" if current_revision
+        name += " (revision #{real_revision[0..7]})" if real_revision
         name
       else
         application
