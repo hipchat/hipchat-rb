@@ -41,6 +41,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     def send_options
       return @send_options if defined?(@send_options)
       @send_options = message_color ? {:color => message_color} : {}
+      @send_options = message_format ? {:format => message_format } : {}
       @send_options.merge!(:notify => message_notification)
       @send_options
     end
@@ -63,6 +64,10 @@ Capistrano::Configuration.instance(:must_exist).load do
 
     def message_notification
       fetch(:hipchat_announce, false)
+    end
+
+    def message_format
+      fetch(:hipchat_message_format, "html")
     end
 
     def deploy_user
