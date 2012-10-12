@@ -13,6 +13,9 @@ client['my room'].send('username', 'I quit!', :notify => true)
 # Color it red. or "yellow", "green", "purple", "random" (default "yellow")
 client['my room'].send('username', 'Build failed!', :color => 'red')
 
+# Have your message rendered as text in HipChat (see https://www.hipchat.com/docs/api/method/rooms/message)
+client['my room'].send('username', '@coworker Build faild!', :message_format => 'text')
+
 h2. Capistrano
 
 bc.. require 'hipchat/capistrano'
@@ -22,6 +25,7 @@ set :hipchat_room_name, "Your room"
 set :hipchat_announce, false # notify users
 set :hipchat_color, 'green' #finished deployment message color
 set :hipchat_failed_color, 'red' #cancelled deployment message color
+set :hipchat_message_format, 'text' # Sets the deployment message format, see https://www.hipchat.com/docs/api/method/rooms/message
 
 h3. Who did it?
 
@@ -64,4 +68,4 @@ end
 
 h2. Copyright
 
-Copyright (c) 2010 Mojo Tech. See LICENSE for details.
+Copyright (c) 2012 Atlassian. See LICENSE for details.

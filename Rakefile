@@ -7,9 +7,9 @@ begin
     gem.name = "hipchat"
     gem.summary = %Q{Ruby library to interact with HipChat}
     gem.description = %Q{Ruby library to interact with HipChat}
-    gem.email = "gems@mojotech.com"
-    gem.homepage = "http://github.com/mojotech/hipchat"
-    gem.authors = ["MojoTech"]
+    gem.email = "support@hipchat.com"
+    gem.homepage = "https://github.com/hipchat/hipchat-rb"
+    gem.authors = ["HipChat/Atlassian"]
     gem.add_dependency "httparty"
     gem.add_development_dependency "rspec", "~> 2.0"
     gem.add_development_dependency "rr", "~> 1.0"
