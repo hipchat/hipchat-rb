@@ -7,12 +7,13 @@ describe HipChat do
 
   # Helper for mocking room message post requests
   def mock_successful_send(from, message, options={})
-    options = {:color => 'yellow', :notify => 0}.merge(options)
+    options = {:color => 'yellow', :notify => 0, :message_format => 'html'}.merge(options)
     mock(HipChat::Room).post("/message",
                              :query => {:auth_token => "blah"},
                              :body  => {:room_id => "Hipchat",
                                         :from    => "Dude",
                                         :message => "Hello world",
+                                        :message_format => options[:message_format],
                                         :color   => options[:color],
                                         :notify  => options[:notify]}) {
       OpenStruct.new(:code => 200)
@@ -36,6 +37,12 @@ describe HipChat do
       mock_successful_send 'Dude', 'Hello world', :color => 'red'
 
       room.send("Dude", "Hello world", :color => 'red').should be_true
+    end
+
+    it "successfully with text message_format" do
+      mock_successful_send 'Dude', 'Hello world', :message_format => 'text'
+
+      room.send("Dude", "Hello world", :message_format => 'text').should be_true
     end
 
     it "but fails when the room doesn't exist" do
