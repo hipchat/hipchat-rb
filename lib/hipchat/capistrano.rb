@@ -30,9 +30,9 @@ Capistrano::Configuration.instance(:must_exist).load do
 
     def send_options
       return @send_options if defined?(@send_options)
-      @send_options = message_color ? {:color => message_color} : {}
       @send_options = message_format ? {:message_format => message_format } : {}
       @send_options.merge!(:notify => message_notification)
+      @send_options.merge!(:color => message_color)
       @send_options
     end
 
