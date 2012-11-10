@@ -90,5 +90,40 @@ module HipChat
         raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
       end
     end
+
+    # Change this room's topic
+    #
+    # Usage:
+    #
+    #   # Default
+    #   topic 'my awesome topic'
+    #
+    # Options:
+    #
+    # +from+::  the name of the person changing the topic
+    #            (default "API")
+    def topic(new_topic, options = {})
+
+      options = { :from => 'API' }.merge options
+
+      response = self.class.post('/topic',
+        :query => { :auth_token => @token },
+        :body  => {
+          :room_id        => room_id,
+          :from           => options[:from],
+          :topic          => new_topic
+        }
+      )
+
+      case response.code
+      when 200; true
+      when 404
+        raise UnknownRoom,  "Unknown room: `#{room_id}'"
+      when 401
+        raise Unauthorized, "Access denied to room `#{room_id}'"
+      else
+        raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
+      end
+    end
   end
 end
