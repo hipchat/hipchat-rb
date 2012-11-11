@@ -27,6 +27,7 @@ client['my room'].topic('Free Ice Cream in the kitchen')
 client['my room'].topic('Weekely sales: $10,000', :from => 'Sales Team')
 
 
+
 h2. Capistrano
 
 bc.. require 'hipchat/capistrano'
