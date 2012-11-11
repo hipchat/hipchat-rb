@@ -20,6 +20,13 @@ client['my room'].send('username', 'Build failed!', :color => 'red')
 # Have your message rendered as text in HipChat (see https://www.hipchat.com/docs/api/method/rooms/message)
 client['my room'].send('username', '@coworker Build faild!', :message_format => 'text')
 
+# Update the topic of a room in HipChat (see https://www.hipchat.com/docs/api/method/rooms/topic)
+client['my room'].topic('Free Ice Cream in the kitchen')
+
+# Change the from field for a topic update (default "API")
+client['my room'].topic('Weekely sales: $10,000', :from => 'Sales Team')
+
+
 h2. Capistrano
 
 bc.. require 'hipchat/capistrano'
