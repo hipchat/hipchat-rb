@@ -35,7 +35,8 @@ bc.. require 'hipchat/capistrano'
 set :hipchat_token, "<your token>"
 set :hipchat_room_name, "Your room" # If you pass an array such as ["room_a", "room_b"] you can send announcements to multiple rooms.
 set :hipchat_announce, false # notify users
-set :hipchat_color, 'green' #finished deployment message color
+set :hipchat_color, 'yellow' #normal message color
+set :hipchat_success_color, 'green' #finished deployment message color
 set :hipchat_failed_color, 'red' #cancelled deployment message color
 set :hipchat_message_format, 'text' # Sets the deployment message format, see https://www.hipchat.com/docs/api/method/rooms/message
 

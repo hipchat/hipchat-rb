@@ -25,6 +25,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
 
     task :notify_deploy_finished do
+      send_options.merge!(:color => success_message_color)
       send("#{human} finished deploying #{deployment_name} to #{env}#{fetch(:hipchat_with_migrations, '')}.", send_options)
     end
 
@@ -62,6 +63,10 @@ Capistrano::Configuration.instance(:must_exist).load do
 
     def message_color
       fetch(:hipchat_color, nil)
+    end
+
+    def success_message_color
+      fetch(:hipchat_success_color, "green")
     end
 
     def failed_message_color
