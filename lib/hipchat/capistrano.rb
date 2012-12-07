@@ -26,6 +26,12 @@ Capistrano::Configuration.instance(:must_exist).load do
 
     task :notify_deploy_finished do
       send_options.merge!(:color => success_message_color)
+
+      environment_string = env
+      if self.respond_to?(:stage)
+        environment_string = "#{stage} (#{environment_string})"
+      end
+
       send("#{human} finished deploying #{deployment_name} to #{env}#{fetch(:hipchat_with_migrations, '')}.", send_options)
     end
 
