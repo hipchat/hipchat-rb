@@ -15,12 +15,18 @@ Capistrano::Configuration.instance(:must_exist).load do
 
     task :notify_deploy_started do
       if hipchat_send_notification
-        on_rollback do
-          send_options.merge!(:color => failed_message_color)
-          send("#{human} cancelled deployment of #{deployment_name} to #{env}.", send_options)
+
+        environment_string = env
+        if self.respond_to?(:stage)
+          environment_string = "#{stage} (#{env})"
         end
 
-        send("#{human} is deploying #{deployment_name} to #{env}#{fetch(:hipchat_with_migrations, '')}.", send_options)
+        on_rollback do
+          send_options.merge!(:color => failed_message_color)
+          send("#{human} cancelled deployment of #{deployment_name} to #{environment_string}.", send_options)
+        end
+
+        send("#{human} is deploying #{deployment_name} to #{environment_string}#{fetch(:hipchat_with_migrations, '')}.", send_options)
       end
     end
 
@@ -29,10 +35,10 @@ Capistrano::Configuration.instance(:must_exist).load do
 
       environment_string = env
       if self.respond_to?(:stage)
-        environment_string = "#{stage} (#{environment_string})"
+        environment_string = "#{stage} (#{env})"
       end
 
-      send("#{human} finished deploying #{deployment_name} to #{env}#{fetch(:hipchat_with_migrations, '')}.", send_options)
+      send("#{human} finished deploying #{deployment_name} to #{environment_string}#{fetch(:hipchat_with_migrations, '')}.", send_options)
     end
 
     def send_options
