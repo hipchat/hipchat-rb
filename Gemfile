@@ -7,3 +7,7 @@ group :test do
   gem "rspec"
   gem "rr"
 end
+
+group :development do
+  gem "jeweler"
+end
