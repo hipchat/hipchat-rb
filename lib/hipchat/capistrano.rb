@@ -6,7 +6,7 @@ Capistrano::Configuration.instance(:must_exist).load do
 
   namespace :hipchat do
     task :trigger_notification do
-      set :hipchat_send_notification, true
+      set :hipchat_send_notification, true if !dry_run
     end
 
     task :configure_for_migrations do
@@ -31,14 +31,16 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
 
     task :notify_deploy_finished do
-      send_options.merge!(:color => success_message_color)
+      if hipchat_send_notification
+        send_options.merge!(:color => success_message_color)
 
-      environment_string = env
-      if self.respond_to?(:stage)
-        environment_string = "#{stage} (#{env})"
+        environment_string = env
+        if self.respond_to?(:stage)
+          environment_string = "#{stage} (#{env})"
+        end
+
+        send("#{human} finished deploying #{deployment_name} to #{environment_string}#{fetch(:hipchat_with_migrations, '')}.", send_options)
       end
-
-      send("#{human} finished deploying #{deployment_name} to #{environment_string}#{fetch(:hipchat_with_migrations, '')}.", send_options)
     end
 
     def send_options
