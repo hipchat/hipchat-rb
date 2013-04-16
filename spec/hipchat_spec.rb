@@ -111,6 +111,10 @@ describe HipChat do
       lambda { room.send "", "" }.should raise_error(HipChat::Unauthorized)
     end
 
+    it "but fails if the username is more than 15 chars" do
+      lambda { room.send "a very long username here", "a message" }.should raise_error(HipChat::UsernameTooLong)
+    end
+
     it "but fails if we get an unknown response code" do
       mock(HipChat::Room).post(anything, anything) {
         OpenStruct.new(:code => 403)
