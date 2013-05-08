@@ -15,17 +15,28 @@ require 'hipchat'
 module HipChat
   class NotifyRoom < Chef::Handler
 
-    def initialize(api_token, room_name, notify_users=false)
+    def initialize(api_token, room_name, notify_users=false, report_success=false)
       @api_token = api_token
       @room_name = room_name
       @notify_users = notify_users
+      @report_success = report_success
     end
 
     def report
-      msg = "Failure on #{node.name}: #{run_status.formatted_exception}"
+      msg = if run_status.failed? then "Failure on \"#{node.name}\": #{run_status.formatted_exception}"
+            elsif run_status.success? && @report_success
+              "Chef run on \"#{node.name}\" completed in #{run_status.elapsed_time.round(2)} seconds"
+            else nil
+            end
 
-      client = HipChat::Client.new(@api_token)
-      client[@room_name].send('Chef', msg, :notify => @notify_users)
+      color = if run_status.success? then 'green'
+              else 'red'
+              end
+
+      if msg
+        client = HipChat::Client.new(@api_token)
+        client[@room_name].send('Chef', msg, :notify => @notify_users, :color => color)
+      end
     end
   end
 end
