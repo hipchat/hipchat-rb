@@ -46,12 +46,14 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<httparty>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, [">= 0"])
+      s.add_development_dependency(%q<builder>, [">= 0"])
       s.add_runtime_dependency(%q<httparty>, [">= 0"])
       s.add_development_dependency(%q<rspec>, ["~> 2.0"])
       s.add_development_dependency(%q<rr>, ["~> 1.0"])
     else
       s.add_dependency(%q<httparty>, [">= 0"])
       s.add_dependency(%q<jeweler>, [">= 0"])
+      s.add_dependency(%q<builder>, [">= 0"])
       s.add_dependency(%q<httparty>, [">= 0"])
       s.add_dependency(%q<rspec>, ["~> 2.0"])
       s.add_dependency(%q<rr>, ["~> 1.0"])
@@ -59,6 +61,7 @@ Gem::Specification.new do |s|
   else
     s.add_dependency(%q<httparty>, [">= 0"])
     s.add_dependency(%q<jeweler>, [">= 0"])
+    s.add_dependency(%q<builder>, [">= 0"])
     s.add_dependency(%q<httparty>, [">= 0"])
     s.add_dependency(%q<rspec>, ["~> 2.0"])
     s.add_dependency(%q<rr>, ["~> 1.0"])
