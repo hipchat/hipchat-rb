@@ -10,4 +10,5 @@ end
 
 group :development do
   gem "jeweler"
+  gem "builder"
 end
