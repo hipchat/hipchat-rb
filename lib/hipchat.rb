@@ -130,5 +130,47 @@ module HipChat
         raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
       end
     end
+
+    # Pull this room's history
+    #
+    # Usage
+    #
+    #   # Default
+    #
+    #
+    # Options
+    #
+    # +date+::     Whether to return a specific day (YYYY-MM-DD format) or recent
+    #                (default "recent")
+    # +timezone+:: Your timezone.  Supported timezones are at: https://www.hipchat.com/docs/api/timezones
+    #                (default "UTC")
+    # +format+::   Format to retrieve the history in.  Valid options are JSON and XML
+    #                (default "JSON")
+    def history(options = {})
+
+      options = { :date => 'recent', :timezone => 'UTC', :format => 'JSON' }.merge options
+
+      response = self.class.get('/history',
+        :query => {
+          :room_id    => room_id,
+          :date       => options[:date],
+          :timezone   => options[:timezone],
+          :format     => options[:format],
+          :auth_token => @token,
+        }
+      )
+
+      case response.code
+      when 200; true
+      when 404
+        raise UnknownRoom,  "Unknown room: `#{room_id}'"
+      when 401
+        raise Unauthorized, "Access denied to room `#{room_id}'"
+      else
+        raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
+      end
+
+      response.body
+    end
   end
 end
