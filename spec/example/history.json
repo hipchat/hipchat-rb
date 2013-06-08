@@ -1,0 +1,36 @@
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "messages": [
+    {
+      "date": "2010-11-19T15:48:19-0800",
+      "from": {
+        "name": "Garret Heaton",
+        "user_id": 10
+      },
+      "message": "Good morning! This is a regular message."
+    },
+    {
+      "date": "2010-11-19T15:49:44-0800",
+      "from": {
+        "name": "Garret Heaton",
+        "user_id": 10
+      },
+      "file": {
+        "name": "Screenshot.png",
+        "size": 141909,
+        "url": "http:\/\/uploads.hipchat.com\/xxx\/Screenshot.png"
+      },
+      "message": "This is a file upload"
+    },
+    {
+      "date": "2010-11-19T16:13:40-0800",
+      "from": {
+        "name": "Deploy Bot",
+        "user_id": "api"
+      },
+      "message": "This message is sent via the API so the user_id is 'api'."
+    }
+  ]
+}

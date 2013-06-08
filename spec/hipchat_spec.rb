@@ -31,6 +31,54 @@ describe HipChat do
     }
   end
 
+  def mock_successful_history(options={})
+    options = { :date => 'recent', :timezone => 'UTC', :format => 'JSON' }.merge(options)
+    canned_response = File.new File.expand_path(File.dirname(__FILE__) + '/example/history.json')
+    stub_request(:get, "https://api.hipchat.com/v1/rooms/history").with(:query => {:auth_token => "blah",
+                                   :room_id    => "Hipchat",
+                                   :date       => options[:date],
+                                   :timezone   => options[:timezone],
+                                   :format     => options[:format]}).to_return(canned_response)
+  end
+
+  describe "#history" do
+    it "is successful without custom options" do
+      mock_successful_history()
+
+      room.history().should be_true
+    end
+
+    it "is successful with custom options" do
+      mock_successful_history(:timezone => 'America/Los_Angeles', :date => '2010-11-19')
+      room.history(:timezone => 'America/Los_Angeles', :date => '2010-11-19').should be_true
+    end
+
+    it "fails when the room doen't exist" do
+      mock(HipChat::Room).get(anything, anything) {
+        OpenStruct.new(:code => 404)
+      }
+
+      lambda { room.history }.should raise_error(HipChat::UnknownRoom)
+    end
+
+    it "fails when we're not allowed to do so" do
+      mock(HipChat::Room).get(anything, anything) {
+        OpenStruct.new(:code => 401)
+      }
+
+      lambda { room.history }.should raise_error(HipChat::Unauthorized)
+    end
+
+    it "fails if we get an unknown response code" do
+      mock(HipChat::Room).get(anything, anything) {
+        OpenStruct.new(:code => 403)
+      }
+
+      lambda { room.history }.
+        should raise_error(HipChat::UnknownResponseCode)
+    end
+  end
+
   describe "#topic" do
     it "is successful without custom options" do
       mock_successful_topic_change("Nice topic")
