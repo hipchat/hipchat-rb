@@ -161,7 +161,8 @@ module HipChat
       )
 
       case response.code
-      when 200; true
+      when 200
+        response.body
       when 404
         raise UnknownRoom,  "Unknown room: `#{room_id}'"
       when 401
@@ -169,8 +170,6 @@ module HipChat
       else
         raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
       end
-
-      response.body
     end
   end
 end
