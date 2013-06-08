@@ -26,6 +26,11 @@ client['my room'].topic('Free Ice Cream in the kitchen')
 # Change the from field for a topic update (default "API")
 client['my room'].topic('Weekely sales: $10,000', :from => 'Sales Team')
 
+# Get history from a room 
+client['my room'].history()
+
+# Get history for a date in time with a particular timezone (default is latest 75 messages, timezone default is 'UTC')
+client['my room'].history(:date => '2010-11-19', :timezone => 'PST')
 
 
 h2. Capistrano
