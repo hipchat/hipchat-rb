@@ -2,7 +2,7 @@ require 'hipchat'
 
 namespace :hipchat do
   desc "Sends a HipChat message as a particular user"
-  task :send do
+  task :send, [:message] do |t, args|
     required_options = [:message, :room, :token, :user]
     config_file      = Rails.root.join 'config', 'hipchat.yml'
 
@@ -14,16 +14,21 @@ namespace :hipchat do
       :room           => ENV['ROOM'],
       :token          => ENV['TOKEN']
     }.reject { |k, v| v.blank? }
-    
+
     system_options = {
       :user    => ENV['USER']
+    }.reject { |k, v| v.blank? }
+
+    argument_options = {
+      :message => args.message
     }.reject { |k, v| v.blank? }
 
     if File.exists? config_file
       options.reverse_merge! YAML.load_file(config_file).symbolize_keys
     end
-    
+
     options.reverse_merge! system_options
+    options.merge! argument_options
 
     options[:notify] = options[:notify].to_s != 'false'
 
