@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    hipchat (0.10.0)
+    hipchat (0.10.1)
       httparty
 
 GEM
