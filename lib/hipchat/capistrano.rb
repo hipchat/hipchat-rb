@@ -65,13 +65,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       rooms.each { |room|
         begin
           hipchat_client[room].send(deploy_user, message, options)
-        rescue UnknownRoom => e
-          puts e.message
-          puts e.backtrace
-        rescue Unauthorized => e
-          puts e.message
-          puts e.backtrace
-        rescue UnknownResponseCode => e
+        rescue => e
           puts e.message
           puts e.backtrace
         end
