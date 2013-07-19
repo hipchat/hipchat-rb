@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    hipchat (0.10.1)
+    hipchat (0.11.0)
       httparty
 
 GEM
@@ -14,8 +14,8 @@ GEM
     httparty (0.11.0)
       multi_json (~> 1.0)
       multi_xml (>= 0.5.2)
-    multi_json (1.7.3)
-    multi_xml (0.5.3)
+    multi_json (1.7.7)
+    multi_xml (0.5.4)
     rake (10.0.4)
     rr (1.0.5)
     rspec (2.13.0)
