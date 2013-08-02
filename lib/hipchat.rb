@@ -36,9 +36,10 @@ module HipChat
     def setup_proxy(proxy_url)
       proxy_url = URI.parse(proxy_url)
 
-      self.class.http_proxy("#{proxy_url.scheme}://#{proxy_url.host}",
-                            proxy_url.port,
+      self.class.http_proxy(proxy_url.host, proxy_url.port,
                             proxy_url.user, proxy_url.password)
+      HipChat::Room.http_proxy(proxy_url.host, proxy_url.port,
+                               proxy_url.user, proxy_url.password)
     end
   end
 

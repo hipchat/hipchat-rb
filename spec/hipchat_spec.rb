@@ -188,10 +188,21 @@ describe HipChat do
       subject { HipChat::Client.default_options }
 
       specify "Client's proxy settings should be changed" do
-        expect(subject[:http_proxyaddr]).to eql("http://#{proxy_host}")
+        expect(subject[:http_proxyaddr]).to eql(proxy_host)
         expect(subject[:http_proxyport]).to eql(proxy_port)
         expect(subject[:http_proxyuser]).to eql(proxy_user)
         expect(subject[:http_proxypass]).to eql(proxy_pass)
+      end
+
+      describe "Room class's proxy" do
+        subject { HipChat::Room.default_options }
+
+        specify "proxy settings should be changed" do
+          expect(subject[:http_proxyaddr]).to eql(proxy_host)
+          expect(subject[:http_proxyport]).to eql(proxy_port)
+          expect(subject[:http_proxyuser]).to eql(proxy_user)
+          expect(subject[:http_proxypass]).to eql(proxy_pass)
+        end
       end
     end
   end
