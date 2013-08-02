@@ -16,8 +16,11 @@ module HipChat
     base_uri 'https://api.hipchat.com/v1/rooms'
     format :json
 
-    def initialize(token)
+    def initialize(token, options={})
       @token = token
+
+      http_proxy = options[:http_proxy] || ENV['http_proxy']
+      setup_proxy(http_proxy) if http_proxy
     end
 
     def rooms
@@ -27,6 +30,15 @@ module HipChat
 
     def [](name)
       Room.new(@token, :room_id => name)
+    end
+
+    private
+    def setup_proxy(proxy_url)
+      proxy_url = URI.parse(proxy_url)
+
+      self.class.http_proxy("#{proxy_url.scheme}://#{proxy_url.host}",
+                            proxy_url.port,
+                            proxy_url.user, proxy_url.password)
     end
   end
 
