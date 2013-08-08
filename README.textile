@@ -9,6 +9,7 @@ h2. Build Status
 h2. Usage
 
 bc.. client = HipChat::Client.new(api_token)
+# 'username' is the name for which the message will be presented as from
 client['my room'].send('username', 'I talk')
 
 # Send notifications to users (default false)
