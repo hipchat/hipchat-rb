@@ -1,1 +1,1 @@
-load File.expand_path('capistrano/tasks/hipchat.rake', __FILE__)
+load File.expand_path('capistrano/tasks/hipchat.rake', File.dirname(__FILE__))
