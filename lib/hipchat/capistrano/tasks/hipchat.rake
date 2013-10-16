@@ -29,7 +29,7 @@ namespace :hipchat do
     hipchat_token = fetch(:hipchat_token)
     hipchat_room_name = fetch(:hipchat_room_name)
 
-    hipchat_client = fetch(:hipchat_client) || HipChat::Client.new(hipchat_token)
+    hipchat_client = fetch(:hipchat_client, HipChat::Client.new(hipchat_token))
 
     if hipchat_room_name.is_a?(String)
       rooms = [hipchat_room_name]
@@ -68,11 +68,11 @@ namespace :hipchat do
   end
 
   def success_message_color
-    fetch(:hipchat_success_color) || 'green'
+    fetch(:hipchat_success_color, 'green')
   end
 
   def failed_message_color
-    fetch(:hipchat_failed_color) || 'red'
+    fetch(:hipchat_failed_color, 'red')
   end
 
   def message_notification
@@ -81,11 +81,11 @@ namespace :hipchat do
   end
 
   def message_format
-    fetch(:hipchat_message_format) || 'html'
+    fetch(:hipchat_message_format, 'html')
   end
 
   def deploy_user
-    fetch(:hipchat_deploy_user) || 'Deploy'
+    fetch(:hipchat_deploy_user, 'Deploy')
   end
 
   def human
@@ -101,6 +101,6 @@ namespace :hipchat do
   end
 
   def environment_name
-    fetch(:hipchat_env) || fetch(:rack_env) || fetch(:rails_env)
+    fetch(:hipchat_env, fetch(:rack_env, fetch(:rails_env, fetch(:stage))))
   end
 end
