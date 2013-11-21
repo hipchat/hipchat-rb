@@ -18,8 +18,10 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "httparty", "~> 0.11.0"
+  spec.required_ruby_version = '>= 1.9.2'
 
+  spec.add_dependency "httparty"
+  
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "rr"
   spec.add_development_dependency "bundler", "~> 1.3"
