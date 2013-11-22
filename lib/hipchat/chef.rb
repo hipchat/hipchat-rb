@@ -24,7 +24,7 @@ module HipChat
     end
 
     def report
-      unless excluded_envs.include?(node.chef_environment)
+      unless @excluded_envs.include?(node.chef_environment)
         msg = if run_status.failed? then "Failure on \"#{node.name}\" (\"#{node.chef_environment}\" env): #{run_status.formatted_exception}"
               elsif run_status.success? && @report_success
                 "Chef run on \"#{node.name}\" completed in #{run_status.elapsed_time.round(2)} seconds"
