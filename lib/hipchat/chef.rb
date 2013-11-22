@@ -15,12 +15,12 @@ require 'hipchat'
 module HipChat
   class NotifyRoom < Chef::Handler
 
-    def initialize(api_token, room_name, excluded_envs=[], notify_users=false, report_success=false)
+    def initialize(api_token, room_name, notify_users=false, report_success=false, excluded_envs=[])
       @api_token = api_token
       @room_name = room_name
-      @excluded_envs = excluded_envs
       @notify_users = notify_users
       @report_success = report_success
+      @excluded_envs = excluded_envs
     end
 
     def report
