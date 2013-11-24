@@ -6,6 +6,10 @@ h2. Build Status
 
 "!https://travis-ci.org/hipchat/hipchat-rb.png!":https://travis-ci.org/hipchat/hipchat-rb
 
+h2. Requirements
+* Ruby 1.9.3 or higher
+* HipChat Account, signed up "here!":https://hipchat.com/
+
 h2. Usage
 
 bc.. client = HipChat::Client.new(api_token)
