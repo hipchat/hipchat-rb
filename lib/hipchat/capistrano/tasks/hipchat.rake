@@ -7,7 +7,6 @@ namespace :hipchat do
   end
 
   after 'deploy:failed', :notify_deploy_reverted do
-    # TODO Test this. Also, what about deployment errors?
     send_options.merge!(:color => failed_message_color)
     send_message("#{human} cancelled deployment of #{deployment_name} to #{environment_name}.", send_options)
   end
