@@ -75,8 +75,7 @@ namespace :hipchat do
   end
 
   def message_notification
-    announce = fetch(:hipchat_announce)
-    announce.nil? ? false : announce
+    fetch(:hipchat_announce, false)
   end
 
   def message_format
