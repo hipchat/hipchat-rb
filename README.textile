@@ -93,6 +93,21 @@ bc.. on_app_master do
   run "cd #{release_path} && bundle exec rake hipchat:send MESSAGE='#{message}'"
 end
 
+h2. Chef Handler
+
+Report on Chef runs. Within a Recipe:
+
+bc.. include_recipe 'chef_handler'
+  
+  gem_package 'hipchat'
+  
+  chef_handler 'HipChat::NotifyRoom' do
+    action :enable
+    arguments ['API_KEY', 'HIPCHAT_ROOM']
+    source File.join(Gem.all_load_paths.grep(/hipchat/).first,
+                     'hipchat', 'chef.rb')
+end
+
 h2. Copyright
 
 Copyright (c) 2012 Atlassian. See LICENSE for details.
