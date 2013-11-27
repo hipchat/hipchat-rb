@@ -99,13 +99,13 @@ Report on Chef runs. Within a Recipe:
 
 bc.. include_recipe 'chef_handler'
   
-  gem_package 'hipchat'
-  
-  chef_handler 'HipChat::NotifyRoom' do
-    action :enable
-    arguments ['API_KEY', 'HIPCHAT_ROOM']
-    source File.join(Gem.all_load_paths.grep(/hipchat/).first,
-                     'hipchat', 'chef.rb')
+gem_package 'hipchat'
+
+chef_handler 'HipChat::NotifyRoom' do
+  action :enable
+  arguments ['API_KEY', 'HIPCHAT_ROOM']
+  source File.join(Gem.all_load_paths.grep(/hipchat/).first,
+                   'hipchat', 'chef.rb')
 end
 
 h2. Copyright
