@@ -7,26 +7,26 @@ describe HipChat do
 
   # Helper for mocking room message post requests
   def mock_successful_send(from, message, options={})
-    options = {:color => 'yellow', :notify => 0, :message_format => 'html'}.merge(options)
-    mock(HipChat::Room).post("/message",
+    options = {:color => 'yellow', :notify => false, :message_format => 'html'}.merge(options)
+    mock(HipChat::Room).post("/Hipchat/notification",
                              :query => {:auth_token => "blah"},
                              :body  => {:room_id => "Hipchat",
                                         :from    => "Dude",
                                         :message => "Hello world",
                                         :message_format => options[:message_format],
                                         :color   => options[:color],
-                                        :notify  => options[:notify]}) {
+                                        :notify  => options[:notify]}.to_json) {
       OpenStruct.new(:code => 200)
     }
   end
 
   def mock_successful_topic_change(topic, options={})
     options = {:from => 'API'}.merge(options)
-    mock(HipChat::Room).post("/topic",
+    mock(HipChat::Room).put("/Hipchat/topic",
                              :query => {:auth_token => "blah"},
                              :body  => {:room_id => "Hipchat",
                                         :from    => options[:from],
-                                        :topic   => "Nice topic" } ) {
+                                        :topic   => "Nice topic" }.to_json ) {
       OpenStruct.new(:code => 200)
     }
   end
@@ -34,7 +34,7 @@ describe HipChat do
   def mock_successful_history(options={})
     options = { :date => 'recent', :timezone => 'UTC', :format => 'JSON' }.merge(options)
     canned_response = File.new File.expand_path(File.dirname(__FILE__) + '/example/history.json')
-    stub_request(:get, "https://api.hipchat.com/v1/rooms/history").with(:query => {:auth_token => "blah",
+    stub_request(:get, "https://api.hipchat.com/v2/room/Hipchat/history").with(:query => {:auth_token => "blah",
                                    :room_id    => "Hipchat",
                                    :date       => options[:date],
                                    :timezone   => options[:timezone],
@@ -93,7 +93,7 @@ describe HipChat do
     end
 
     it "fails when the room doesn't exist" do
-      mock(HipChat::Room).post(anything, anything) {
+      mock(HipChat::Room).put(anything, anything) {
         OpenStruct.new(:code => 404)
       }
 
@@ -101,7 +101,7 @@ describe HipChat do
     end
 
     it "fails when we're not allowed to do so" do
-      mock(HipChat::Room).post(anything, anything) {
+      mock(HipChat::Room).put(anything, anything) {
         OpenStruct.new(:code => 401)
       }
 
@@ -109,7 +109,7 @@ describe HipChat do
     end
 
     it "fails if we get an unknown response code" do
-      mock(HipChat::Room).post(anything, anything) {
+      mock(HipChat::Room).put(anything, anything) {
         OpenStruct.new(:code => 403)
       }
 
@@ -126,7 +126,7 @@ describe HipChat do
     end
 
     it "successfully with notifications on as option" do
-      mock_successful_send 'Dude', 'Hello world', :notify => 1
+      mock_successful_send 'Dude', 'Hello world', :notify => true
 
       room.send("Dude", "Hello world", :notify => true).should be_true
     end

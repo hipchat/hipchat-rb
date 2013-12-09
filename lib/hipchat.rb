@@ -13,7 +13,7 @@ module HipChat
   class Client
     include HTTParty
 
-    base_uri 'https://api.hipchat.com/v1/rooms'
+    base_uri 'https://api.hipchat.com/v2'
     format :json
 
     def initialize(token, options={})
@@ -24,7 +24,7 @@ module HipChat
     end
 
     def rooms
-      @rooms ||= self.class.get("/list", :query => {:auth_token => @token})['rooms'].
+      @rooms ||= self.class.get("/room", :query => {:auth_token => @token})['items'].
         map { |r| Room.new(@token, r) }
     end
 
@@ -46,7 +46,10 @@ module HipChat
   class Room < OpenStruct
     include HTTParty
 
-    base_uri 'https://api.hipchat.com/v1/rooms'
+    base_uri 'https://api.hipchat.com/v2/room'
+    format   :json
+    headers  'Accept' => 'application/json',
+             'Content-Type' => 'application/json'
 
     def initialize(token, params)
       @token = token
@@ -86,7 +89,7 @@ module HipChat
 
       options = { :color => 'yellow', :notify => false }.merge options
 
-      response = self.class.post('/message',
+      response = self.class.post("/#{room_id}/notification",
         :query => { :auth_token => @token },
         :body  => {
           :room_id        => room_id,
@@ -94,12 +97,12 @@ module HipChat
           :message        => message,
           :message_format => options[:message_format] || 'html',
           :color          => options[:color],
-          :notify         => options[:notify] ? 1 : 0
-        }
+          :notify         => options[:notify]
+        }.to_json
       )
 
       case response.code
-      when 200; true
+      when 200, 204; true
       when 404
         raise UnknownRoom,  "Unknown room: `#{room_id}'"
       when 401
@@ -124,17 +127,17 @@ module HipChat
 
       options = { :from => 'API' }.merge options
 
-      response = self.class.post('/topic',
+      response = self.class.put("/#{room_id}/topic",
         :query => { :auth_token => @token },
         :body  => {
           :room_id        => room_id,
           :from           => options[:from],
           :topic          => new_topic
-        }
+        }.to_json
       )
 
       case response.code
-      when 200; true
+      when 204,200; true
       when 404
         raise UnknownRoom,  "Unknown room: `#{room_id}'"
       when 401
@@ -163,7 +166,7 @@ module HipChat
 
       options = { :date => 'recent', :timezone => 'UTC', :format => 'JSON' }.merge options
 
-      response = self.class.get('/history',
+      response = self.class.get("/#{room_id}/history",
         :query => {
           :room_id    => room_id,
           :date       => options[:date],
