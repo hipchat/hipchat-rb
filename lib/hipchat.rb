@@ -3,6 +3,7 @@ require 'ostruct'
 
 require 'hipchat/railtie' if defined?(Rails::Railtie)
 require "hipchat/version"
+require 'hipchat/api_version'
 
 module HipChat
   class UnknownRoom         < StandardError; end
@@ -13,23 +14,24 @@ module HipChat
   class Client
     include HTTParty
 
-    base_uri 'https://api.hipchat.com/v2'
     format :json
 
     def initialize(token, options={})
       @token = token
-
+      @api_version = options[:api_version]
+      @config = HipChat::ApiVersion.new(@api_version).rooms
       http_proxy = options[:http_proxy] || ENV['http_proxy']
       setup_proxy(http_proxy) if http_proxy
     end
 
     def rooms
-      @rooms ||= self.class.get("/room", :query => {:auth_token => @token})['items'].
+      self.class.base_uri(@config[:base_uri])
+      @rooms ||= self.class.get(@config[:url], :query => {:auth_token => @token})['items'].
         map { |r| Room.new(@token, r) }
     end
 
     def [](name)
-      Room.new(@token, :room_id => name)
+      Room.new(@token, :room_id => name, :api_version => @api_version)
     end
 
     private
@@ -46,14 +48,13 @@ module HipChat
   class Room < OpenStruct
     include HTTParty
 
-    base_uri 'https://api.hipchat.com/v2/room'
     format   :json
     headers  'Accept' => 'application/json',
              'Content-Type' => 'application/json'
 
     def initialize(token, params)
       @token = token
-
+      @api = HipChat::ApiVersion.new(params.delete(:api_version))
       super(params)
     end
 
@@ -89,7 +90,9 @@ module HipChat
 
       options = { :color => 'yellow', :notify => false }.merge options
 
-      response = self.class.post("/#{room_id}/notification",
+      send_config = @api.send(room_id)
+      self.class.base_uri(send_config[:base_uri])
+      response = self.class.post(send_config[:url],
         :query => { :auth_token => @token },
         :body  => {
           :room_id        => room_id,
@@ -97,8 +100,8 @@ module HipChat
           :message        => message,
           :message_format => options[:message_format] || 'html',
           :color          => options[:color],
-          :notify         => options[:notify]
-        }.to_json
+          :notify         => @api.bool_val(options[:notify])
+        }.send(send_config[:body_format])
       )
 
       case response.code
@@ -127,13 +130,15 @@ module HipChat
 
       options = { :from => 'API' }.merge options
 
-      response = self.class.put("/#{room_id}/topic",
+      topic_config = @api.topic(room_id)
+      self.class.base_uri(topic_config[:base_uri])
+      response = self.class.send(topic_config[:method], topic_config[:url],
         :query => { :auth_token => @token },
         :body  => {
           :room_id        => room_id,
           :from           => options[:from],
           :topic          => new_topic
-        }.to_json
+        }.send(topic_config[:body_format])
       )
 
       case response.code
@@ -166,7 +171,8 @@ module HipChat
 
       options = { :date => 'recent', :timezone => 'UTC', :format => 'JSON' }.merge options
 
-      response = self.class.get("/#{room_id}/history",
+      self.class.base_uri(@api.history(room_id)[:base_uri])
+      response = self.class.get(@api.history(room_id)[:url],
         :query => {
           :room_id    => room_id,
           :date       => options[:date],
