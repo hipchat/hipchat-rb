@@ -2,18 +2,18 @@ require 'hipchat'
 
 namespace :hipchat do
 
-  before 'deploy:starting', :notify_deploy_started do
+  task :notify_deploy_started do
     send_message("#{human} is deploying #{deployment_name} to #{environment_name}.", send_options)
   end
 
-  after 'deploy:failed', :notify_deploy_reverted do
-    send_options.merge!(:color => failed_message_color)
-    send_message("#{human} cancelled deployment of #{deployment_name} to #{environment_name}.", send_options)
-  end
-
-  after 'deploy:finished', :notify_deploy_finished do
+  task :notify_deploy_finished do
     send_options.merge!(:color => success_message_color)
     send_message("#{human} finished deploying #{deployment_name} to #{environment_name}.", send_options)
+  end
+
+  task :notify_deploy_reverted do
+    send_options.merge!(:color => failed_message_color)
+    send_message("#{human} cancelled deployment of #{deployment_name} to #{environment_name}.", send_options)
   end
 
   def send_options
@@ -101,4 +101,11 @@ namespace :hipchat do
   def environment_name
     fetch(:hipchat_env, fetch(:rack_env, fetch(:rails_env, fetch(:stage))))
   end
+
+  before 'deploy:starting', :notify_deploy_started
+  after 'deploy:finished', :notify_deploy_finished
+  if Rake::Task.task_defined? 'deploy:failed'
+    after 'deploy:failed', :notify_deploy_reverted
+  end
+
 end
