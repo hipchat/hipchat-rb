@@ -10,14 +10,16 @@ h2. Requirements
 * Ruby 1.9.3 or higher
 * HipChat Account, sign up "here!":https://hipchat.com/
 
-h2. Usage
+h1. Usage
+
+h2. "API v1":https://www.hipchat.com/docs/api
 
 bc.. client = HipChat::Client.new(api_token)
 # 'username' is the name for which the message will be presented as from
 client['my room'].send('username', 'I talk')
 
 # Send notifications to users (default false)
-client['my room'].send('username', 'I quit!', :notify => true)
+client['my room'].send('username', 'I quit!', :notify => 1)
 
 # Color it red. or "yellow", "green", "purple", "random" (default "yellow")
 client['my room'].send('username', 'Build failed!', :color => 'red')
@@ -37,6 +39,31 @@ client['my room'].history()
 # Get history for a date in time with a particular timezone (default is latest 75 messages, timezone default is 'UTC')
 client['my room'].history(:date => '2010-11-19', :timezone => 'PST')
 
+h2. "API v2":https://www.hipchat.com/docs/apiv2
+bc.. client = HipChat::Client.new(api_token, :api_version => 'v2')
+# 'username' is the name for which the message will be presented as from
+client['my room'].send('username', 'I talk')
+
+# Send notifications to users (default false)
+client['my room'].send('username', 'I quit!', :notify => true)
+
+# Color it red. or "yellow", "green", "purple", "random" (default "yellow")
+client['my room'].send('username', 'Build failed!', :color => 'red')
+
+# Have your message rendered as text in HipChat (see https://www.hipchat.com/docs/apiv2/method/send_room_notification)
+client['my room'].send('username', '@coworker Build faild!', :message_format => 'text')
+
+# Update the topic of a room in HipChat (see https://www.hipchat.com/docs/apiv2/method/set_topic)
+client['my room'].topic('Free Ice Cream in the kitchen')
+
+# Change the from field for a topic update (default "API")
+client['my room'].topic('Weekely sales: $10,000', :from => 'Sales Team')
+
+# Get history from a room
+client['my room'].history()
+
+# Get history for a date in time with a particular timezone (default is latest 75 messages, timezone default is 'UTC')
+client['my room'].history(:date => '2010-11-19', :timezone => 'PST')
 
 h2. Capistrano
 
