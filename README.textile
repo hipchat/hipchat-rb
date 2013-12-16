@@ -40,6 +40,7 @@ client['my room'].history()
 client['my room'].history(:date => '2010-11-19', :timezone => 'PST')
 
 h2. "API v2":https://www.hipchat.com/docs/apiv2
+
 bc.. client = HipChat::Client.new(api_token, :api_version => 'v2')
 # 'username' is the name for which the message will be presented as from
 client['my room'].send('username', 'I talk')
