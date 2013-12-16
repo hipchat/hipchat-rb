@@ -54,7 +54,7 @@ module HipChat
         {
           'v1' => {
             :url => "/message",
-            :body_format => :to_h
+            :body_format => :to_hash
           },
           'v2' => {
             :url => "/#{room_id}/notification",
@@ -68,7 +68,7 @@ module HipChat
           'v1' => {
             :url => '/topic',
             :method => :post,
-            :body_format => :to_h
+            :body_format => :to_hash
           },
           'v2' => {
             :url => "/#{room_id}/topic",
