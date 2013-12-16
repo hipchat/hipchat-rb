@@ -7,12 +7,16 @@ module HipChat
         @version = !version.nil? ? version : 'v1'
         if @version.eql?('v1')
           @base_uri = "https://api.hipchat.com/v1/rooms"
+          @headers = {'Accept' => 'application/json',
+             'Content-Type' => 'application/x-www-form-urlencoded'}
         else
           @base_uri = "https://api.hipchat.com/v2/room"
+          @headers = {'Accept' => 'application/json',
+             'Content-Type' => 'application/json'}
         end
       end
 
-      attr_reader :version, :base_uri
+      attr_reader :version, :base_uri, :headers
 
       def rooms_config
         {
@@ -35,12 +39,16 @@ module HipChat
         @version = !version.nil? ? version : 'v1'
         if @version.eql?('v1')
           @base_uri = "https://api.hipchat.com/v1/rooms"
+          @headers = {'Accept' => 'application/json',
+             'Content-Type' => 'application/x-www-form-urlencoded'}
         else
           @base_uri = "https://api.hipchat.com/v2/room"
+          @headers = {'Accept' => 'application/json',
+             'Content-Type' => 'application/json'}
         end
       end
 
-      attr_reader :version, :base_uri, :room_id
+      attr_reader :version, :base_uri, :room_id, :headers
 
       def send_config
         {

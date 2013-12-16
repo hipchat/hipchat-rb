@@ -47,7 +47,8 @@ module HipChat
       response = self.class.get(@api.rooms_config[:url],
         :query => {
           :auth_token => @token
-        }
+        }, 
+        :headers => @api.headers
       )
       case response.code
       when 200
@@ -64,8 +65,6 @@ module HipChat
     include HTTParty
 
     format   :json
-    headers  'Accept' => 'application/json',
-             'Content-Type' => 'application/json'
 
     def initialize(token, params)
       @token = token
@@ -116,7 +115,8 @@ module HipChat
           :message_format => options[:message_format] || 'html',
           :color          => options[:color],
           :notify         => @api.bool_val(options[:notify])
-        }.send(@api.send_config[:body_format])
+        }.send(@api.send_config[:body_format]),
+        :headers => @api.headers
       )
 
       case response.code
@@ -151,7 +151,8 @@ module HipChat
           :room_id        => room_id,
           :from           => options[:from],
           :topic          => new_topic
-        }.send(@api.topic_config[:body_format])
+        }.send(@api.topic_config[:body_format]),
+        :headers => @api.headers
       )
 
       case response.code
@@ -191,7 +192,8 @@ module HipChat
           :timezone   => options[:timezone],
           :format     => options[:format],
           :auth_token => @token,
-        }
+        },
+        :headers => @api.headers
       )
 
       case response.code
