@@ -59,7 +59,7 @@ shared_context "HipChatV2" do
 
   def mock_successful_topic_change(topic, options={})
     options = {:from => 'API'}.merge(options)
-    stub_request(:post, "https://api.hipchat.com/v2/room/Hipchat/topic").with(
+    stub_request(:put, "https://api.hipchat.com/v2/room/Hipchat/topic").with(
                              :query => {:auth_token => "blah"},
                              :body  => {:room_id => "Hipchat",
                                         :from    => options[:from],
