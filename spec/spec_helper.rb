@@ -4,6 +4,9 @@ require 'hipchat'
 require 'rspec'
 require 'rspec/autorun'
 require 'webmock/rspec'
+require 'coveralls'
+
+Coveralls.wear!
 
 RSpec.configure do |config|
   config.mock_with :rr
