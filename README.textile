@@ -68,6 +68,7 @@ client['my room'].history()
 client['my room'].history(:date => '2010-11-19', :timezone => 'PST')
 
 h2. Capistrano
+
 *APIv1 ONLY, use APIv1 Key*
 
 Capfile
@@ -96,6 +97,7 @@ To determine the user that is currently running the deploy, the capistrano tasks
 # The $USER environment variable.
 
 h2. Rails 3 Rake Task
+
 *APIv1 ONLY, use APIv1 Key*
 
 Send a message using a rake task:
@@ -131,6 +133,7 @@ bc.. on_app_master do
 end
 
 h2. Chef Handler
+
 *APIv1 ONLY, use APIv1 Key*
 
 Report on Chef runs. Within a Recipe:
