@@ -98,8 +98,6 @@ To determine the user that is currently running the deploy, the capistrano tasks
 
 h2. Rails 3 Rake Task
 
-*APIv1 ONLY, use APIv1 Key*
-
 Send a message using a rake task:
 
 bc. rake hipchat:send["hello world"]
@@ -116,6 +114,7 @@ bc.. token: "<your token>"
 room: "Your room"
 user: "Your name" # Default to `whoami`
 notify: true # Defaults to false
+api_version: "v2" # optional, defaults to v1
 
 h2. Engine Yard
 
