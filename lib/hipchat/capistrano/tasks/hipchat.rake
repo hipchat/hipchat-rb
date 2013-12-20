@@ -102,10 +102,10 @@ namespace :hipchat do
     fetch(:hipchat_env, fetch(:rack_env, fetch(:rails_env, fetch(:stage))))
   end
 
-  before 'deploy:starting', :notify_deploy_started
-  after 'deploy:finished', :notify_deploy_finished
+  before 'deploy:starting', 'hipchat:notify_deploy_started'
+  after 'deploy:finished', 'hipchat:notify_deploy_finished'
   if Rake::Task.task_defined? 'deploy:failed'
-    after 'deploy:failed', :notify_deploy_reverted
+    after 'deploy:failed', 'hipchat:notify_deploy_reverted'
   end
 
 end
