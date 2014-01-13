@@ -1,3 +1,5 @@
+HISTORY_JSON_PATH = File.expand_path(File.dirname(__FILE__) + '/../example/history.json')
+
 shared_context "HipChatV1" do
   before { @api_version = 'v1'}
   # Helper for mocking room message post requests
@@ -29,7 +31,7 @@ shared_context "HipChatV1" do
 
   def mock_successful_history(options={})
     options = { :date => 'recent', :timezone => 'UTC', :format => 'JSON' }.merge(options)
-    canned_response = File.new File.expand_path(File.dirname(__FILE__) + '/example/history.json')
+    canned_response = File.new(HISTORY_JSON_PATH)
     stub_request(:get, "https://api.hipchat.com/v1/rooms/history").with(:query => {:auth_token => "blah",
                                    :room_id    => "Hipchat",
                                    :date       => options[:date],
@@ -54,7 +56,7 @@ shared_context "HipChatV2" do
                                         :color   => options[:color],
                                         :notify  => options[:notify]}.to_json,
                                         :headers => {'Accept' => 'application/json',
-                                                    'Content-Type' => 'application/json'}).to_return(:status => 200, :body => "", :headers => {}) 
+                                                    'Content-Type' => 'application/json'}).to_return(:status => 200, :body => "", :headers => {})
   end
 
   def mock_successful_topic_change(topic, options={})
@@ -70,7 +72,8 @@ shared_context "HipChatV2" do
 
   def mock_successful_history(options={})
     options = { :date => 'recent', :timezone => 'UTC', :format => 'JSON' }.merge(options)
-    canned_response = File.new File.expand_path(File.dirname(__FILE__) + '/example/history.json')
+
+    canned_response = File.new(HISTORY_JSON_PATH)
     stub_request(:get, "https://api.hipchat.com/v2/room/Hipchat/history").with(:query => {:auth_token => "blah",
                                    :room_id    => "Hipchat",
                                    :date       => options[:date],
