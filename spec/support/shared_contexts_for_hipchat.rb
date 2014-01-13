@@ -72,7 +72,6 @@ shared_context "HipChatV2" do
 
   def mock_successful_history(options={})
     options = { :date => 'recent', :timezone => 'UTC', :format => 'JSON' }.merge(options)
-
     canned_response = File.new(HISTORY_JSON_PATH)
     stub_request(:get, "https://api.hipchat.com/v2/room/Hipchat/history").with(:query => {:auth_token => "blah",
                                    :room_id    => "Hipchat",
