@@ -79,6 +79,4 @@ shared_context "HipChatV2" do
                                    :timezone   => options[:timezone],
                                    :format     => options[:format]}).to_return(canned_response)
   end
-  subject { HipChat::Client.new("blah", :api_version => @api_version) }
-  let(:room) { subject["Hipchat"] }
 end

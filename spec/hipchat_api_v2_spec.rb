@@ -2,6 +2,10 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe "HipChat (API V2)" do
 
+  subject { HipChat::Client.new("blah", :api_version => @api_version) }
+
+  let(:room) { subject["Hipchat"] }
+
   describe "#history" do
     include_context "HipChatV2"
     it "is successful without custom options" do
