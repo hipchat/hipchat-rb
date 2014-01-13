@@ -6,10 +6,7 @@ require "hipchat/version"
 require 'hipchat/api_version'
 
 module HipChat
-  class UnknownRoom         < StandardError; end
-  class Unauthorized        < StandardError; end
-  class UnknownResponseCode < StandardError; end
-  class UsernameTooLong < StandardError; end
+  require 'hipchat/errors'
 
   class Client
     include HTTParty
