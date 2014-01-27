@@ -47,7 +47,7 @@ module HipChat
           Room.new(@token, r.merge(:api_version => @api_version))
         end
       else
-        raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
+        raise UnknownResponseCode, "Unexpected #{response.code} for room"
       end
     end
   end

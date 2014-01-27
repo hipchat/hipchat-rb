@@ -27,7 +27,7 @@ module HipChat
             :data_key => 'rooms'
           },
           'v2' => {
-            :url => '/room',
+            :url => '',
             :data_key => 'items'
           }
         }[version]
