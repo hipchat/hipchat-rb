@@ -1,3 +1,5 @@
+require 'uri'
+
 module HipChat
   class ApiVersion
 
@@ -57,7 +59,7 @@ module HipChat
             :body_format => :to_hash
           },
           'v2' => {
-            :url => "/#{room_id}/notification",
+            :url => URI::escape("/#{room_id}/notification"),
             :body_format => :to_json
           }
         }[version]
@@ -71,7 +73,7 @@ module HipChat
             :body_format => :to_hash
           },
           'v2' => {
-            :url => "/#{room_id}/topic",
+            :url => URI::escape("/#{room_id}/topic"),
             :method => :put,
             :body_format => :to_json
           }
@@ -84,7 +86,7 @@ module HipChat
             :url => '/history'
           },
           'v2' => {
-            :url => "/#{room_id}/history"
+            :url => URI::escape("/#{room_id}/history")
           }
         }[version]
       end
