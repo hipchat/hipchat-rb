@@ -5,6 +5,7 @@ describe "HipChat (API V2)" do
   subject { HipChat::Client.new("blah", :api_version => @api_version) }
 
   let(:room) { subject["Hipchat"] }
+  let(:user) { subject.user "12345678" }
 
   describe "#history" do
     include_context "HipChatV2"
@@ -138,6 +139,31 @@ describe "HipChat (API V2)" do
 
       lambda { room.send "", "" }.
         should raise_error(HipChat::UnknownResponseCode)
+    end
+  end
+
+  describe "#send user message" do
+    include_context "HipChatV2"
+    it "successfully with a standard message" do
+      mock_successful_user_send 'Equal bytes for everyone'
+
+      user.send('Equal bytes for everyone').should be_true
+    end
+
+    it "but fails when the user doesn't exist" do
+      mock(HipChat::User).post(anything, anything) {
+        OpenStruct.new(:code => 404)
+      }
+
+      lambda { user.send "" }.should raise_error(HipChat::UnknownUser)
+    end
+
+    it "but fails when we're not allowed to do so" do
+      mock(HipChat::User).post(anything, anything) {
+        OpenStruct.new(:code => 401)
+      }
+
+      lambda { user.send "" }.should raise_error(HipChat::Unauthorized)
     end
   end
 end

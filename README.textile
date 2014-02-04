@@ -67,6 +67,9 @@ client['my room'].history()
 # Get history for a date in time with a particular timezone (default is latest 75 messages, timezone default is 'UTC')
 client['my room'].history(:date => '2010-11-19', :timezone => 'PST')
 
+# Sends a user a private message. Valid value for user are user id or email address
+client.user('foo@bar.org').send('I can send private messages')
+
 h2. Capistrano
 
 *APIv1 ONLY, use APIv1 Key*

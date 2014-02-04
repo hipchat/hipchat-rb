@@ -140,4 +140,12 @@ describe "HipChat (API V1)" do
         should raise_error(HipChat::UnknownResponseCode)
     end
   end
+
+  describe "#send user message" do
+    it "fails because API V1 doesn't support user operations" do
+
+      lambda { HipChat::Client.new("blah", :api_version => @api_version).user('12345678') }.
+        should raise_error(HipChat::InvalidApiVersion)
+    end
+  end
 end
