@@ -72,6 +72,7 @@ module HipChat
       end
     end
 
+
     # Change this room's topic
     #
     # Usage:

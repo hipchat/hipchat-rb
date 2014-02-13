@@ -79,4 +79,12 @@ shared_context "HipChatV2" do
                                    :timezone   => options[:timezone],
                                    :format     => options[:format]}).to_return(canned_response)
   end
+
+  def mock_successful_room_create(name,options={})
+    stub_request(:put, "https://api.hipchat.com/v2/room").with(:query => {:auth_token =>"blah",
+                                    :name         => name,
+                                    :guest_access => options[:guest_access] || 'false',
+                                    :privacy      => options[:privacy] })
+    
+  end
 end

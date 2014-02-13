@@ -32,6 +32,19 @@ module HipChat
           }
         }[version]
       end
+
+      def room_create_config
+        {
+          'v1' => {
+            :url => "/create",
+            :body_format => :to_hash
+          },
+          'v2' => {
+            :url => 'https://api.hipchat.com/v2/room',
+            :body_format => :to_json
+          }
+        }[version]
+      end
     end
 
     class Room
@@ -64,6 +77,8 @@ module HipChat
           }
         }[version]
       end
+
+     
 
       def topic_config
         {

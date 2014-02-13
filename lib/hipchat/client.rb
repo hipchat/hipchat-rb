@@ -20,6 +20,16 @@ module HipChat
       @rooms ||= _rooms
     end
 
+    def create_room(name, options={})
+
+      response = self.class.post(@api.room_create_config[:url],
+      :query => { :auth_token =>@token},
+      :body  => {
+                :name => name
+      }.merge(options).send(@api.room_create_config[:body_format]),
+        :headers => @api.headers
+        )
+    end
     def [](name)
       Room.new(@token, :room_id => name, :api_version => @api_version)
     end
