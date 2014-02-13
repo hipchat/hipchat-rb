@@ -30,6 +30,7 @@ module HipChat
         :headers => @api.headers
         )
     end
+    
     def [](name)
       Room.new(@token, :room_id => name, :api_version => @api_version)
     end
