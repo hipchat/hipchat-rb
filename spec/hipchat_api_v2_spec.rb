@@ -139,5 +139,15 @@ describe "HipChat (API V2)" do
       lambda { room.send "", "" }.
         should raise_error(HipChat::UnknownResponseCode)
     end
+  
+    describe "#create" do 
+      include_context "HipChatV2"
+      it "succesful without options" do
+        mock_successful_room_create('Test room').should be_true
+      end
+      it "succesful without options" do
+        mock_successful_room_create('Test room').should be_true
+      end
+    end
   end
 end
