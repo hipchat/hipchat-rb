@@ -80,6 +80,8 @@ client.create_room('my room')
 options = {:privacy => ('public' || 'private'), :guest_access => (0 || 1), :owner_user_id}
 client.create_room('my room, now with options', options)
 
+# Invite user to room
+client['my room'].invite_user("this.user@hipchat.com", 'This is where the reason goes')
 
 h2. Capistrano
 
