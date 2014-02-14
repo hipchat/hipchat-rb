@@ -73,6 +73,31 @@ module HipChat
     end
 
 
+    def invite_user(user_id_or_email, reason)
+      if reason.length > 250
+        raise ReasonTooLong, "Reason is limited to 250 characters"
+      end
+      @api = HipChat::ApiVersion::Room.new(room_id, 'v2', user_id_or_email)
+      response = self.class.post(@api.invite_user_config[:url],
+        :query => { :auth_token => @token },
+        :body  => {
+          :reason => reason
+        }.send(@api.invite_user_config[:body_format]),
+        :headers => @api.headers
+      )
+
+      case response.code
+        when 200, 204; true
+        when 404
+        raise UnknownRoom,  "Unknown room: `#{room_id}'"
+      when 401
+        raise Unauthorized, "Access denied to room `#{room_id}'"
+      else
+        raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
+      end
+    end
+
+
     # Change this room's topic
     #
     # Usage:

@@ -49,9 +49,10 @@ module HipChat
 
     class Room
 
-      def initialize(room_id, version = 'v1')
+      def initialize(room_id, version = 'v1', user_id_or_email = nil)
         @room_id = room_id
         @version = !version.nil? ? version : 'v1'
+        @user_id_or_email  = user_id_or_email unless user_id_or_email.nil? 
         if @version.eql?('v1')
           @base_uri = "https://api.hipchat.com/v1/rooms"
           @headers = {'Accept' => 'application/json',
@@ -63,7 +64,7 @@ module HipChat
         end
       end
 
-      attr_reader :version, :base_uri, :room_id, :headers
+      attr_reader :version, :base_uri, :room_id, :headers, :user_id_or_email
 
       def send_config
         {
@@ -78,6 +79,17 @@ module HipChat
         }[version]
       end
 
+      def invite_user_config
+         {
+          'v1' => {
+            
+            },
+          'v2' => {
+            :url => URI::escape("/#{room_id}/invite/#{user_id_or_email}"),
+            :body_format => :to_json
+          }
+        }[version]
+      end
      
 
       def topic_config
