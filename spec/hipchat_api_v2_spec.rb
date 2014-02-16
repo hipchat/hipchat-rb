@@ -140,4 +140,48 @@ describe "HipChat (API V2)" do
         should raise_error(HipChat::UnknownResponseCode)
     end
   end
+
+  describe "#create" do
+    include_context "HipChatV2"
+
+    it "successfully with room name" do
+      mock_successful_room_creation({:name => "A Room"})
+
+      subject.create_room("A Room").should be_true
+    end
+
+    it "successfully with custom parameters" do
+      mock_successful_room_creation({:name => "A Room", :owner_user_id => "123456", :privacy => "private", :guest_access => true})
+
+      subject.create_room("A Room", "123456", "private", true).should be_true
+    end
+  end
+
+  describe "#get_room" do
+    include_context "HipChatV2"
+
+    it "successfully" do
+      mock_successful_get_room("Hipchat")
+
+      room.get_room.should be_true
+    end
+
+  end
+
+  describe "#invite" do
+    include_context "HipChatV2"
+
+    it "successfully with user_id" do
+      mock_successful_invite()
+
+      room.invite("1234").should be_true
+    end
+
+    it "successfully with custom parameters" do
+      mock_successful_invite({:user_id => "321", :reason => "A great reason"})
+
+      room.invite("321", "A great reason").should be_true
+    end
+  end
+
 end

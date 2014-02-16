@@ -67,6 +67,15 @@ client['my room'].history()
 # Get history for a date in time with a particular timezone (default is latest 75 messages, timezone default is 'UTC')
 client['my room'].history(:date => '2010-11-19', :timezone => 'PST')
 
+# Create a new room
+client.create_room("Name")
+
+# Get room data
+client['my room'].get_room
+
+# Invite user to room
+client['my room'].invite("USER_ID_OR_NAME")
+
 h2. Capistrano
 
 *APIv1 ONLY, use APIv1 Key*
@@ -138,7 +147,7 @@ h2. Chef Handler
 Report on Chef runs. Within a Recipe:
 
 bc.. include_recipe 'chef_handler'
-  
+
 gem_package 'hipchat'
 
 chef_handler 'HipChat::NotifyRoom' do
