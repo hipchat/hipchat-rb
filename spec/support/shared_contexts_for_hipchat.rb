@@ -79,4 +79,41 @@ shared_context "HipChatV2" do
                                    :timezone   => options[:timezone],
                                    :format     => options[:format]}).to_return(canned_response)
   end
+
+  def mock_successful_room_creation(options={})
+    options = {:name => "A Room", :owner_user_id => "", :privacy => "public", :guest_access => false}.merge(options)
+    stub_request(:post, "https://api.hipchat.com/v2/room").with(
+                             :query => {:auth_token => "blah"},
+                             :body  => {:name => options[:name],
+                                        :owner_user_id => options[:owner_user_id],
+                                        :privacy => options[:privacy],
+                                        :guest_access => options[:guest_access]}.to_json,
+                             :headers => {'Accept' => 'application/json',
+                                          'Content-Type' => 'application/json'}).to_return(
+                                          :status => 201,
+                                          :body => '{"id": "12345", "links": {"self": "https://api.hipchat.com/v2/room/12345"}}',
+                                          :headers => {})
+  end
+
+  def mock_successful_get_room(room_id="1234")
+    stub_request(:get, "https://api.hipchat.com/v2/room/#{room_id}").with(
+      :query => {:auth_token => "blah"},
+      :body => "",
+      :headers => {'Accept' => 'application/json',
+                   'Content-Type' => 'application/json'}).to_return(:status => 200, :body => "{\"id\":\"#{room_id}\"}", :headers => {})
+  end
+
+  def mock_successful_invite(options={})
+    options = {:user_id => "1234"}.merge(options)
+    stub_request(:post, "https://api.hipchat.com/v2/room/Hipchat/invite/#{options[:user_id]}").with(
+      :query => {:auth_token => "blah"},
+      :body  => {
+        :reason => options[:reason]||""
+      }.to_json,
+      :headers => {'Accept' => 'application/json',
+                   'Content-Type' => 'application/json'}).to_return(
+                   :status => 204,
+                   :body => "",
+                   :headers => {})
+  end
 end

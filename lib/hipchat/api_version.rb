@@ -32,6 +32,14 @@ module HipChat
           }
         }[version]
       end
+
+      def create_room_config
+        {
+          'v2' => {
+            :url => ""
+          }
+        }[version]
+      end
     end
 
     class Room
@@ -51,6 +59,22 @@ module HipChat
       end
 
       attr_reader :version, :base_uri, :room_id, :headers
+
+      def get_room_config
+        {
+          'v2' => {
+            :url => URI::escape("/#{room_id}")
+          }
+        }[version]
+      end
+
+      def invite_config
+        {
+          'v2' => {
+            :url => URI::escape("/#{room_id}/invite")
+          }
+        }[version]
+      end
 
       def send_config
         {

@@ -16,6 +16,46 @@ module HipChat
       super(params)
     end
 
+    # Retrieve data for this room
+    def get_room
+      response = self.class.get(@api.get_room_config[:url],
+        :query => {:auth_token => @token },
+        :headers => @api.headers
+      )
+
+      case response.code
+      when 200
+        response.parsed_response
+      when 404
+        raise UnknownRoom,  "Unknown room: `#{room_id}'"
+      when 401
+        raise Unauthorized, "Access denied to room `#{room_id}'"
+      else
+        raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
+      end
+    end
+
+    # Invite user to this room
+    def invite(user, reason="")
+      response = self.class.post(@api.invite_config[:url]+"/#{user}",
+        :query => { :auth_token => @token },
+        :body => {
+          :reason => reason
+        }.to_json,
+        :headers => @api.headers)
+
+      case response.code
+      when 200, 204; true
+      when 404
+        raise UnknownRoom,  "Unknown room: `#{room_id}'"
+      when 401
+        raise Unauthorized, "Access denied to room `#{room_id}'"
+      else
+        raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
+      end
+    end
+
+
     # Send a message to this room.
     #
     # Usage:

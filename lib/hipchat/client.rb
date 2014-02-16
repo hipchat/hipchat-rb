@@ -24,6 +24,34 @@ module HipChat
       Room.new(@token, :room_id => name, :api_version => @api_version)
     end
 
+    def create_room(name, owner_user_id="", privacy='public', guest_access=false)
+      if name.length > 50
+        raise RoomNameTooLong, "Room name #{name} is #{name.length} characters long. Limit is 50."
+      end
+
+      response = self.class.post(@api.create_room_config[:url],
+        :query => { :auth_token => @token },
+        :body => {
+          :name => name,
+          :owner_user_id => owner_user_id,
+          :privacy => privacy,
+          :guest_access => guest_access
+          }.to_json,
+        :headers => @api.headers
+      )
+
+      case response.code
+      when 201 #CREATED
+        response.parsed_response["id"]
+      when 400
+        raise UnknownRoom,  "Error: #{response.message}"
+      when 401
+        raise Unauthorized, "Access denied"
+      else
+        raise UnknownResponseCode, "Unexpected errorres #{response.code}"
+      end
+    end
+
     private
     def setup_proxy(proxy_url)
       proxy_url = URI.parse(proxy_url)
