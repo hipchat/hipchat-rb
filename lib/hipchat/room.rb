@@ -10,8 +10,7 @@ module HipChat
 
     def initialize(token, params)
       @token = token
-      @api = HipChat::ApiVersion::Room.new(params[:room_id],
-                                           params.delete(:api_version))
+      @api = HipChat::ApiVersion::Room.new(params)
       self.class.base_uri(@api.base_uri)
       super(params)
     end
