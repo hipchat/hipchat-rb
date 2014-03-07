@@ -96,6 +96,15 @@ To determine the user that is currently running the deploy, the capistrano tasks
 # The git user.name var.
 # The $USER environment variable.
 
+h3. Commit log notification (only for Capistrano 2)
+
+Send commit log with deploy notification. We currently support git and svn.
+
+bc.. set :hipchat_commit_log, true
+# Optional
+set :hipchat_commit_log_format, ":time :user\n:message\n"
+set :hipchat_commit_log_time_format, "%Y/%m/%d %H:%M:%S"
+
 h2. Rails 3 Rake Task
 
 Send a message using a rake task:
