@@ -12,6 +12,7 @@ namespace :hipchat do
       :user           => ENV['HIPCHAT_USER'],
       :notify         => ENV['NOTIFY'],
       :room           => ENV['ROOM'],
+      :color          => ENV['COLOR'],
       :token          => ENV['TOKEN'],
       :api_version    => ENV['API_VERSION']
     }.reject { |k, v| v.blank? }
@@ -40,6 +41,6 @@ namespace :hipchat do
 
     client = HipChat::Client.new(options[:token], options)
 
-    client[options[:room]].send(options[:user], options[:message], :notify => options[:notify])
+    client[options[:room]].send(options[:user], options[:message], { :color => options[:color], :notify => options[:notify] })
   end
 end
