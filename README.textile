@@ -40,6 +40,9 @@ client['my room'].history()
 # Get history for a date in time with a particular timezone (default is latest 75 messages, timezone default is 'UTC')
 client['my room'].history(:date => '2010-11-19', :timezone => 'PST')
 
+# Create a new room, V1 requires owner_user_id (see https://www.hipchat.com/docs/api/method/rooms/create)
+client.create_room("Name", :owner_user_id => 'user_id')
+
 h2. "API v2":https://www.hipchat.com/docs/apiv2
 
 bc.. client = HipChat::Client.new(api_token, :api_version => 'v2')
@@ -67,14 +70,14 @@ client['my room'].history()
 # Get history for a date in time with a particular timezone (default is latest 75 messages, timezone default is 'UTC')
 client['my room'].history(:date => '2010-11-19', :timezone => 'PST')
 
-# Create a new room
-client.create_room("Name")
+# Create a new room (see https://www.hipchat.com/docs/apiv2/method/create_room)
+client.create_room("Name", options = {})
 
-# Get room data
+# Get room data (see https://www.hipchat.com/docs/apiv2/method/get_room)
 client['my room'].get_room
 
-# Invite user to room
-client['my room'].invite("USER_ID_OR_NAME")
+# Invite user to room (see https://www.hipchat.com/docs/apiv2/method/invite_user)
+client['my room'].invite("USER_ID_OR_NAME", options = {})
 
 h2. Capistrano
 
