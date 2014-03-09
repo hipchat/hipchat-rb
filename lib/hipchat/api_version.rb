@@ -3,7 +3,15 @@ require 'uri'
 module HipChat
   class ApiVersion
 
-    class Client
+    def bool_val(opt)
+      if version.eql?('v1')
+        opt ? 1 : 0
+      else
+        opt
+      end
+    end
+
+    class Client < ApiVersion
 
       def initialize(version = 'v1')
         @version = !version.nil? ? version : 'v1'
@@ -35,14 +43,19 @@ module HipChat
 
       def create_room_config
         {
+          'v1' => {
+            :url => '/create',
+            :body_format => :to_hash
+          },
           'v2' => {
-            :url => ""
+            :url => '',
+            :body_format => :to_json
           }
         }[version]
       end
     end
 
-    class Room
+    class Room < ApiVersion
 
       def initialize(room_id, version = 'v1')
         @room_id = room_id
@@ -71,7 +84,8 @@ module HipChat
       def invite_config
         {
           'v2' => {
-            :url => URI::escape("/#{room_id}/invite")
+            :url => URI::escape("/#{room_id}/invite"),
+            :body_format => :to_json
           }
         }[version]
       end
@@ -114,15 +128,6 @@ module HipChat
           }
         }[version]
       end
-
-      def bool_val(opt)
-        if version.eql?('v1')
-          opt ? 1 : 0
-        else
-          opt
-        end
-      end
-
     end
   end
 end

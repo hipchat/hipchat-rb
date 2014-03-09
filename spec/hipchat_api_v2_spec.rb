@@ -145,15 +145,20 @@ describe "HipChat (API V2)" do
     include_context "HipChatV2"
 
     it "successfully with room name" do
-      mock_successful_room_creation({:name => "A Room"})
+      mock_successful_room_creation("A Room")
 
       subject.create_room("A Room").should be_true
     end
 
     it "successfully with custom parameters" do
-      mock_successful_room_creation({:name => "A Room", :owner_user_id => "123456", :privacy => "private", :guest_access => true})
+      mock_successful_room_creation("A Room", {:owner_user_id => "123456", :privacy => "private", :guest_access => true})
 
-      subject.create_room("A Room", "123456", "private", true).should be_true
+      subject.create_room("A Room", {:owner_user_id => "123456", :privacy => "private", :guest_access =>true}).should be_true
+    end
+
+    it "but fail is name is longer then 50 char" do
+      lambda { subject.create_room("A Room that is too long that I should fail right now") }.
+        should raise_error(HipChat::RoomNameTooLong)
     end
   end
 

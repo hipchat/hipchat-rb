@@ -38,8 +38,18 @@ shared_context "HipChatV1" do
                                    :timezone   => options[:timezone],
                                    :format     => options[:format]}).to_return(canned_response)
   end
-  subject { HipChat::Client.new("blah", :api_version => @api_version) }
-  let(:room) { subject["Hipchat"] }
+
+  def mock_successful_room_creation(name, options={})
+    options = {:name => "A Room"}.merge(options)
+    stub_request(:post, "https://api.hipchat.com/v1/rooms/create").with(
+                             :query => {:auth_token => "blah"},
+                             :body  => { :name => name }.merge(options),
+                             :headers => {'Accept' => 'application/json',
+                                          'Content-Type' => 'application/x-www-form-urlencoded'}).to_return(
+                                          :status => 200,
+                                          :body => '{"room": {"room_id": "1234", "name" : "A Room"}}',
+                                          :headers => {})
+  end
 end
 
 shared_context "HipChatV2" do
@@ -80,14 +90,10 @@ shared_context "HipChatV2" do
                                    :format     => options[:format]}).to_return(canned_response)
   end
 
-  def mock_successful_room_creation(options={})
-    options = {:name => "A Room", :owner_user_id => "", :privacy => "public", :guest_access => false}.merge(options)
+  def mock_successful_room_creation(name, options={})
     stub_request(:post, "https://api.hipchat.com/v2/room").with(
                              :query => {:auth_token => "blah"},
-                             :body  => {:name => options[:name],
-                                        :owner_user_id => options[:owner_user_id],
-                                        :privacy => options[:privacy],
-                                        :guest_access => options[:guest_access]}.to_json,
+                             :body  => { :name => name }.merge(options).to_json,
                              :headers => {'Accept' => 'application/json',
                                           'Content-Type' => 'application/json'}).to_return(
                                           :status => 201,

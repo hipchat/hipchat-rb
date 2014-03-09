@@ -140,4 +140,25 @@ describe "HipChat (API V1)" do
         should raise_error(HipChat::UnknownResponseCode)
     end
   end
+
+    describe "#create" do
+    include_context "HipChatV1"
+
+    it "successfully with room name" do
+      mock_successful_room_creation("A Room", :owner_user_id => "123456")
+
+      subject.create_room("A Room", {:owner_user_id => "123456"}).should be_true
+    end
+
+    it "successfully with custom parameters" do
+      mock_successful_room_creation("A Room", {:owner_user_id => "123456", :privacy => "private", :guest_access => "1"})
+
+      subject.create_room("A Room", {:owner_user_id => "123456", :privacy => "private", :guest_access =>true}).should be_true
+    end
+
+    it "but fails if we dont pass owner_user_id" do
+      lambda { subject.create_room("A Room", {:privacy => "private", :guest_access =>true}) }.
+        should raise_error(HipChat::RoomMissingOwnerUserId)
+    end
+  end
 end
