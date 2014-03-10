@@ -141,7 +141,7 @@ describe "HipChat (API V1)" do
     end
   end
 
-    describe "#create" do
+  describe "#create" do
     include_context "HipChatV1"
 
     it "successfully with room name" do
@@ -159,6 +159,14 @@ describe "HipChat (API V1)" do
     it "but fails if we dont pass owner_user_id" do
       lambda { subject.create_room("A Room", {:privacy => "private", :guest_access =>true}) }.
         should raise_error(HipChat::RoomMissingOwnerUserId)
+    end
+  end
+
+  describe "#send user message" do
+    it "fails because API V1 doesn't support user operations" do
+
+      lambda { HipChat::Client.new("blah", :api_version => @api_version).user('12345678') }.
+        should raise_error(HipChat::InvalidApiVersion)
     end
   end
 end

@@ -122,4 +122,12 @@ shared_context "HipChatV2" do
                    :body => "",
                    :headers => {})
   end
+
+  def mock_successful_user_send(message)
+    stub_request(:post, "https://api.hipchat.com/v2/user/12345678/message").with(
+                                   :query   => {:auth_token => "blah"},
+                                   :body    => {:message => "Equal bytes for everyone"},
+                                   :headers => {'Accept' => 'application/json',
+                                                'Content-Type' => 'application/json'}).to_return(:status => 200, :body => "", :headers => {})
+  end
 end
