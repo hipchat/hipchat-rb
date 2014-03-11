@@ -39,6 +39,12 @@ Capistrano::Configuration.instance(:must_exist).load do
           environment_string = "#{stage} (#{env})"
         end
 
+        if fetch(:hipchat_commit_log, false)
+          logs = commit_logs
+          unless logs.empty?
+            send(logs.join("\n"), send_options)
+          end
+        end
         send("#{human} finished deploying #{deployment_name} to #{environment_string}#{fetch(:hipchat_with_migrations, '')}.", send_options)
       end
     end
@@ -120,6 +126,40 @@ Capistrano::Configuration.instance(:must_exist).load do
 
     def env
       fetch(:hipchat_env, fetch(:rack_env, fetch(:rails_env, "production")))
+    end
+  end
+
+  def commit_logs
+    from = (previous_revision rescue nil)
+    to   = (latest_revision rescue nil)
+
+    log_hashes = []
+    case scm.to_s
+    when 'git'
+      logs = run_locally(source.local.scm(:log, "--no-merges --pretty=format:'%H$$%at$$%an$$%s' #{from}..#{to}"))
+      logs.split(/\n/).each do |log|
+        ll = log.split(/\$\$/)
+        log_hashes << {revision: ll[0], time: Time.at(ll[1].to_i), user: ll[2], message: ll[3]}
+      end
+    when 'svn'
+      logs = run_locally(source.local.scm(:log, "--non-interactive -r #{from}:#{to}"))
+      logs.scan(/^[-]+$\n\s*(?<revision>[^\|]+)\s+\|\s+(?<user>[^\|]+)\s+\|\s+(?<time>[^\|]+)\s+.*\n+^\s*(?<message>.*)\s*$\n/) do |m|
+        h = Regexp.last_match
+        log_hashes << {revision: h[:revision], time: Time.parse(h[:time]), user: h[:user], message: h[:message]}
+      end
+    else
+      puts "We haven't supported this scm yet."
+      return []
+    end
+
+    format = fetch(:hipchat_commit_log_format, ":time :user\n:message\n")
+    time_format = fetch(:hipchat_commit_log_time_format, "%Y/%m/%d %H:%M:%S")
+
+    log_hashes.map do |log_hash|
+      log_hash[:time] &&= log_hash[:time].localtime.strftime(time_format)
+      log_hash.inject(format) do |l, (k, v)|
+        l.gsub(/:#{k}/, v.to_s)
+      end
     end
   end
 
