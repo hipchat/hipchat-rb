@@ -27,8 +27,9 @@ namespace :hipchat do
   def send_message(message, options)
     hipchat_token = fetch(:hipchat_token)
     hipchat_room_name = fetch(:hipchat_room_name)
+    hipchat_options = fetch(:hipchat_options, {})
 
-    hipchat_client = fetch(:hipchat_client, HipChat::Client.new(hipchat_token))
+    hipchat_client = fetch(:hipchat_client, HipChat::Client.new(hipchat_token, hipchat_options))
 
     if hipchat_room_name.is_a?(String)
       rooms = [hipchat_room_name]
