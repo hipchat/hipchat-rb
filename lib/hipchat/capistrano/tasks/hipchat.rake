@@ -64,7 +64,7 @@ namespace :hipchat do
   end
 
   def message_color
-    fetch(:hipchat_color)
+    fetch(:hipchat_color, 'yellow')
   end
 
   def success_message_color
