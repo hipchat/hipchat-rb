@@ -84,8 +84,6 @@ client.user('foo@bar.org').send('I can send private messages')
 
 h2. Capistrano
 
-*APIv1 ONLY, use APIv1 Key*
-
 Capfile
 
 bc. require 'hipchat/capistrano'
@@ -101,6 +99,9 @@ set :hipchat_color, 'yellow' #normal message color
 set :hipchat_success_color, 'green' #finished deployment message color
 set :hipchat_failed_color, 'red' #cancelled deployment message color
 set :hipchat_message_format, 'html' # Sets the deployment message format, see https://www.hipchat.com/docs/api/method/rooms/message
+set :hipchat_options, {
+  :api_version  => "v2" # Set "v2" to send messages with API v2
+}
 
 h3. Who did it?
 

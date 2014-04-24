@@ -58,7 +58,8 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
 
     def send(message, options)
-      set :hipchat_client, HipChat::Client.new(hipchat_token) if fetch(:hipchat_client, nil).nil?
+      hipchat_options = fetch(:hipchat_options, {})
+      set :hipchat_client, HipChat::Client.new(hipchat_token, hipchat_options) if fetch(:hipchat_client, nil).nil?
 
       if hipchat_room_name.is_a?(String)
         rooms = [hipchat_room_name]
