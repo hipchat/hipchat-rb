@@ -51,7 +51,7 @@ module HipChat
 
       case response.code
       when 200
-          User.new(@token, response.merge(:api_version => 'v2'))
+        User.new(@token, response.merge(:api_version => 'v2'))
       else
         raise UnknownResponseCode, "Unexpected #{response.code} for view message to `#{user_id}'"
       end
