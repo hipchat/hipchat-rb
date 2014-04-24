@@ -20,7 +20,7 @@ bc.. client = HipChat::Client.new(api_token)
 client['my room'].send('username', 'I talk')
 
 # Send notifications to users (default false)
-client['my room'].send('username', 'I quit!', :notify => 1)
+client['my room'].send('username', 'I quit!', :notify => true)
 
 # Color it red. or "yellow", "green", "purple", "random" (default "yellow")
 client['my room'].send('username', 'Build failed!', :color => 'red')
