@@ -11,7 +11,7 @@ module HipChat
     def initialize(token, params)
       @token = token
       @api = HipChat::ApiVersion::User.new(params[:user_id],
-                                           params.delete(:api_version))
+                                           params)
       self.class.base_uri(@api.base_uri)
       super(params)
     end
@@ -38,7 +38,7 @@ module HipChat
         raise UnknownResponseCode, "Unexpected #{response.code} for private message to `#{user_id}'"
       end
     end
-    
+
     #
     # Get a user's details.
     #
@@ -57,4 +57,4 @@ module HipChat
       end
     end
   end
-end 
+end
