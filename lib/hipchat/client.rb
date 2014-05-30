@@ -9,8 +9,10 @@ module HipChat
 
     def initialize(token, options={})
       @token = token
+      default_options = { api_version: 'v1', server_url: 'https://api.hipchat.com' }
+      @options = default_options.merge options
       @api_version = options[:api_version]
-      @api = HipChat::ApiVersion::Client.new(@api_version)
+      @api = HipChat::ApiVersion::Client.new(@options)
       self.class.base_uri(@api.base_uri)
       http_proxy = options[:http_proxy] || ENV['http_proxy']
       setup_proxy(http_proxy) if http_proxy
@@ -21,7 +23,7 @@ module HipChat
     end
 
     def [](name)
-      Room.new(@token, :room_id => name, :api_version => @api_version)
+      Room.new(@token, { room_id: name }.merge(@options))
     end
 
     def create_room(name, options={})
@@ -35,7 +37,7 @@ module HipChat
       unless options[:guest_access].nil?
         options[:guest_access] = @api.bool_val(options[:guest_access])
       end
-      
+
       response = self.class.post(@api.create_room_config[:url],
         :query => { :auth_token => @token },
         :body => {
@@ -57,7 +59,7 @@ module HipChat
     end
 
     def user(name)
-      User.new(@token, :user_id => name, :api_version => @api_version)
+      User.new(@token, { :user_id => name }.merge(@options))
     end
 
     def users
@@ -107,6 +109,6 @@ module HipChat
       else
         raise UnknownResponseCode, "Unexpected #{response.code} for room"
       end
-    end    
+    end
   end
 end

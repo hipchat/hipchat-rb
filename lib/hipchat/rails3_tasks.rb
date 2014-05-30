@@ -14,7 +14,8 @@ namespace :hipchat do
       :room           => ENV['ROOM'],
       :color          => ENV['COLOR'],
       :token          => ENV['TOKEN'],
-      :api_version    => ENV['API_VERSION']
+      :api_version    => ENV['API_VERSION'],
+      :server_url     => ENV['SERVER_URL']
     }.reject { |k, v| v.blank? }
 
     system_options = {

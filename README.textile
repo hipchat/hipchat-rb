@@ -20,7 +20,7 @@ bc.. client = HipChat::Client.new(api_token)
 client['my room'].send('username', 'I talk')
 
 # Send notifications to users (default false)
-client['my room'].send('username', 'I quit!', :notify => 1)
+client['my room'].send('username', 'I quit!', :notify => true)
 
 # Color it red. or "yellow", "green", "purple", "random" (default "yellow")
 client['my room'].send('username', 'Build failed!', :color => 'red')
@@ -46,6 +46,45 @@ client.create_room("Name", :owner_user_id => 'user_id')
 h2. "API v2":https://www.hipchat.com/docs/apiv2
 
 bc.. client = HipChat::Client.new(api_token, :api_version => 'v2')
+# 'username' is the name for which the message will be presented as from
+client['my room'].send('username', 'I talk')
+
+# Send notifications to users (default false)
+client['my room'].send('username', 'I quit!', :notify => true)
+
+# Color it red. or "yellow", "green", "purple", "random" (default "yellow")
+client['my room'].send('username', 'Build failed!', :color => 'red')
+
+# Have your message rendered as text in HipChat (see https://www.hipchat.com/docs/apiv2/method/send_room_notification)
+client['my room'].send('username', '@coworker Build faild!', :message_format => 'text')
+
+# Update the topic of a room in HipChat (see https://www.hipchat.com/docs/apiv2/method/set_topic)
+client['my room'].topic('Free Ice Cream in the kitchen')
+
+# Change the from field for a topic update (default "API")
+client['my room'].topic('Weekely sales: $10,000', :from => 'Sales Team')
+
+# Get history from a room
+client['my room'].history()
+
+# Get history for a date in time with a particular timezone (default is latest 75 messages, timezone default is 'UTC')
+client['my room'].history(:date => '2010-11-19', :timezone => 'PST')
+
+# Create a new room (see https://www.hipchat.com/docs/apiv2/method/create_room)
+client.create_room("Name", options = {})
+
+# Get room data (see https://www.hipchat.com/docs/apiv2/method/get_room)
+client['my room'].get_room
+
+# Invite user to room (see https://www.hipchat.com/docs/apiv2/method/invite_user)
+client['my room'].invite("USER_ID_OR_NAME", options = {})
+
+# Sends a user a private message. Valid value for user are user id or email address
+client.user('foo@bar.org').send('I can send private messages')
+
+h2. Custom Server URL
+
+bc.. client = HipChat::Client.new(api_token, :api_version => 'v2', :server_url => 'https://domain.com')
 # 'username' is the name for which the message will be presented as from
 client['my room'].send('username', 'I talk')
 

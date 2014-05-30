@@ -13,14 +13,15 @@ module HipChat
 
     class Client < ApiVersion
 
-      def initialize(version = 'v1')
-        @version = !version.nil? ? version : 'v1'
+      def initialize(options = {})
+        # puts options.inspect
+        @version = options[:api_version]
         if @version.eql?('v1')
-          @base_uri = "https://api.hipchat.com/v1"
+          @base_uri = "#{options[:server_url]}/v1"
           @headers = {'Accept' => 'application/json',
              'Content-Type' => 'application/x-www-form-urlencoded'}
         else
-          @base_uri = "https://api.hipchat.com/v2"
+          @base_uri = "#{options[:server_url]}/v2"
           @headers = {'Accept' => 'application/json',
              'Content-Type' => 'application/json'}
         end
@@ -65,15 +66,15 @@ module HipChat
 
     class Room < ApiVersion
 
-      def initialize(room_id, version = 'v1')
-        @room_id = room_id
-        @version = !version.nil? ? version : 'v1'
+      def initialize(options = {})
+        @room_id = options[:room_id]
+        @version = options[:api_version]
         if @version.eql?('v1')
-          @base_uri = "https://api.hipchat.com/v1/rooms"
+          @base_uri = "#{options[:server_url]}/v1/rooms"
           @headers = {'Accept' => 'application/json',
              'Content-Type' => 'application/x-www-form-urlencoded'}
         else
-          @base_uri = "https://api.hipchat.com/v2/room"
+          @base_uri = "#{options[:server_url]}/v2/room"
           @headers = {'Accept' => 'application/json',
              'Content-Type' => 'application/json'}
         end
@@ -140,10 +141,10 @@ module HipChat
 
     class User
 
-      def initialize(user_id, version)
+      def initialize(user_id, options)
         @user_id = user_id
-        raise InvalidApiVersion,  "user API calls invalid for API v1" if ! version.eql?('v2')
-        @base_uri = "https://api.hipchat.com/v2/user"
+        raise InvalidApiVersion,  "user API calls invalid for API v1" if ! options[:api_version].eql?('v2')
+        @base_uri = "#{options[:server_url]}/v2/user"
         @headers = {'Accept' => 'application/json',
           'Content-Type' => 'application/json'}
       end

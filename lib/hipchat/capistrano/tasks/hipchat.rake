@@ -3,17 +3,17 @@ require 'hipchat'
 namespace :hipchat do
 
   task :notify_deploy_started do
-    send_message("#{human} is deploying #{deployment_name} to #{environment_name}.", send_options)
+    send_message("#{human} is deploying #{deployment_name} to #{environment_string}.", send_options)
   end
 
   task :notify_deploy_finished do
     send_options.merge!(:color => success_message_color)
-    send_message("#{human} finished deploying #{deployment_name} to #{environment_name}.", send_options)
+    send_message("#{human} finished deploying #{deployment_name} to #{environment_string}.", send_options)
   end
 
   task :notify_deploy_reverted do
     send_options.merge!(:color => failed_message_color)
-    send_message("#{human} cancelled deployment of #{deployment_name} to #{environment_name}.", send_options)
+    send_message("#{human} cancelled deployment of #{deployment_name} to #{environment_string}.", send_options)
   end
 
   def send_options
@@ -47,6 +47,14 @@ namespace :hipchat do
         puts e.backtrace
       end
     }
+  end
+
+  def environment_string
+    if fetch(:stage)
+      "#{fetch(:stage)} (#{environment_name})"
+    else
+      environment_name
+    end
   end
 
   def deployment_name
