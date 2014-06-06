@@ -67,7 +67,18 @@ module HipChat
     end
 
     private
+
+    def no_proxy?
+      host = URI.parse(@options[:server_url]).host
+      ENV.fetch('no_proxy','').split(',').any? do |pattern|
+        # convert patterns like `*.example.com` into `.*\.example\.com`
+        host =~ Regexp.new(pattern.gsub(/\./,'\\.').gsub(/\*/,'.*'))
+      end
+    end
+
     def setup_proxy(proxy_url)
+      return if no_proxy?
+
       proxy_url = URI.parse(proxy_url)
 
       self.class.http_proxy(proxy_url.host, proxy_url.port,
