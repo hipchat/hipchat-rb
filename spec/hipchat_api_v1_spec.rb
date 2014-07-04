@@ -19,6 +19,14 @@ describe "HipChat (API V1)" do
       room.history(:timezone => 'America/Los_Angeles', :date => '2010-11-19').should be_true
     end
 
+    it "is successful from fetched room" do
+      mock_successfull_rooms
+      mock_successful_history
+
+      subject.rooms.should be_true
+      subject.rooms.first.history.should be_true
+    end
+
     it "fails when the room doen't exist" do
       mock(HipChat::Room).get(anything, anything) {
         OpenStruct.new(:code => 404)

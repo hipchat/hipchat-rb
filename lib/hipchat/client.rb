@@ -86,7 +86,7 @@ module HipChat
       case response.code
       when 200
         response[@api.rooms_config[:data_key]].map do |r|
-          Room.new(@token, r.merge(:api_version => @api_version, :room_id => r['id']))
+          Room.new(@token, r.merge(:api_version => @api_version, :room_id => r['id'], :server_url => @options[:server_url]))
         end
       else
         raise UnknownResponseCode, "Unexpected #{response.code} for room"
