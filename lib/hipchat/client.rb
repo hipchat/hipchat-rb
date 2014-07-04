@@ -28,7 +28,7 @@ module HipChat
 
     def create_room(name, options={})
       if @api.version == 'v1' && options[:owner_user_id].nil?
-        raise RoomMissingOwnerUserId, "V1 API Requres owner_user_id"
+        raise RoomMissingOwnerUserId, "V1 API Requires owner_user_id"
       end
 
       if name.length > 50
