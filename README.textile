@@ -11,6 +11,16 @@ h2. Requirements
 * Ruby 1.9.3 or higher
 * HipChat Account, sign up "here!":https://hipchat.com/
 
+h2. Installation
+
+h3. Gemfile
+
+bc. gem 'hipchat'
+
+h3. Install
+
+bc. gem install hipchat
+
 h1. Usage
 
 h2. "API v1":https://www.hipchat.com/docs/api
