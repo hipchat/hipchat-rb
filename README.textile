@@ -159,6 +159,7 @@ bc.. set :hipchat_commit_log, true
 # Optional
 set :hipchat_commit_log_format, ":time :user\n:message\n"
 set :hipchat_commit_log_time_format, "%Y/%m/%d %H:%M:%S"
+set :hipchat_commit_log_message_format, "^PROJECT-\d+" # extracts ticket number from message
 
 h2. Rails 3 Rake Task
 
