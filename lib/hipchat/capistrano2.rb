@@ -155,8 +155,17 @@ Capistrano::Configuration.instance(:must_exist).load do
 
     format = fetch(:hipchat_commit_log_format, ":time :user\n:message\n")
     time_format = fetch(:hipchat_commit_log_time_format, "%Y/%m/%d %H:%M:%S")
+    message_format = fetch(:hipchat_commit_log_message_format, nil)
 
     log_hashes.map do |log_hash|
+      if message_format
+        matches = log_hash[:message].match(/#{message_format}/)
+        log_hash[:message] = if matches
+                               matches[0]
+                             else
+                               ''
+                             end
+      end
       log_hash[:time] &&= log_hash[:time].localtime.strftime(time_format)
       log_hash.inject(format) do |l, (k, v)|
         l.gsub(/:#{k}/, v.to_s)
