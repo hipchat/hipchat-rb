@@ -27,17 +27,6 @@ module HipChat
     end
 
     def create_user(name, options={})
-      #if @api.version == 'v1' && options[:owner_user_id].nil?
-        #raise RoomMissingOwnerUserId, "V1 API Requires owner_user_id"
-      #end
-
-      #if name.length > 50
-        #raise RoomNameTooLong, "Room name #{name} is #{name.length} characters long. Limit is 50."
-      #end
-      #unless options[:guest_access].nil?
-        #options[:guest_access] = @api.bool_val(options[:guest_access])
-      #end
-
       response = self.class.post(@api.create_user_config[:url],
         :query => { :auth_token => @token },
         :body => {
@@ -69,6 +58,7 @@ module HipChat
       unless options[:guest_access].nil?
         options[:guest_access] = @api.bool_val(options[:guest_access])
       end
+
       response = self.class.post(@api.create_room_config[:url],
         :query => { :auth_token => @token },
         :body => {
@@ -76,6 +66,7 @@ module HipChat
           }.merge(options).send(@api.create_room_config[:body_format]),
         :headers => @api.headers
       )
+
       case response.code
       when 201, 200 #CREATED
         response.parsed_response
