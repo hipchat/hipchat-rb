@@ -29,7 +29,7 @@ shared_context "HipChatV1" do
                                           'Content-Type' => 'application/x-www-form-urlencoded'}).to_return(:status => 200, :body => "", :headers => {})
   end
 
-  def mock_successfull_rooms
+  def mock_successful_rooms
     stub_request(:get, "https://api.hipchat.com/v1/rooms/list").with(
                              :query => {:auth_token => "blah"},
                              :body => "",
@@ -91,7 +91,7 @@ shared_context "HipChatV2" do
                                                     'Content-Type' => 'application/json'}).to_return(:status => 200, :body => "", :headers => {})
   end
 
-  def mock_successfull_rooms
+  def mock_successful_rooms
     stub_request(:get, "https://api.hipchat.com/v2/room").with(
                              :query => {:auth_token => "blah"},
                              :body => "",

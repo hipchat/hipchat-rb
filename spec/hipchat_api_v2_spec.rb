@@ -21,7 +21,7 @@ describe "HipChat (API V2)" do
     end
 
     it "is successful from fetched room" do
-      mock_successfull_rooms
+      mock_successful_rooms
       mock_successful_history
 
       subject.rooms.should be_true
