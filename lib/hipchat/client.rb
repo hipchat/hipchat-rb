@@ -26,11 +26,32 @@ module HipChat
       Room.new(@token, { room_id: name }.merge(@options))
     end
 
+    def create_user(name, options={})
+      response = self.class.post(@api.create_user_config[:url],
+        :query => { :auth_token => @token },
+        :body => {
+          :name => name,
+          :email => options[:email]
+          }.merge(options).send(@api.create_user_config[:body_format]),
+        :headers => @api.headers
+      )
+
+      case response.code
+      when 201, 200 #CREATED
+        response.parsed_response
+      when 400
+        raise UnknownUser,  "Error: #{response.message}"
+      when 401
+        raise Unauthorized, "Access denied"
+      else
+        raise UnknownResponseCode, "Unexpected error #{response.code}"
+      end
+    end
+
     def create_room(name, options={})
       if @api.version == 'v1' && options[:owner_user_id].nil?
         raise RoomMissingOwnerUserId, "V1 API Requires owner_user_id"
       end
-
       if name.length > 50
         raise RoomNameTooLong, "Room name #{name} is #{name.length} characters long. Limit is 50."
       end
