@@ -28,7 +28,7 @@ module HipChat
           :message        => message,
           :message_format => options[:message_format],
           :color          => options[:color],
-          :notify         => @api.bool_val(options[:notify])
+          :notify         => options[:notify]
         }.send(@api.send_config[:body_format]),
         :headers => @api.headers
       )
