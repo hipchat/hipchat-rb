@@ -7,9 +7,9 @@ require 'json'
 require 'webmock/rspec'
 require 'coveralls'
 
-Dir["./spec/support/**/*.rb"].each {|f| require f}
-
 Coveralls.wear!
+
+Dir["./spec/support/**/*.rb"].each {|f| require f}
 
 RSpec.configure do |config|
   config.mock_with :rr
