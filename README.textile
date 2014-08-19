@@ -209,8 +209,11 @@ end
 h2. Chef Handler
 
 *APIv1 ONLY, use APIv1 Key*
+NOTE: APIv2 required for HipChatServer Beta
 
-Report on Chef runs. Within a Recipe:
+Report on Chef runs. 
+
+h3. Within a Recipe:
 
 bc.. include_recipe 'chef_handler'
 
@@ -222,6 +225,18 @@ chef_handler 'HipChat::NotifyRoom' do
   source File.join(Gem.all_load_paths.grep(/hipchat/).first,
                    'hipchat', 'chef.rb')
 end
+
+h3. With client.rb:
+
+bc..    require 'hipchat/chef'
+   hipchat_handler = HipChat::NotifyRoom.new("API_KEY", "HIPCHAT_ROOM")
+   exception_handlers << hipchat_handler
+
+h3. With HipChat Server Beta
+
+Add an "options" hash to set api v2 and your URL:
+* arguments ['API_KEY', 'HIPCHAT_ROOM', options={api_version: "v2", server_url: "https://hipchat.example.com"}]
+* hipchat_handler = HipChat::NotifyRoom.new("API_KEY", "HIPCHAT_ROOM", options={api_version: "v2", server_url: "https://hipchat.example.com"})
 
 h2. Copyright
 
