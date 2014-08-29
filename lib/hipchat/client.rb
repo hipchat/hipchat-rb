@@ -118,7 +118,7 @@ module HipChat
           User.new(@token, r.merge(:api_version => @api_version, :user_id => r['id']))
         end
       else
-        raise UnknownResponseCode, "Unexpected #{response.code} for room"
+        raise UnknownResponseCode, "Unexpected #{response.code} for user"
       end
     end
   end
