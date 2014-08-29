@@ -15,9 +15,10 @@ require 'hipchat'
 module HipChat
   class NotifyRoom < Chef::Handler
 
-    def initialize(api_token, room_name, notify_users=false, report_success=false, excluded_envs=[])
+    def initialize(api_token, room_name, options={}, notify_users=false, report_success=false, excluded_envs=[])
       @api_token = api_token
       @room_name = room_name
+      @options = options
       @notify_users = notify_users
       @report_success = report_success
       @excluded_envs = excluded_envs
@@ -36,7 +37,7 @@ module HipChat
                 end
 
         if msg
-          client = HipChat::Client.new(@api_token)
+          client = HipChat::Client.new(@api_token, @options)
           client[@room_name].send('Chef', msg, :notify => @notify_users, :color => color)
         end
       end
