@@ -137,6 +137,14 @@ module HipChat
           }
         }[version]
       end
+
+      def statistics_config
+        {
+          'v2' => {
+            :url => URI::escape("/#{room_id}/statistics")
+          }
+        }[version]
+      end
     end
 
     class User

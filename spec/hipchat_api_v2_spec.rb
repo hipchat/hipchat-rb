@@ -54,6 +54,48 @@ describe "HipChat (API V2)" do
     end
   end
 
+  describe "#statistics" do
+    include_context "HipChatV2"
+    it "is successful without custom options" do
+      mock_successful_statistics
+
+      room.statistics().should be_true
+    end
+
+    it "is successful from fetched room" do
+      mock_successful_rooms
+      mock_successful_statistics
+
+      subject.rooms.should be_true
+      subject.rooms.first.statistics.should be_true
+    end
+
+    it "fails when the room doen't exist" do
+      mock(HipChat::Room).get(anything, anything) {
+        OpenStruct.new(:code => 404)
+      }
+
+      lambda { room.statistics }.should raise_error(HipChat::UnknownRoom)
+    end
+
+    it "fails when we're not allowed to do so" do
+      mock(HipChat::Room).get(anything, anything) {
+        OpenStruct.new(:code => 401)
+      }
+
+      lambda { room.statistics }.should raise_error(HipChat::Unauthorized)
+    end
+
+    it "fails if we get an unknown response code" do
+      mock(HipChat::Room).get(anything, anything) {
+        OpenStruct.new(:code => 403)
+      }
+
+      lambda { room.statistics }.
+        should raise_error(HipChat::UnknownResponseCode)
+    end 
+  end
+
   describe "#topic" do
     include_context "HipChatV2"
     it "is successful without custom options" do
