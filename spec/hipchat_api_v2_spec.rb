@@ -182,6 +182,24 @@ describe "HipChat (API V2)" do
 
   end
 
+  describe "#update_room" do
+    include_context "HipChatV2"
+    let(:room_info) {
+      {
+        "name" => "hipchat",
+        "topic" => "hipchat topic",
+        "privacy" => "public",
+        "is_archived" => false,
+        "is_guest_accessible" => false,
+        "owner" => { "id" => "12345" }
+      }
+    }
+    it "successfully" do 
+      mock_successful_update_room("Hipchat", room_info)
+      room.update_room(room_info).should be_true
+    end
+  end
+
   describe "#invite" do
     include_context "HipChatV2"
 

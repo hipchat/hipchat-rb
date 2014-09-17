@@ -34,6 +34,39 @@ module HipChat
       end
     end
 
+    # Update a room
+    def update_room(options = {})
+      options = {
+        :privacy => "public",
+        :is_archived => false,
+        :is_guest_accessible => false
+      }.merge symbolize(options)
+
+      response = self.class.send(@api.topic_config[:method], @api.update_room_config[:url],
+        :query => { :auth_token => @token },
+        :body => {
+          :name => options[:name],
+          :topic => options[:topic],
+          :privacy => options[:privacy],
+          :is_archived => @api.bool_val(options[:is_archived]),
+          :is_guest_accessible => @api.bool_val(options[:is_guest_accessible]),
+          :owner => options[:owner]
+        }.to_json,
+        :headers => @api.headers)
+
+      puts response.body
+
+      case response.code
+      when 200, 204; true
+      when 404
+        raise Unknown Room, "Unknown room: `#{room_id}'"
+      when 401
+        raise Unauthorized, "Access denied to room `#{room_id}'"
+      else
+        raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
+      end
+    end
+
     # Invite user to this room
     def invite(user, reason="")
       response = self.class.post(@api.invite_config[:url]+"/#{user}",
@@ -188,5 +221,17 @@ module HipChat
         raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
       end
     end
+
+    private
+      def symbolize(obj)
+        return obj.reduce({}) do |memo, (k, v)|
+          memo.tap { |m| m[k.to_sym] = symbolize(v) }
+        end if obj.is_a? Hash
+          
+        return obj.reduce([]) do |memo, v| 
+          memo << symbolize(v); memo
+        end if obj.is_a? Array
+        obj
+      end
   end
 end
