@@ -17,13 +17,21 @@ module HipChat
     end
 
     #
-    # Send a private message to user.
+    # Send a private text message to user.
     #
     def send(message)
+      self.send_with_format(message, 'text')
+    end
+    
+    #
+    # Send a private text message to user specifying the message format
+    #
+    def send_with_format(message, message_format = 'text')
       response = self.class.post(@api.send_config[:url],
         :query => { :auth_token => @token },
         :body  => {
-          :message => message
+          :message => message,
+          :message_format => message_format
         }.send(@api.send_config[:body_format]),
         :headers => @api.headers
       )
