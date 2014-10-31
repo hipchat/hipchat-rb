@@ -197,7 +197,7 @@ Options like the room, API token, user name and notification flag can be set in 
 RAILS_ROOT/config/hipchat.yml:
 
 bc.. token: "<your token>"
-room: "Your room"
+room: ["Room name(s) or id(s)"] # this is an array
 user: "Your name" # Default to `whoami`
 notify: true # Defaults to false
 api_version: "v2" # optional, defaults to v1
