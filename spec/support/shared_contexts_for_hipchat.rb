@@ -112,6 +112,17 @@ shared_context "HipChatV2" do
                                    :format     => options[:format]}).to_return(canned_response)
   end
 
+  def mock_successful_statistics(options={})
+    stub_request(:get, "https://api.hipchat.com/v2/room/Hipchat/statistics").with(:query => {:auth_token => "blah",
+                                   :room_id    => "Hipchat",
+                                   :date       => options[:date],
+                                   :timezone   => options[:timezone],
+                                   :format     => options[:format]}).to_return(
+                                          :status => 200,
+                                          :body => '{"last_active": "2014-09-02T21:33:54+00:00", "links": {"self": "https://api.hipchat.com/v2/room/12345/statistics"},  "messages_sent": 10}',
+                                          :headers => {})
+  end
+
   def mock_successful_room_creation(name, options={})
     stub_request(:post, "https://api.hipchat.com/v2/room").with(
                              :query => {:auth_token => "blah"},

@@ -80,6 +80,9 @@ client['my room'].history()
 # Get history for a date in time with a particular timezone (default is latest 75 messages, timezone default is 'UTC')
 client['my room'].history(:date => '2010-11-19', :timezone => 'PST')
 
+# Get statistics from a room
+client['my room'].statistics()
+
 # Create a new room (see https://www.hipchat.com/docs/apiv2/method/create_room)
 client.create_room("Name", options = {})
 

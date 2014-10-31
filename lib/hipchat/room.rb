@@ -188,5 +188,31 @@ module HipChat
         raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
       end
     end
+
+    # Pull this room's statistics
+    def statistics(options = {})
+
+      response = self.class.get(@api.statistics_config[:url],
+        :query => {
+          :room_id    => room_id,
+          :date       => options[:date],
+          :timezone   => options[:timezone],
+          :format     => options[:format],
+          :auth_token => @token,
+        },
+        :headers => @api.headers
+      )
+
+      case response.code
+      when 200
+        response.body
+      when 404
+        raise UnknownRoom,  "Unknown room: `#{room_id}'"
+      when 401
+        raise Unauthorized, "Access denied to room `#{room_id}'"
+      else
+        raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
+      end
+    end
   end
 end
