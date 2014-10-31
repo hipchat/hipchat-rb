@@ -90,6 +90,16 @@ module HipChat
         }[version]
       end
 
+      def update_room_config
+        {
+          "v2" => {
+            :url => URI::escape("/#{room_id}"),
+            :method => :put,
+            :body_format => :to_json
+          }
+        }[version]
+      end
+
       def invite_config
         {
           'v2' => {
