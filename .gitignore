@@ -13,6 +13,10 @@ tmtags
 ## VIM
 *.swp
 
+## IntelliJ
+*.iml
+.idea
+
 ## PROJECT::GENERAL
 coverage
 rdoc
