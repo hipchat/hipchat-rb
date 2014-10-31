@@ -142,6 +142,24 @@ shared_context "HipChatV2" do
                    'Content-Type' => 'application/json'}).to_return(:status => 200, :body => "{\"id\":\"#{room_id}\"}", :headers => {})
   end
 
+  def mock_successful_update_room(room_id="1234", options={})
+    stub_request(:put, "https://api.hipchat.com/v2/room/#{room_id}").with(
+      :query => {:auth_token => "blah"},
+      :body => {
+        :name => "hipchat",
+        :topic => "hipchat topic",
+        :privacy => "public",
+        :is_archived => false,
+        :is_guest_accessible => false,
+        :owner => { :id => "12345" }
+      }.to_json,
+      :headers => {"Accept" => "application/json",
+                    "Content-Type" => "application/json"}).to_return(
+                    :status => 204,
+                    :body => "", 
+                    :headers => {})
+  end
+
   def mock_successful_invite(options={})
     options = {:user_id => "1234"}.merge(options)
     stub_request(:post, "https://api.hipchat.com/v2/room/Hipchat/invite/#{options[:user_id]}").with(

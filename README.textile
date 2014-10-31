@@ -89,6 +89,10 @@ client.create_room("Name", options = {})
 # Get room data (see https://www.hipchat.com/docs/apiv2/method/get_room)
 client['my room'].get_room
 
+# Update room data (see https://www.hipchat.com/docs/apiv2/method/update_room)
+It's recommended to call client['my room'].get_room then pass in modified hash attributes to #update_room
+client['my room'].update_room(options = {})
+
 # Invite user to room (see https://www.hipchat.com/docs/apiv2/method/invite_user)
 client['my room'].invite("USER_ID_OR_NAME", options = {})
 
@@ -127,6 +131,10 @@ client.create_room("Name", options = {})
 
 # Get room data (see https://www.hipchat.com/docs/apiv2/method/get_room)
 client['my room'].get_room
+
+# Update room data (see https://www.hipchat.com/docs/apiv2/method/update_room)
+It's easiest to call client['my room'].get_room, parse the json and then pass in modified hash attributes
+client['my room'].update_room(options = {})
 
 # Invite user to room (see https://www.hipchat.com/docs/apiv2/method/invite_user)
 client['my room'].invite("USER_ID_OR_NAME", options = {})
