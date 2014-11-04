@@ -15,20 +15,21 @@ require 'hipchat'
 module HipChat
   class NotifyRoom < Chef::Handler
 
-    def initialize(api_token, room_name, options={}, msg_options={}, notify_users=false, report_success=false, excluded_envs=[], msg_prefix='')
+    def initialize(api_token, room_name, options={})
+      defaults = { hipchat_options: {}, msg_options: {}, excluded_envs: [], msg_prefix: ''}
+      options = defaults.merge(options)
       @api_token = api_token
       @room_name = room_name
-      @options = options
-      @report_success = report_success
-      @msg_options = msg_options
-      @msg_options[:notify] = notify_users 
-      @excluded_envs = excluded_envs
+      @hipchat_options = options[:hipchat_options]
+      @msg_options = options[:msg_options]
+      @msg_prefix = options[:msg_prefix]
+      @excluded_envs = options[:excluded_envs]
     end
 
     def report
       unless @excluded_envs.include?(node.chef_environment)
         msg = if run_status.failed? then "Failure on \"#{node.name}\" (\"#{node.chef_environment}\" env): #{run_status.formatted_exception}"
-              elsif run_status.success? && @report_success
+              elsif run_status.success? && @msg_options[:notify]
                 "Chef run on \"#{node.name}\" completed in #{run_status.elapsed_time.round(2)} seconds"
               else nil
               end
@@ -38,8 +39,8 @@ module HipChat
                 end
 
         if msg
-          client = HipChat::Client.new(@api_token, @options)
-          client[@room_name].send('Chef', [msg_prefix, msg].join(' '), @msg_options)
+          client = HipChat::Client.new(@api_token, @hipchat_options)
+          client[@room_name].send('Chef', [@msg_prefix, msg].join(' '), @msg_options)
         end
       end
     end
