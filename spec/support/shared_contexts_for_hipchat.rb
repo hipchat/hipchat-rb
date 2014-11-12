@@ -41,13 +41,14 @@ shared_context "HipChatV1" do
   end
 
   def mock_successful_history(options={})
-    options = { :date => 'recent', :timezone => 'UTC', :format => 'JSON' }.merge(options)
+    options = { :date => 'recent', :timezone => 'UTC', :format => 'JSON', :'max-results' => 100 }.merge(options)
     canned_response = File.new(HISTORY_JSON_PATH)
     stub_request(:get, "https://api.hipchat.com/v1/rooms/history").with(:query => {:auth_token => "blah",
-                                   :room_id    => "Hipchat",
-                                   :date       => options[:date],
-                                   :timezone   => options[:timezone],
-                                   :format     => options[:format]}).to_return(canned_response)
+                                   :room_id       => "Hipchat",
+                                   :date          => options[:date],
+                                   :timezone      => options[:timezone],
+                                   :'max-results' => options[:'max-results'],
+                                   :format        => options[:format]}).to_return(canned_response)
   end
 
   def mock_successful_room_creation(name, options={})
@@ -103,12 +104,13 @@ shared_context "HipChatV2" do
   end
 
   def mock_successful_history(options={})
-    options = { :date => 'recent', :timezone => 'UTC', :format => 'JSON' }.merge(options)
+    options = { :date => 'recent', :timezone => 'UTC', :format => 'JSON', :'max-results' => 100 }.merge(options)
     canned_response = File.new(HISTORY_JSON_PATH)
     stub_request(:get, "https://api.hipchat.com/v2/room/Hipchat/history").with(:query => {:auth_token => "blah",
                                    :room_id    => "Hipchat",
                                    :date       => options[:date],
                                    :timezone   => options[:timezone],
+                                   :'max-results' => options[:'max-results'],
                                    :format     => options[:format]}).to_return(canned_response)
   end
 
