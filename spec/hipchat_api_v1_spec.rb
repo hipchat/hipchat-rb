@@ -173,7 +173,7 @@ describe "HipChat (API V1)" do
   describe "#send user message" do
     it "fails because API V1 doesn't support user operations" do
 
-      lambda { HipChat::Client.new("blah", :api_version => @api_version).user('12345678') }.
+      lambda { HipChat::Client.new("blah", :api_version => @api_version).user('12345678').send('nope') }.
         should raise_error(HipChat::InvalidApiVersion)
     end
   end

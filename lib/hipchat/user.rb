@@ -10,8 +10,7 @@ module HipChat
 
     def initialize(token, params)
       @token = token
-      @api = HipChat::ApiVersion::User.new(params[:user_id],
-                                           params)
+      @api = HipChat::ApiVersion::User.new(params)
       self.class.base_uri(@api.base_uri)
       super(params)
     end
@@ -43,15 +42,14 @@ module HipChat
     # Get a user's details.
     #
     def view
-      puts "#{@api.base_uri}#{@api.view_config[:url]}"
       response = self.class.get(@api.view_config[:url],
-        :query => { :auth_token => @token },
+        :query => { :auth_token => @token }.merge(@api.view_config[:query_params]),
         :headers => @api.headers
       )
 
       case response.code
       when 200
-        User.new(@token, response.merge(:api_version => 'v2'))
+        User.new(@token, response.merge(:api_version => @api.version))
       else
         raise UnknownResponseCode, "Unexpected #{response.code} for view message to `#{user_id}'"
       end

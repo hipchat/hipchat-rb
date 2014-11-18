@@ -1,5 +1,3 @@
-require 'hipchat/api_version'
-
 module HipChat
 
   class Client
@@ -23,12 +21,12 @@ module HipChat
     end
 
     def [](name)
-      Room.new(@token, { room_id: name }.merge(@options))
+      HipChat::Room.new(@token, { room_id: name, :api_version => @api_version, :server_url => @options[:server_url] })
     end
 
     def create_room(name, options={})
       if @api.version == 'v1' && options[:owner_user_id].nil?
-        raise RoomMissingOwnerUserId, "V1 API Requires owner_user_id"
+        raise RoomMissingOwnerUserId, 'V1 API Requires owner_user_id'
       end
 
       if name.length > 50
@@ -52,14 +50,14 @@ module HipChat
       when 400
         raise UnknownRoom,  "Error: #{response.message}"
       when 401
-        raise Unauthorized, "Access denied"
+        raise Unauthorized, 'Access denied'
       else
         raise UnknownResponseCode, "Unexpected error #{response.code}"
       end
     end
 
     def user(name)
-      User.new(@token, { :user_id => name }.merge(@options))
+      HipChat::User.new(@token, { :user_id => name, :api_version => @api_version, :server_url => @options[:server_url] })
     end
 
     def users
@@ -97,7 +95,7 @@ module HipChat
       case response.code
       when 200
         response[@api.rooms_config[:data_key]].map do |r|
-          Room.new(@token, r.merge(:api_version => @api_version, :room_id => r['id'], :server_url => @options[:server_url]))
+          HipChat::Room.new(@token, r.merge(:api_version => @api_version, :server_url => @options[:server_url]))
         end
       else
         raise UnknownResponseCode, "Unexpected #{response.code} for room"
@@ -114,8 +112,8 @@ module HipChat
       )
       case response.code
       when 200
-        response[@api.users_config[:data_key]].map do |r|
-          User.new(@token, r.merge(:api_version => @api_version, :user_id => r['id']))
+        response[@api.users_config[:data_key]].map do |u|
+          HipChat::User.new(@token, u.merge(:api_version => @api_version))
         end
       else
         raise UnknownResponseCode, "Unexpected #{response.code} for user"
