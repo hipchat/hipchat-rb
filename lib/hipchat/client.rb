@@ -21,7 +21,7 @@ module HipChat
     end
 
     def [](name)
-      HipChat::Room.new(@token, { room_id: name }.merge(@options))
+      HipChat::Room.new(@token, { room_id: name, :api_version => @api_version, :server_url => @options[:server_url] })
     end
 
     def create_room(name, options={})
@@ -57,7 +57,7 @@ module HipChat
     end
 
     def user(name)
-      User.new(@token, { :user_id => name }.merge(@options))
+      HipChat::User.new(@token, { :user_id => name, :api_version => @api_version, :server_url => @options[:server_url] })
     end
 
     def users
@@ -112,8 +112,8 @@ module HipChat
       )
       case response.code
       when 200
-        response[@api.users_config[:data_key]].map do |r|
-          User.new(@token, r.merge(:api_version => @api_version, :user_id => r['id']))
+        response[@api.users_config[:data_key]].map do |u|
+          HipChat::User.new(@token, u.merge(:api_version => @api_version))
         end
       else
         raise UnknownResponseCode, "Unexpected #{response.code} for user"

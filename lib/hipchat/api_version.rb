@@ -58,9 +58,15 @@ module HipChat
 
       def users_config
         {
-          :url => '/user',
-          :data_key => 'items'
-        }
+          'v1' => {
+            :url => '/users/list',
+            :data_key => 'users'
+          },
+          'v2' => {
+            :url => '/user',
+            :data_key => 'items'
+          }
+        }[version]
       end
     end
 
@@ -68,7 +74,7 @@ module HipChat
 
       def initialize(options = {})
         @version = options[:api_version]
-        options[:room_id] ||= options[get_room_config[:id_attribute]]
+        options[:room_id] ||= options[get_id_attribute]
         @room_id = options[:room_id]
         if @version.eql?('v1')
           @base_uri = "#{options[:server_url]}/v1/rooms"
@@ -83,14 +89,19 @@ module HipChat
 
       attr_reader :version, :base_uri, :room_id, :headers
 
+      def get_id_attribute
+        version.eql?('v1') ? 'room_id' : 'id'
+      end
+
       def get_room_config
         {
           'v1' => {
-              :id_attribute => 'room_id'
-          },
+            :url => URI::escape('/show'),
+            :query_params => { :room_id => room_id }
+        },
           'v2' => {
             :url => URI::escape("/#{room_id}"),
-            :id_attribute => 'id'
+            :query_params => { }
           }
         }[version]
       end
@@ -164,17 +175,30 @@ module HipChat
 
     class User
 
-      def initialize(user_id, options)
-        @user_id = user_id
-        raise InvalidApiVersion,  "user API calls invalid for API v1" if ! options[:api_version].eql?('v2')
-        @base_uri = "#{options[:server_url]}/v2/user"
-        @headers = {'Accept' => 'application/json',
-          'Content-Type' => 'application/json'}
+      def initialize(options)
+        @version = options[:api_version]
+        options[:user_id] ||= options[get_id_attribute]
+        @user_id = options[:user_id]
+        if @version.eql?('v1')
+          @base_uri = "#{options[:server_url]}/v1/users"
+          @headers = {'Accept' => 'application/json',
+                      'Content-Type' => 'application/x-www-form-urlencoded'}
+        else
+          @base_uri = "#{options[:server_url]}/v2/user"
+          @headers = {'Accept' => 'application/json',
+                      'Content-Type' => 'application/json'}
+        end
       end
 
       attr_reader :version, :base_uri, :user_id, :headers
 
+      def get_id_attribute
+        version.eql?('v1') ? 'user_id' : 'id'
+      end
+
       def send_config
+        raise InvalidApiVersion, 'This functionality is not supported in API v1' unless version.eql?('v2')
+
         {
           :url => URI::escape("/#{user_id}/message"),
           :body_format => :to_json
@@ -183,9 +207,17 @@ module HipChat
 
       def view_config
         {
-          :url => URI::escape("/#{user_id}"),
-          :body_format => :to_json
-        }
+          'v1' => {
+            :url => URI::escape('/show'),
+            :body_format => :to_json,
+            :query_params => { :user_id => user_id }
+          },
+          'v2' => {
+            :url => URI::escape("/#{user_id}"),
+            :body_format => :to_json,
+            :query_params => {}
+          }
+        }[version]
       end
     end
   end

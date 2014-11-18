@@ -18,7 +18,7 @@ module HipChat
     # Retrieve data for this room
     def get_room
       response = self.class.get(@api.get_room_config[:url],
-        :query => {:auth_token => @token },
+        :query => {:auth_token => @token }.merge(@api.get_room_config[:query_params]),
         :headers => @api.headers
       )
 
@@ -53,8 +53,6 @@ module HipChat
           :owner => options[:owner]
         }.to_json,
         :headers => @api.headers)
-
-      puts response.body
 
       case response.code
       when 200, 204; true
