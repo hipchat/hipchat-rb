@@ -67,8 +67,9 @@ module HipChat
     class Room < ApiVersion
 
       def initialize(options = {})
-        @room_id = options[:room_id]
         @version = options[:api_version]
+        options[:room_id] ||= options[get_room_config[:id_attribute]]
+        @room_id = options[:room_id]
         if @version.eql?('v1')
           @base_uri = "#{options[:server_url]}/v1/rooms"
           @headers = {'Accept' => 'application/json',
@@ -84,15 +85,19 @@ module HipChat
 
       def get_room_config
         {
+          'v1' => {
+              :id_attribute => 'room_id'
+          },
           'v2' => {
-            :url => URI::escape("/#{room_id}")
+            :url => URI::escape("/#{room_id}"),
+            :id_attribute => 'id'
           }
         }[version]
       end
 
       def update_room_config
         {
-          "v2" => {
+          'v2' => {
             :url => URI::escape("/#{room_id}"),
             :method => :put,
             :body_format => :to_json

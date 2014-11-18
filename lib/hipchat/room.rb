@@ -37,7 +37,7 @@ module HipChat
     # Update a room
     def update_room(options = {})
       options = {
-        :privacy => "public",
+        :privacy => 'public',
         :is_archived => false,
         :is_guest_accessible => false
       }.merge symbolize(options)
@@ -68,7 +68,7 @@ module HipChat
     end
 
     # Invite user to this room
-    def invite(user, reason="")
+    def invite(user, reason='')
       response = self.class.post(@api.invite_config[:url]+"/#{user}",
         :query => { :auth_token => @token },
         :body => {
@@ -112,7 +112,7 @@ module HipChat
         raise UsernameTooLong, "Username #{from} is `#{from.length} characters long. Limit is 15'"
       end
       options = if options_or_notify == true or options_or_notify == false
-        warn "DEPRECATED: Specify notify flag as an option (e.g., :notify => true)"
+        warn 'DEPRECATED: Specify notify flag as an option (e.g., :notify => true)'
         { :notify => options_or_notify }
       else
         options_or_notify || {}

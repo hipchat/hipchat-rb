@@ -1,7 +1,8 @@
 require 'hipchat/railtie' if defined?(Rails::Railtie)
-require "hipchat/version"
+require 'hipchat/version'
 
 module HipChat
+  require 'hipchat/api_version'
   require 'hipchat/errors'
   require 'hipchat/room'
   require 'hipchat/client'

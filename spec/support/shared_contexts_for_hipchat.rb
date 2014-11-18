@@ -36,7 +36,7 @@ shared_context "HipChatV1" do
                              :headers => {'Accept' => 'application/json',
                                           'Content-Type' => 'application/x-www-form-urlencoded'}).to_return(
                                             :status => 200,
-                                            :body => '{"rooms":[{"id": "Hipchat", "links": {"self": "https://api.hipchat.com/v2/room/12345"}}]}',
+                                            :body => '{"rooms":[{"room_id": "Hipchat", "links": {"self": "https://api.hipchat.com/v2/room/12345"}}]}',
                                             :headers => {})
   end
 
