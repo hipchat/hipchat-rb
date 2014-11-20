@@ -219,6 +219,16 @@ module HipChat
           }
         }[version]
       end
+
+      def history_config
+        raise InvalidApiVersion, 'This functionality is not supported in API v1' unless version.eql?('v2')
+
+        {
+          :url => URI::escape("/#{user_id}/history/latest"),
+          :body_format => :to_json,
+          :allowed_params => %i(max-results timezone not-before)
+        }
+      end
     end
   end
 end

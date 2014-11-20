@@ -282,4 +282,29 @@ describe "HipChat (API V2)" do
       lambda { user.send "" }.should raise_error(HipChat::Unauthorized)
     end
   end
+
+  describe '#get_user_history' do
+    include_context 'HipChatV2'
+
+    it 'successfully returns history' do
+      mock_successful_user_history
+      user.history.should be_truthy
+    end
+
+    it "but fails when the user doesn't exist" do
+      mock(HipChat::User).post(anything, anything) {
+        OpenStruct.new(:code => 404)
+      }
+
+      lambda { user.send "" }.should raise_error(HipChat::UnknownUser)
+    end
+
+    it "but fails when we're not allowed to do so" do
+      mock(HipChat::User).post(anything, anything) {
+        OpenStruct.new(:code => 401)
+      }
+
+      lambda { user.send "" }.should raise_error(HipChat::Unauthorized)
+    end
+  end
 end
