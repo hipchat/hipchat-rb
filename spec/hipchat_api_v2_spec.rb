@@ -12,20 +12,20 @@ describe "HipChat (API V2)" do
     it "is successful without custom options" do
       mock_successful_history()
 
-      room.history().should be_true
+      expect(room.history()).to be_truthy
     end
 
     it "is successful with custom options" do
       mock_successful_history(:timezone => 'America/Los_Angeles', :date => '2010-11-19')
-      room.history(:timezone => 'America/Los_Angeles', :date => '2010-11-19').should be_true
+      expect(room.history(:timezone => 'America/Los_Angeles', :date => '2010-11-19')).to be_truthy
     end
 
     it "is successful from fetched room" do
       mock_successful_rooms
       mock_successful_history
 
-      subject.rooms.should be_true
-      subject.rooms.first.history.should be_true
+      expect(subject.rooms).to be_truthy
+      expect(subject.rooms.first.history).to be_truthy
     end
 
     it "fails when the room doen't exist" do
@@ -33,7 +33,7 @@ describe "HipChat (API V2)" do
         OpenStruct.new(:code => 404)
       }
 
-      lambda { room.history }.should raise_error(HipChat::UnknownRoom)
+      expect { room.history }.to raise_error(HipChat::UnknownRoom)
     end
 
     it "fails when we're not allowed to do so" do
@@ -41,7 +41,7 @@ describe "HipChat (API V2)" do
         OpenStruct.new(:code => 401)
       }
 
-      lambda { room.history }.should raise_error(HipChat::Unauthorized)
+      expect { room.history }.to raise_error(HipChat::Unauthorized)
     end
 
     it "fails if we get an unknown response code" do
@@ -49,8 +49,7 @@ describe "HipChat (API V2)" do
         OpenStruct.new(:code => 403)
       }
 
-      lambda { room.history }.
-        should raise_error(HipChat::UnknownResponseCode)
+      expect { room.history }.to raise_error(HipChat::UnknownResponseCode)
     end
   end
 
@@ -59,15 +58,15 @@ describe "HipChat (API V2)" do
     it "is successful without custom options" do
       mock_successful_statistics
 
-      room.statistics().should be_true
+      expect(room.statistics()).to be_truthy
     end
 
     it "is successful from fetched room" do
       mock_successful_rooms
       mock_successful_statistics
 
-      subject.rooms.should be_true
-      subject.rooms.first.statistics.should be_true
+      expect(subject.rooms).to be_truthy
+      expect(subject.rooms.first.statistics).to be_truthy
     end
 
     it "fails when the room doen't exist" do
@@ -75,7 +74,7 @@ describe "HipChat (API V2)" do
         OpenStruct.new(:code => 404)
       }
 
-      lambda { room.statistics }.should raise_error(HipChat::UnknownRoom)
+      expect { room.statistics }.to raise_error(HipChat::UnknownRoom)
     end
 
     it "fails when we're not allowed to do so" do
@@ -83,7 +82,7 @@ describe "HipChat (API V2)" do
         OpenStruct.new(:code => 401)
       }
 
-      lambda { room.statistics }.should raise_error(HipChat::Unauthorized)
+      expect { room.statistics }.to raise_error(HipChat::Unauthorized)
     end
 
     it "fails if we get an unknown response code" do
@@ -91,8 +90,7 @@ describe "HipChat (API V2)" do
         OpenStruct.new(:code => 403)
       }
 
-      lambda { room.statistics }.
-        should raise_error(HipChat::UnknownResponseCode)
+      expect { room.statistics }.to raise_error(HipChat::UnknownResponseCode)
     end 
   end
 
@@ -101,13 +99,13 @@ describe "HipChat (API V2)" do
     it "is successful without custom options" do
       mock_successful_topic_change("Nice topic")
 
-      room.topic("Nice topic").should be_true
+      expect(room.topic("Nice topic")).to be_truthy
     end
 
     it "is successful with a custom from" do
       mock_successful_topic_change("Nice topic", :from => "Me")
 
-      room.topic("Nice topic", :from => "Me").should be_true
+      expect(room.topic("Nice topic", :from => "Me")).to be_truthy
     end
 
     it "fails when the room doesn't exist" do
@@ -115,7 +113,7 @@ describe "HipChat (API V2)" do
         OpenStruct.new(:code => 404)
       }
 
-      lambda { room.topic "" }.should raise_error(HipChat::UnknownRoom)
+      expect { room.topic "" }.to raise_error(HipChat::UnknownRoom)
     end
 
     it "fails when we're not allowed to do so" do
@@ -123,7 +121,7 @@ describe "HipChat (API V2)" do
           OpenStruct.new(:code => 401)
         }
 
-      lambda { room.topic "" }.should raise_error(HipChat::Unauthorized)
+      expect { room.topic "" }.to raise_error(HipChat::Unauthorized)
     end
 
     it "fails if we get an unknown response code" do
@@ -131,8 +129,7 @@ describe "HipChat (API V2)" do
           OpenStruct.new(:code => 403)
         }
 
-      lambda { room.topic "" }.
-        should raise_error(HipChat::UnknownResponseCode)
+      expect { room.topic "" }.to raise_error(HipChat::UnknownResponseCode)
     end
   end
 
@@ -141,25 +138,25 @@ describe "HipChat (API V2)" do
     it "successfully without custom options" do
       mock_successful_send 'Dude', 'Hello world'
 
-      room.send("Dude", "Hello world").should be_true
+      expect(room.send("Dude", "Hello world")).to be_truthy
     end
 
     it "successfully with notifications on as option" do
       mock_successful_send 'Dude', 'Hello world', :notify => true
 
-      room.send("Dude", "Hello world", :notify => true).should be_true
+      expect(room.send("Dude", "Hello world", :notify => true)).to be_truthy
     end
 
     it "successfully with custom color" do
       mock_successful_send 'Dude', 'Hello world', :color => 'red'
 
-      room.send("Dude", "Hello world", :color => 'red').should be_true
+      expect(room.send("Dude", "Hello world", :color => 'red')).to be_truthy
     end
 
     it "successfully with text message_format" do
       mock_successful_send 'Dude', 'Hello world', :message_format => 'text'
 
-      room.send("Dude", "Hello world", :message_format => 'text').should be_true
+      expect(room.send("Dude", "Hello world", :message_format => 'text')).to be_truthy
     end
 
     it "but fails when the room doesn't exist" do
@@ -167,7 +164,7 @@ describe "HipChat (API V2)" do
         OpenStruct.new(:code => 404)
       }
 
-      lambda { room.send "", "" }.should raise_error(HipChat::UnknownRoom)
+      expect { room.send "", "" }.to raise_error(HipChat::UnknownRoom)
     end
 
     it "but fails when we're not allowed to do so" do
@@ -175,11 +172,11 @@ describe "HipChat (API V2)" do
         OpenStruct.new(:code => 401)
       }
 
-      lambda { room.send "", "" }.should raise_error(HipChat::Unauthorized)
+      expect { room.send "", "" }.to raise_error(HipChat::Unauthorized)
     end
 
     it "but fails if the username is more than 15 chars" do
-      lambda { room.send "a very long username here", "a message" }.should raise_error(HipChat::UsernameTooLong)
+      expect { room.send "a very long username here", "a message" }.to raise_error(HipChat::UsernameTooLong)
     end
 
     it "but fails if we get an unknown response code" do
@@ -187,8 +184,7 @@ describe "HipChat (API V2)" do
         OpenStruct.new(:code => 403)
       }
 
-      lambda { room.send "", "" }.
-        should raise_error(HipChat::UnknownResponseCode)
+      expect { room.send "", "" }.to raise_error(HipChat::UnknownResponseCode)
     end
   end
 
@@ -198,18 +194,18 @@ describe "HipChat (API V2)" do
     it "successfully with room name" do
       mock_successful_room_creation("A Room")
 
-      subject.create_room("A Room").should be_true
+      expect(subject.create_room("A Room")).to be_truthy
     end
 
     it "successfully with custom parameters" do
       mock_successful_room_creation("A Room", {:owner_user_id => "123456", :privacy => "private", :guest_access => true})
 
-      subject.create_room("A Room", {:owner_user_id => "123456", :privacy => "private", :guest_access =>true}).should be_true
+      expect(subject.create_room("A Room", {:owner_user_id => "123456", :privacy => "private", :guest_access =>true})).to be_truthy
     end
 
     it "but fail is name is longer then 50 char" do
-      lambda { subject.create_room("A Room that is too long that I should fail right now") }.
-        should raise_error(HipChat::RoomNameTooLong)
+      expect { subject.create_room("A Room that is too long that I should fail right now") }.
+        to raise_error(HipChat::RoomNameTooLong)
     end
   end
 
@@ -219,7 +215,7 @@ describe "HipChat (API V2)" do
     it "successfully" do
       mock_successful_get_room("Hipchat")
 
-      room.get_room.should be_true
+      expect(room.get_room).to be_truthy
     end
 
   end
@@ -238,7 +234,7 @@ describe "HipChat (API V2)" do
     }
     it "successfully" do 
       mock_successful_update_room("Hipchat", room_info)
-      room.update_room(room_info).should be_true
+      expect(room.update_room(room_info)).to be_truthy
     end
   end
 
@@ -248,13 +244,13 @@ describe "HipChat (API V2)" do
     it "successfully with user_id" do
       mock_successful_invite()
 
-      room.invite("1234").should be_true
+      expect(room.invite("1234")).to be_truthy
     end
 
     it "successfully with custom parameters" do
       mock_successful_invite({:user_id => "321", :reason => "A great reason"})
 
-      room.invite("321", "A great reason").should be_true
+      expect(room.invite("321", "A great reason")).to be_truthy
     end
   end
 
@@ -263,7 +259,7 @@ describe "HipChat (API V2)" do
     it "successfully with a standard message" do
       mock_successful_user_send 'Equal bytes for everyone'
 
-      user.send('Equal bytes for everyone').should be_true
+      expect(user.send('Equal bytes for everyone')).to be_truthy
     end
 
     it "but fails when the user doesn't exist" do
@@ -271,7 +267,7 @@ describe "HipChat (API V2)" do
         OpenStruct.new(:code => 404)
       }
 
-      lambda { user.send "" }.should raise_error(HipChat::UnknownUser)
+      expect { user.send "" }.to raise_error(HipChat::UnknownUser)
     end
 
     it "but fails when we're not allowed to do so" do
@@ -279,7 +275,7 @@ describe "HipChat (API V2)" do
         OpenStruct.new(:code => 401)
       }
 
-      lambda { user.send "" }.should raise_error(HipChat::Unauthorized)
+      expect { user.send "" }.to raise_error(HipChat::Unauthorized)
     end
   end
 end
