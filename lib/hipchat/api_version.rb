@@ -138,6 +138,15 @@ module HipChat
         }[version]
       end
 
+      def send_file_config
+        {
+          'v2' => {
+            :url => URI::escape("/#{room_id}/share/file"),
+            :body_format => :to_json
+          }
+        }[version]
+      end
+
       def topic_config
         {
           'v1' => {
@@ -201,6 +210,13 @@ module HipChat
 
         {
           :url => URI::escape("/#{user_id}/message"),
+          :body_format => :to_json
+        }
+      end
+
+      def send_file_config
+        {
+          :url => URI::escape("/#{user_id}/share/file"),
           :body_format => :to_json
         }
       end

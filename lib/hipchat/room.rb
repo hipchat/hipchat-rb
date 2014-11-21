@@ -5,6 +5,7 @@ module HipChat
 
   class Room < OpenStruct
     include HTTParty
+    include FileHelper
 
     format   :json
 
@@ -142,6 +143,40 @@ module HipChat
       end
     end
 
+    # Send a file to this room.
+    #
+    # Usage:
+    #
+    #   # Default
+    #   send_file 'nickname', 'some message', File.open("/path/to/file")
+    def send_file(from, message, file)
+      if from.length > 15
+        raise UsernameTooLong, "Username #{from} is `#{from.length} characters long. Limit is 15'"
+      end
+
+      response = self.class.post(@api.send_file_config[:url],
+        :query => { :auth_token => @token },
+        :body  => file_body(
+          {
+            :room_id        => room_id,
+            :from           => from,
+            :message        => message,
+          }.send(@api.send_config[:body_format]), file
+        ),
+        :headers => file_body_headers(@api.headers)
+      )
+
+      case response.code
+      when 200, 204; true
+      when 404
+        raise UnknownRoom,  "Unknown room: `#{room_id}'"
+      when 401
+        raise Unauthorized, "Access denied to room `#{room_id}'"
+      else
+        raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
+      end
+    end
+
     # Change this room's topic
     #
     # Usage:
@@ -257,8 +292,8 @@ module HipChat
         return obj.reduce({}) do |memo, (k, v)|
           memo.tap { |m| m[k.to_sym] = symbolize(v) }
         end if obj.is_a? Hash
-          
-        return obj.reduce([]) do |memo, v| 
+
+        return obj.reduce([]) do |memo, v|
           memo << symbolize(v); memo
         end if obj.is_a? Array
         obj
