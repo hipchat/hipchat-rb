@@ -226,7 +226,7 @@ module HipChat
         {
           :url => URI::escape("/#{user_id}/history/latest"),
           :body_format => :to_json,
-          :allowed_params => %i(max-results timezone not-before)
+          :allowed_params => [:'max-results', :timezone, :'not-before']
         }
       end
     end
