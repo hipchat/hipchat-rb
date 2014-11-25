@@ -5,9 +5,13 @@ require 'rspec'
 require 'rspec/autorun'
 require 'json'
 require 'webmock/rspec'
-require 'coveralls'
 
-Coveralls.wear!
+begin
+  require 'coveralls'
+  Coveralls.wear!
+rescue LoadError
+  warn 'warning: coveralls gem not found; skipping coverage'
+end
 
 Dir["./spec/support/**/*.rb"].each {|f| require f}
 
