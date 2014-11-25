@@ -282,4 +282,17 @@ describe "HipChat (API V2)" do
       lambda { user.send "" }.should raise_error(HipChat::Unauthorized)
     end
   end
+
+  describe '#get_user_history' do
+    include_context 'HipChatV2'
+
+    it 'successfully returns history' do
+      mock_successful_user_history
+      user.history.should be_truthy
+    end
+
+    it 'has allowed params' do
+      expect(user.instance_variable_get(:@api).history_config[:allowed_params]).to eq([:'max-results', :timezone, :'not-before'])
+    end
+  end
 end

@@ -156,7 +156,7 @@ shared_context "HipChatV2" do
       :headers => {"Accept" => "application/json",
                     "Content-Type" => "application/json"}).to_return(
                     :status => 204,
-                    :body => "", 
+                    :body => "",
                     :headers => {})
   end
 
@@ -180,5 +180,13 @@ shared_context "HipChatV2" do
                                    :body    => {:message => "Equal bytes for everyone"},
                                    :headers => {'Accept' => 'application/json',
                                                 'Content-Type' => 'application/json'}).to_return(:status => 200, :body => "", :headers => {})
+  end
+
+  def mock_successful_user_history()
+    canned_response = File.new(HISTORY_JSON_PATH)
+    url = 'https://api.hipchat.com/v2/user/12345678/history/latest'
+    stub_request(:get, url).with(:query => { :auth_token => "blah" },
+                                 :headers => { 'Accept' => 'application/json',
+                                              'Content-Type' => 'application/json' }).to_return(canned_response)
   end
 end
