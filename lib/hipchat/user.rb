@@ -60,7 +60,7 @@ module HipChat
     # Get private message history
     #
     def history(params = {})
-      params.select! { |key, _value| allowed_params.include? key }
+      params.select! { |key, _value| @api.history_config[:allowed_params].include? key }
 
       response = self.class.get(@api.history_config[:url],
                                 :query => { :auth_token => @token }.merge(params),

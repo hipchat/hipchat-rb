@@ -291,20 +291,8 @@ describe "HipChat (API V2)" do
       user.history.should be_truthy
     end
 
-    it "but fails when the user doesn't exist" do
-      mock(HipChat::User).post(anything, anything) {
-        OpenStruct.new(:code => 404)
-      }
-
-      lambda { user.send "" }.should raise_error(HipChat::UnknownUser)
-    end
-
-    it "but fails when we're not allowed to do so" do
-      mock(HipChat::User).post(anything, anything) {
-        OpenStruct.new(:code => 401)
-      }
-
-      lambda { user.send "" }.should raise_error(HipChat::Unauthorized)
+    it 'has allowed params' do
+      expect(user.instance_variable_get(:@api).history_config[:allowed_params]).to eq([:'max-results', :timezone, :'not-before'])
     end
   end
 end
