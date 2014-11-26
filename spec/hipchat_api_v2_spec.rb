@@ -188,6 +188,54 @@ describe "HipChat (API V2)" do
     end
   end
 
+  describe "#send_file" do
+    let(:file) do
+      Tempfile.new('foo').tap do |f|
+        f.write("the content")
+        f.rewind
+      end
+    end
+
+    after { file.unlink }
+
+    include_context "HipChatV2"
+
+    it "successfully" do
+      mock_successful_file_send 'Dude', 'Hello world', file
+
+      room.send_file("Dude", "Hello world", file).should be_truthy
+    end
+
+    it "but fails when the room doesn't exist" do
+      mock(HipChat::Room).post(anything, anything) {
+        OpenStruct.new(:code => 404)
+      }
+
+      lambda { room.send_file "", "", file }.should raise_error(HipChat::UnknownRoom)
+    end
+
+    it "but fails when we're not allowed to do so" do
+      mock(HipChat::Room).post(anything, anything) {
+        OpenStruct.new(:code => 401)
+      }
+
+      lambda { room.send_file "", "", file }.should raise_error(HipChat::Unauthorized)
+    end
+
+    it "but fails if the username is more than 15 chars" do
+      lambda { room.send_file "a very long username here", "a message", file }.should raise_error(HipChat::UsernameTooLong)
+    end
+
+    it "but fails if we get an unknown response code" do
+      mock(HipChat::Room).post(anything, anything) {
+        OpenStruct.new(:code => 403)
+      }
+
+      lambda { room.send_file "", "", file }.
+        should raise_error(HipChat::UnknownResponseCode)
+    end
+  end
+
   describe "#create" do
     include_context "HipChatV2"
 
@@ -289,6 +337,39 @@ describe "HipChat (API V2)" do
 
     it 'has allowed params' do
       expect(user.instance_variable_get(:@api).history_config[:allowed_params]).to eq([:'max-results', :timezone, :'not-before'])
+    end
+  end
+
+  describe "#send_file user" do
+    include_context "HipChatV2"
+
+    let(:file) do
+      Tempfile.new('foo').tap do |f|
+        f.write("the content")
+        f.rewind
+      end
+    end
+
+    it "successfully with a standard file" do
+      mock_successful_user_send_file 'Equal bytes for everyone', file
+
+      user.send_file('Equal bytes for everyone', file).should be_truthy
+    end
+
+    it "but fails when the user doesn't exist" do
+      mock(HipChat::User).post(anything, anything) {
+        OpenStruct.new(:code => 404)
+      }
+
+      lambda { user.send_file "", file }.should raise_error(HipChat::UnknownUser)
+    end
+
+    it "but fails when we're not allowed to do so" do
+      mock(HipChat::User).post(anything, anything) {
+        OpenStruct.new(:code => 401)
+      }
+
+      lambda { user.send_file "", file }.should raise_error(HipChat::Unauthorized)
     end
   end
 end

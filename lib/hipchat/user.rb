@@ -5,6 +5,7 @@ module HipChat
 
   class User < OpenStruct
     include HTTParty
+    include FileHelper
 
     format :json
 
@@ -32,6 +33,27 @@ module HipChat
         true
       when 404
         raise UnknownUser, "Unknown user: `#{user_id}'"
+      when 401
+        raise Unauthorized, "Access denied to user `#{user_id}'"
+      else
+        raise UnknownResponseCode, "Unexpected #{response.code} for private message to `#{user_id}'"
+      end
+    end
+
+    #
+    # Send a private file to user.
+    #
+    def send_file(message, file)
+      response = self.class.post(@api.send_file_config[:url],
+        :query => { :auth_token => @token },
+        :body => file_body({ :message => message }.send(@api.send_config[:body_format]), file),
+        :headers => file_body_headers(@api.headers)
+      )
+
+      case response.code
+      when 200, 204; true
+      when 404
+        raise UnknownUser,  "Unknown user: `#{user_id}'"
       when 401
         raise Unauthorized, "Access denied to user `#{user_id}'"
       else
