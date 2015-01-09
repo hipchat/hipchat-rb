@@ -42,8 +42,8 @@ namespace :hipchat do
 
     client = HipChat::Client.new(options[:token], options)
 
-    options[:room].each do |r| 
-      client[options[r]].send(options[:user], options[:message], { :color => options[:color], :notify => options[:notify] })
+    options[:room].each do |r|
+      client[r].send(options[:user], options[:message], { :color => options[:color], :notify => options[:notify] })
     end
   end
 end
