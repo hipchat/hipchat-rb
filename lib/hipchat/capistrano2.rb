@@ -42,7 +42,7 @@ Capistrano::Configuration.instance(:must_exist).load do
         if fetch(:hipchat_commit_log, false)
           logs = commit_logs
           unless logs.empty?
-            send(logs.join("\n"), send_options)
+            send(logs.join(commit_log_line_separator), send_options)
           end
         end
         send("#{human} finished deploying #{deployment_name} to #{environment_string}#{fetch(:hipchat_with_migrations, '')}.", send_options)
@@ -127,6 +127,10 @@ Capistrano::Configuration.instance(:must_exist).load do
 
     def env
       fetch(:hipchat_env, fetch(:rack_env, fetch(:rails_env, "production")))
+    end
+
+    def commit_log_line_separator
+      message_format == "html" ? "<br/>" : "\n"
     end
   end
 
