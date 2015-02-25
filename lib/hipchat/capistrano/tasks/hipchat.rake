@@ -25,6 +25,8 @@ namespace :hipchat do
   end
 
   def send_message(message, options)
+    return unless options[:notify]
+
     hipchat_token = fetch(:hipchat_token)
     hipchat_room_name = fetch(:hipchat_room_name)
     hipchat_options = fetch(:hipchat_options, {})
