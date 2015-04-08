@@ -9,10 +9,10 @@ module HipChat
       @token = token
       default_options = { api_version: 'v1', server_url: 'https://api.hipchat.com' }
       @options = default_options.merge options
-      @api_version = options[:api_version]
+      @api_version = @options[:api_version]
       @api = HipChat::ApiVersion::Client.new(@options)
       self.class.base_uri(@api.base_uri)
-      http_proxy = options[:http_proxy] || ENV['http_proxy']
+      http_proxy = @options[:http_proxy] || ENV['http_proxy']
       setup_proxy(http_proxy) if http_proxy
     end
 
