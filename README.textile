@@ -154,6 +154,7 @@ bc.. # Required
 set :hipchat_token, "<your token>"
 set :hipchat_room_name, "Your room" # If you pass an array such as ["room_a", "room_b"] you can send announcements to multiple rooms.
 # Optional
+set :hipchat_enabled, true # set to false to prevent any messages from being sent
 set :hipchat_announce, false # notify users
 set :hipchat_color, 'yellow' #normal message color
 set :hipchat_success_color, 'green' #finished deployment message color

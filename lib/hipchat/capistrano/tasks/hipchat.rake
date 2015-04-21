@@ -25,6 +25,8 @@ namespace :hipchat do
   end
 
   def send_message(message, options)
+    return unless enabled?
+
     hipchat_token = fetch(:hipchat_token)
     hipchat_room_name = fetch(:hipchat_room_name)
     hipchat_options = fetch(:hipchat_options, {})
@@ -47,6 +49,10 @@ namespace :hipchat do
         puts e.backtrace
       end
     }
+  end
+
+  def enabled?
+    fetch(:hipchat_enabled, true)
   end
 
   def environment_string
