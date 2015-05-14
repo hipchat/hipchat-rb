@@ -7,4 +7,7 @@ module HipChat
   class UnknownResponseCode < StandardError; end
   class UnknownUser         < StandardError; end
   class InvalidApiVersion   < StandardError; end
+  class InvalidUrl          < StandardError; end
+  class InvalidEvent        < StandardError; end
+  class UnknownWebhook      < StandardError; end
 end
