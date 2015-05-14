@@ -208,4 +208,44 @@ shared_context "HipChatV2" do
                                    :headers => {'Accept' => 'application/json',
                                                 'Content-Type' => 'multipart/related; boundary=sendfileboundary'}).to_return(:status => 200, :body => "", :headers => {})
   end
+
+  def mock_successful_create_webhook(room_id, url, event, options = {})
+    options = {:pattern => '', :name => ''}.merge(options)
+    stub_request(:post, "https://api.hipchat.com/v2/room/#{room_id}/webhook").with(
+                                   :query   => {:auth_token => "blah"},
+                                   :body => {:url => url,
+                                             :pattern => options[:pattern],
+                                             :event => event,
+                                             :name => options[:name]}.to_json,
+                                   :headers => {'Accept' => 'application/json',
+                                                'Content-Type' => 'application/json'}).to_return(:status => 201,
+                                                                                                 :body => {:id => '1234', :links => {:self => "https://api.hipchat.com/v2/room/#{room_id}/webhook/1234"}}.to_json,
+                                                                                                 :headers => {})
+  end
+
+  def mock_successful_delete_webhook(room_id, webhook_id)
+    stub_request(:delete, "https://api.hipchat.com/v2/room/#{room_id}/webhook/#{webhook_id}").with(
+                                   :query   => {:auth_token => "blah"},
+                                   :headers => {'Accept' => 'application/json',
+                                                'Content-Type' => 'application/json'}).to_return(:status => 204, :headers => {})
+  end
+
+  def mock_successful_get_all_webhooks(room_id, options = {})
+    options = {:'start-index' => 0, :'max-results' => 100}.merge(options)
+    stub_request(:get, "https://api.hipchat.com/v2/room/#{room_id}/webhook").with(
+                                   :query   => {:auth_token => "blah", :'start-index' => options[:'start-index'], :'max-results' => options[:'max-results']},
+                                   :headers => {'Accept' => 'application/json',
+                                                'Content-Type' => 'application/json'}).to_return(:status => 200,
+                                                                                                 :body => {:items => [], :startIndex => 0, :maxResults => 100, :links => {:self => "https://api.hipchat.com/v2/room/#{room_id}/webhook"}}.to_json,
+                                                                                                 :headers => {})
+  end
+
+  def mock_successful_get_webhook(room_id, webhook_id)
+    stub_request(:get, "https://api.hipchat.com/v2/room/#{room_id}/webhook/#{webhook_id}").with(
+                                   :query   => {:auth_token => "blah"},
+                                   :headers => {'Accept' => 'application/json',
+                                                'Content-Type' => 'application/json'}).to_return(:status => 200,
+                                                                                                 :body => {:room => nil, :links => {:self => "https://api.hipchat.com/v2/room/#{room_id}/webhook/#{webhook_id}"}, :creator => nil, :url => 'http://example.org/webhook', :created => '2014-09-02T21:33:54+00:00', :event => 'room_deleted'}.to_json,
+                                                                                                 :headers => {})
+  end
 end

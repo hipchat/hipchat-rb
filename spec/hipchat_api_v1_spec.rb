@@ -173,4 +173,11 @@ describe "HipChat (API V1)" do
         to raise_error(HipChat::InvalidApiVersion)
     end
   end
+
+  describe "#create_webhook"
+  it "fails because API V1 doesn't support webhooks" do
+
+    expect { room.create_webhook('https://example.org/hooks/awesome', 'room_enter') }.
+      to raise_error(HipChat::InvalidApiVersion)
+  end
 end
