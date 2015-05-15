@@ -230,11 +230,12 @@ module HipChat
     #                (default "JSON")
     def history(options = {})
 
-      options = { 
-        :date => 'recent', 
-        :timezone => 'UTC', 
-        :format => 'JSON', 
-        :'max-results' => 100 
+      options = {
+        :date => 'recent',
+        :timezone => 'UTC',
+        :format => 'JSON',
+        :'max-results' => 100,
+        :'start-index' => 0
       }.merge options
 
       response = self.class.get(@api.history_config[:url],
@@ -244,6 +245,7 @@ module HipChat
           :timezone   => options[:timezone],
           :format     => options[:format],
           :'max-results' => options[:'max-results'],
+          :'start-index' => options[:'start-index'],
           :auth_token => @token
         },
         :headers => @api.headers
