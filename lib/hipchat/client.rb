@@ -106,7 +106,8 @@ module HipChat
       response = self.class.get(@api.users_config[:url],
         :query => {
           :auth_token => @token,
-          :expand => 'items'
+          :expand => 'items',
+          :'max-results' => 1000
         },
         :headers => @api.headers
       )
