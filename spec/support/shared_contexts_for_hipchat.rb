@@ -41,13 +41,14 @@ shared_context "HipChatV1" do
   end
 
   def mock_successful_history(options={})
-    options = { :date => 'recent', :timezone => 'UTC', :format => 'JSON', :'max-results' => 100 }.merge(options)
+    options = { :date => 'recent', :timezone => 'UTC', :format => 'JSON', :'max-results' => 100, :'start-index' => 0 }.merge(options)
     canned_response = File.new(HISTORY_JSON_PATH)
     stub_request(:get, "https://api.hipchat.com/v1/rooms/history").with(:query => {:auth_token => "blah",
                                    :room_id       => "Hipchat",
                                    :date          => options[:date],
                                    :timezone      => options[:timezone],
                                    :'max-results' => options[:'max-results'],
+                                   :'start-index' => options[:'start-index'],
                                    :format        => options[:format]}).to_return(canned_response)
   end
 
@@ -112,13 +113,14 @@ shared_context "HipChatV2" do
   end
 
   def mock_successful_history(options={})
-    options = { :date => 'recent', :timezone => 'UTC', :format => 'JSON', :'max-results' => 100 }.merge(options)
+    options = { :date => 'recent', :timezone => 'UTC', :format => 'JSON', :'max-results' => 100, :'start-index' => 0 }.merge(options)
     canned_response = File.new(HISTORY_JSON_PATH)
     stub_request(:get, "https://api.hipchat.com/v2/room/Hipchat/history").with(:query => {:auth_token => "blah",
                                    :room_id    => "Hipchat",
                                    :date       => options[:date],
                                    :timezone   => options[:timezone],
                                    :'max-results' => options[:'max-results'],
+                                   :'start-index' => options[:'start-index'],
                                    :format     => options[:format]}).to_return(canned_response)
   end
 
