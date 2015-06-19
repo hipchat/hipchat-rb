@@ -35,4 +35,39 @@ describe HipChat do
       end
     end
   end
+
+  describe 'options' do
+
+    context "api_version" do
+
+      it "defaults to a v1 client" do
+        client = HipChat::Client.new("blah")
+        expect(client[:example].api_version).to eql('v1')
+      end
+
+      it "when given 'v1' it registers a v1 client" do
+        client = HipChat::Client.new("blah", :api_version => 'v1')
+        expect(client[:example].api_version).to eql('v1')
+      end
+
+      it "when given 'v2' it registers a v2 client" do
+        client = HipChat::Client.new("blah", :api_version => 'v2')
+        expect(client[:example].api_version).to eql('v2')
+      end
+    end
+
+    context "server_url" do
+
+      it "defaults to 'https://api.hipchat.com'" do
+        client = HipChat::Client.new("derr")
+        expect(client[:example].server_url).to eql('https://api.hipchat.com')
+      end
+
+      it "can be overridden to 'http://hipchat.example.com'" do
+        client = HipChat::Client.new("derr", :server_url => 'http://hipchat.example.com')
+        expect(client[:example].server_url).to eql('http://hipchat.example.com')
+      end
+    end
+  end
 end
+
