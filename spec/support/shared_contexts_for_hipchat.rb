@@ -85,7 +85,7 @@ shared_context "HipChatV2" do
   def mock_successful_file_send(from, message, file)
     stub_request(:post, "https://api.hipchat.com/v2/room/Hipchat/share/file").with(
                              :query => {:auth_token => "blah"},
-                             :body  => "--sendfileboundary\nContent-Type: application/json; charset=UTF-8\nContent-Disposition: attachment; name=\"metadata\"\n\n{\"room_id\":\"Hipchat\",\"from\":\"Dude\",\"message\":\"Hello world\"}\n--sendfileboundary\nContent-Type: ; charset=UTF-8\nContent-Transfer-Encoding: base64\nContent-Disposition: attachment; name=\"file\"; filename=\"#{File.basename(file.path)}\"\n\ndGhlIGNvbnRlbnQ=\n\n--sendfileboundary--",
+                             :body  => "--sendfileboundary\nContent-Type: application/json; charset=UTF-8\nContent-Disposition: attachment; name=\"metadata\"\n\n{\"room_id\":\"Hipchat\",\"from\":\"Dude\",\"message\":\"Hello world\"}\n--sendfileboundary\nContent-Type: \nContent-Transfer-Encoding: base64\nContent-Disposition: attachment; name=\"file\"; filename=\"#{File.basename(file.path)}\"\n\ndGhlIGNvbnRlbnQ=\n\n--sendfileboundary--",
                              :headers => {'Accept' => 'application/json',
                                           'Content-Type' => 'multipart/related; boundary=sendfileboundary'}).to_return(:status => 200, :body => "", :headers => {})
   end
@@ -206,7 +206,7 @@ shared_context "HipChatV2" do
   def mock_successful_user_send_file(message, file)
     stub_request(:post, "https://api.hipchat.com/v2/user/12345678/share/file").with(
                                    :query   => {:auth_token => "blah"},
-                                   :body    => "--sendfileboundary\nContent-Type: application/json; charset=UTF-8\nContent-Disposition: attachment; name=\"metadata\"\n\n{\"message\":\"Equal bytes for everyone\"}\n--sendfileboundary\nContent-Type: ; charset=UTF-8\nContent-Transfer-Encoding: base64\nContent-Disposition: attachment; name=\"file\"; filename=\"#{File.basename(file)}\"\n\ndGhlIGNvbnRlbnQ=\n\n--sendfileboundary--",
+                                   :body    => "--sendfileboundary\nContent-Type: application/json; charset=UTF-8\nContent-Disposition: attachment; name=\"metadata\"\n\n{\"message\":\"Equal bytes for everyone\"}\n--sendfileboundary\nContent-Type: \nContent-Transfer-Encoding: base64\nContent-Disposition: attachment; name=\"file\"; filename=\"#{File.basename(file)}\"\n\ndGhlIGNvbnRlbnQ=\n\n--sendfileboundary--",
                                    :headers => {'Accept' => 'application/json',
                                                 'Content-Type' => 'multipart/related; boundary=sendfileboundary'}).to_return(:status => 200, :body => "", :headers => {})
   end

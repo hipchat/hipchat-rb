@@ -22,7 +22,7 @@ module HipChat
       body << ''
       body << message
       body << "--#{BOUNDARY}"
-      body << "Content-Type: #{mime_type}; charset=UTF-8"
+      body << "Content-Type: #{mime_type}"
       body << 'Content-Transfer-Encoding: base64'
       body << %{Content-Disposition: attachment; name="file"; filename="#{file_name}"}
       body << ''
