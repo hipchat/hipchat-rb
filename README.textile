@@ -35,6 +35,9 @@ client['my room'].send('username', 'I quit!', :notify => true)
 # Color it red. or "yellow", "green", "purple", "random" (default "yellow")
 client['my room'].send('username', 'Build failed!', :color => 'red')
 
+# Set http proxy
+client['my room'].send('username', 'Set proxy!', :http_proxy => 'http://proxy_host:proxy_port')
+
 # Have your message rendered as text in HipChat (see https://www.hipchat.com/docs/api/method/rooms/message)
 client['my room'].send('username', '@coworker Build faild!', :message_format => 'text')
 
@@ -224,7 +227,7 @@ h2. Chef Handler
 *APIv1 ONLY, use APIv1 Key*
 NOTE: APIv2 required for HipChatServer Beta
 
-Report on Chef runs. 
+Report on Chef runs.
 
 h3. Within a Recipe:
 
