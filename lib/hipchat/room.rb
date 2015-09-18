@@ -127,6 +127,7 @@ module HipChat
           :message        => message,
           :message_format => options[:message_format] || 'html',
           :color          => options[:color],
+          :card           => options[:card],
           :notify         => @api.bool_val(options[:notify])
         }.send(@api.send_config[:body_format]),
         :headers => @api.headers
