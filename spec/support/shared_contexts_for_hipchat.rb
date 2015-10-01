@@ -82,6 +82,17 @@ shared_context "HipChatV2" do
                                                     'Content-Type' => 'application/json'}).to_return(:status => 200, :body => "", :headers => {})
   end
 
+  def mock_successful_link_share(from, message, link)
+    stub_request(:post, "https://api.hipchat.com/v2/room/Hipchat/share/link").with(
+                             :query => {:auth_token => "blah"},
+                             :body  => {:room_id => "Hipchat",
+                                        :from    => "Dude",
+                                        :message => message,
+                                        :link    => link}.to_json,
+                                        :headers => {'Accept' => 'application/json',
+                                                    'Content-Type' => 'application/json'}).to_return(:status => 200, :body => "", :headers => {})
+  end
+
   def mock_successful_file_send(from, message, file)
     stub_request(:post, "https://api.hipchat.com/v2/room/Hipchat/share/file").with(
                              :query => {:auth_token => "blah"},
