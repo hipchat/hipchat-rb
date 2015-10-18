@@ -188,6 +188,45 @@ describe "HipChat (API V2)" do
     end
   end
 
+  describe '#share_link' do
+    let(:link) { "http://i.imgur.com/cZ6GDFY.jpg" }
+    include_context "HipChatV2"
+    it "successfully" do
+      mock_successful_link_share 'Dude', 'Sloth love Chunk!', link
+
+      room.share_link("Dude", "Sloth love Chunk!", link).should be_truthy
+    end
+
+    it "but fails when the room doesn't exist" do
+      mock(HipChat::Room).post(anything, anything) {
+        OpenStruct.new(:code => 404)
+      }
+
+      lambda { room.share_link "", "", link }.should raise_error(HipChat::UnknownRoom)
+    end
+
+    it "but fails when we're not allowed to do so" do
+      mock(HipChat::Room).post(anything, anything) {
+        OpenStruct.new(:code => 401)
+      }
+
+      lambda { room.share_link "", "", link }.should raise_error(HipChat::Unauthorized)
+    end
+
+    it "but fails if the username is more than 15 chars" do
+      lambda { room.share_link "a very long username here", "a message", link }.should raise_error(HipChat::UsernameTooLong)
+    end
+
+    it "but fails if we get an unknown response code" do
+      mock(HipChat::Room).post(anything, anything) {
+        OpenStruct.new(:code => 403)
+      }
+
+      lambda { room.share_link "", "", link }.
+        should raise_error(HipChat::UnknownResponseCode)
+    end
+  end
+
   describe "#send_file" do
     let(:file) do
       Tempfile.new('foo').tap do |f|

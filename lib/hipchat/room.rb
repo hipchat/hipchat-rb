@@ -143,6 +143,33 @@ module HipChat
       end
     end
 
+    def share_link(from, message, link)
+      if from.length > 15
+        raise UsernameTooLong, "Username #{from} is `#{from.length} characters long. Limit is 15'"
+      end
+
+      response = self.class.post(@api.share_link_config[:url],
+        :query => { :auth_token => @token },
+        :body  => {
+          :room_id        => room_id,
+          :from           => from,
+          :message        => message,
+          :link           => link,
+        }.send(@api.send_config[:body_format]),
+        :headers => @api.headers
+      )
+
+      case response.code
+      when 200, 204; true
+      when 404
+        raise UnknownRoom,  "Unknown room: `#{room_id}'"
+      when 401
+        raise Unauthorized, "Access denied to room `#{room_id}'"
+      else
+        raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
+      end
+    end
+
     # Send a file to this room.
     #
     # Usage:

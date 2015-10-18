@@ -147,6 +147,15 @@ module HipChat
         }[version]
       end
 
+      def share_link_config
+        {
+          'v2' => {
+            :url => URI::escape("/#{room_id}/share/link"),
+            :body_format => :to_json
+          }
+        }[version]
+      end
+
       def topic_config
         {
           'v1' => {
