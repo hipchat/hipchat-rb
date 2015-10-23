@@ -30,6 +30,8 @@ module HipChat
         raise UnknownRoom,  "Unknown room: `#{room_id}'"
       when 401
         raise Unauthorized, "Access denied to room `#{room_id}'"
+      when 403
+        raise RateLimitExceeded, "API Rate limit exceeded"
       else
         raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
       end
@@ -59,6 +61,8 @@ module HipChat
       when 200, 204; true
       when 404
         raise Unknown Room, "Unknown room: `#{room_id}'"
+      when 403
+        raise RateLimitExceeded, "API Rate limit exceeded"
       when 401
         raise Unauthorized, "Access denied to room `#{room_id}'"
       else
@@ -79,6 +83,8 @@ module HipChat
       when 200, 204; true
       when 404
         raise UnknownRoom,  "Unknown room: `#{room_id}'"
+      when 403
+        raise RateLimitExceeded, "API Rate limit exceeded"
       when 401
         raise Unauthorized, "Access denied to room `#{room_id}'"
       else
@@ -136,6 +142,8 @@ module HipChat
       when 200, 204; true
       when 404
         raise UnknownRoom,  "Unknown room: `#{room_id}'"
+      when 403
+        raise RateLimitExceeded, "API Rate limit exceeded"
       when 401
         raise Unauthorized, "Access denied to room `#{room_id}'"
       else
@@ -163,6 +171,8 @@ module HipChat
       when 200, 204; true
       when 404
         raise UnknownRoom,  "Unknown room: `#{room_id}'"
+      when 403
+        raise RateLimitExceeded, "API Rate limit exceeded"
       when 401
         raise Unauthorized, "Access denied to room `#{room_id}'"
       else
@@ -197,6 +207,8 @@ module HipChat
       when 200, 204; true
       when 404
         raise UnknownRoom,  "Unknown room: `#{room_id}'"
+      when 403
+        raise RateLimitExceeded, "API Rate limit exceeded"
       when 401
         raise Unauthorized, "Access denied to room `#{room_id}'"
       else
@@ -233,6 +245,8 @@ module HipChat
       when 204,200; true
       when 404
         raise UnknownRoom,  "Unknown room: `#{room_id}'"
+      when 403
+        raise RateLimitExceeded, "API Rate limit exceeded"
       when 401
         raise Unauthorized, "Access denied to room `#{room_id}'"
       else
@@ -283,6 +297,8 @@ module HipChat
         response.body
       when 404
         raise UnknownRoom,  "Unknown room: `#{room_id}'"
+      when 403
+        raise RateLimitExceeded, "API Rate limit exceeded"
       when 401
         raise Unauthorized, "Access denied to room `#{room_id}'"
       else
@@ -309,6 +325,8 @@ module HipChat
         response.body
       when 404
         raise UnknownRoom,  "Unknown room: `#{room_id}'"
+      when 403
+        raise RateLimitExceeded, "API Rate limit exceeded"
       when 401
         raise Unauthorized, "Access denied to room `#{room_id}'"
       else

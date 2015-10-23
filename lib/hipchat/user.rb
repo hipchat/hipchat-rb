@@ -34,6 +34,8 @@ module HipChat
         true
       when 404
         raise UnknownUser, "Unknown user: `#{user_id}'"
+      when 403
+        raise RateLimitExceeded, "API Rate limit exceeded"
       when 401
         raise Unauthorized, "Access denied to user `#{user_id}'"
       else
@@ -55,6 +57,8 @@ module HipChat
       when 200, 204; true
       when 404
         raise UnknownUser,  "Unknown user: `#{user_id}'"
+      when 403
+        raise RateLimitExceeded, "API Rate limit exceeded"
       when 401
         raise Unauthorized, "Access denied to user `#{user_id}'"
       else
@@ -74,6 +78,8 @@ module HipChat
       case response.code
       when 200
         User.new(@token, response.merge(:api_version => @api.version))
+      when 403
+        raise RateLimitExceeded, "API Rate limit exceeded"
       else
         raise UnknownResponseCode, "Unexpected #{response.code} for view message to `#{user_id}'"
       end
@@ -93,6 +99,8 @@ module HipChat
       case response.code
       when 200
         response.body
+      when 403
+        raise RateLimitExceeded, "API Rate limit exceeded"
       else
         raise UnknownResponseCode, "Unexpected #{response.code} for view private message history for `#{user_id}'"
       end

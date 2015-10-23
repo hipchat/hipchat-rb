@@ -44,9 +44,17 @@ describe "HipChat (API V2)" do
       expect { room.history }.to raise_error(HipChat::Unauthorized)
     end
 
-    it "fails if we get an unknown response code" do
+    it "fails when we've hit the API rate limit" do
       mock(HipChat::Room).get(anything, anything) {
         OpenStruct.new(:code => 403)
+      }
+
+      expect { room.history }.to raise_error(HipChat::RateLimitExceeded)
+    end
+
+    it "fails if we get an unknown response code" do
+      mock(HipChat::Room).get(anything, anything) {
+        OpenStruct.new(:code => 407)
       }
 
       expect { room.history }.to raise_error(HipChat::UnknownResponseCode)
@@ -85,9 +93,17 @@ describe "HipChat (API V2)" do
       expect { room.statistics }.to raise_error(HipChat::Unauthorized)
     end
 
-    it "fails if we get an unknown response code" do
+    it "fails when we've hit the API rate limit" do
       mock(HipChat::Room).get(anything, anything) {
         OpenStruct.new(:code => 403)
+      }
+
+      expect { room.statistics }.to raise_error(HipChat::RateLimitExceeded)
+    end
+
+    it "fails if we get an unknown response code" do
+      mock(HipChat::Room).get(anything, anything) {
+        OpenStruct.new(:code => 407)
       }
 
       expect { room.statistics }.to raise_error(HipChat::UnknownResponseCode)
@@ -124,9 +140,17 @@ describe "HipChat (API V2)" do
       expect { room.topic "" }.to raise_error(HipChat::Unauthorized)
     end
 
+    it "fails when we've hit the API rate limit" do
+      mock(HipChat::Room).put(anything, anything) {
+        OpenStruct.new(:code => 403)
+      }
+
+      expect { room.topic "" }.to raise_error(HipChat::RateLimitExceeded)
+    end
+
     it "fails if we get an unknown response code" do
         mock(HipChat::Room).put(anything, anything) {
-          OpenStruct.new(:code => 403)
+          OpenStruct.new(:code => 407)
         }
 
       expect { room.topic "" }.to raise_error(HipChat::UnknownResponseCode)
@@ -179,9 +203,17 @@ describe "HipChat (API V2)" do
       expect { room.send "a very long username here", "a message" }.to raise_error(HipChat::UsernameTooLong)
     end
 
-    it "but fails if we get an unknown response code" do
+    it "fails when we've hit the API rate limit" do
       mock(HipChat::Room).post(anything, anything) {
         OpenStruct.new(:code => 403)
+      }
+
+      expect { room.send "", "" }.to raise_error(HipChat::RateLimitExceeded)
+    end
+
+    it "but fails if we get an unknown response code" do
+      mock(HipChat::Room).post(anything, anything) {
+        OpenStruct.new(:code => 407)
       }
 
       expect { room.send "", "" }.to raise_error(HipChat::UnknownResponseCode)
@@ -217,9 +249,18 @@ describe "HipChat (API V2)" do
       lambda { room.share_link "a very long username here", "a message", link }.should raise_error(HipChat::UsernameTooLong)
     end
 
-    it "but fails if we get an unknown response code" do
+    it "fails when we've hit the API rate limit" do
       mock(HipChat::Room).post(anything, anything) {
         OpenStruct.new(:code => 403)
+      }
+
+      lambda { room.share_link "", "", link }.
+        should raise_error(HipChat::RateLimitExceeded)
+    end
+
+    it "but fails if we get an unknown response code" do
+      mock(HipChat::Room).post(anything, anything) {
+        OpenStruct.new(:code => 407)
       }
 
       lambda { room.share_link "", "", link }.
@@ -265,9 +306,18 @@ describe "HipChat (API V2)" do
       lambda { room.send_file "a very long username here", "a message", file }.should raise_error(HipChat::UsernameTooLong)
     end
 
-    it "but fails if we get an unknown response code" do
+    it "fails when we've hit the API rate limit" do
       mock(HipChat::Room).post(anything, anything) {
         OpenStruct.new(:code => 403)
+      }
+
+      lambda { room.send_file "", "", file }.
+        should raise_error(HipChat::RateLimitExceeded)
+    end
+
+    it "but fails if we get an unknown response code" do
+      mock(HipChat::Room).post(anything, anything) {
+        OpenStruct.new(:code => 407)
       }
 
       lambda { room.send_file "", "", file }.

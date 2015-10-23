@@ -7,4 +7,5 @@ module HipChat
   class UnknownResponseCode < StandardError; end
   class UnknownUser         < StandardError; end
   class InvalidApiVersion   < StandardError; end
+  class RateLimitExceeded   < StandardError; end
 end

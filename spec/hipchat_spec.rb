@@ -70,4 +70,3 @@ describe HipChat do
     end
   end
 end
-

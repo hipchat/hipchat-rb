@@ -51,6 +51,8 @@ module HipChat
         raise UnknownRoom,  "Error: #{response.message}"
       when 401
         raise Unauthorized, 'Access denied'
+      when 403
+        raise RateLimitExceeded, "API Rate limit exceeded"
       else
         raise UnknownResponseCode, "Unexpected error #{response.code}"
       end
@@ -97,6 +99,8 @@ module HipChat
         response[@api.rooms_config[:data_key]].map do |r|
           HipChat::Room.new(@token, r.merge(:api_version => @api_version, :server_url => @options[:server_url]))
         end
+      when 403
+        raise RateLimitExceeded, "API Rate limit exceeded"
       else
         raise UnknownResponseCode, "Unexpected #{response.code} for room"
       end
@@ -115,6 +119,8 @@ module HipChat
         response[@api.users_config[:data_key]].map do |u|
           HipChat::User.new(@token, u.merge(:api_version => @api_version, :server_url => @options[:server_url]))
         end
+      when 403
+        raise RateLimitExceeded, "API Rate limit exceeded"
       else
         raise UnknownResponseCode, "Unexpected #{response.code} for user"
       end

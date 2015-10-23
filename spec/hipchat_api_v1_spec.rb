@@ -43,9 +43,17 @@ describe "HipChat (API V1)" do
       expect { room.history }.to raise_error(HipChat::Unauthorized)
     end
 
-    it "fails if we get an unknown response code" do
+    it "fails when we've hit the API rate limit" do
       mock(HipChat::Room).get(anything, anything) {
         OpenStruct.new(:code => 403)
+      }
+
+      expect { room.history }.to raise_error(HipChat::RateLimitExceeded)
+    end
+
+    it "fails if we get an unknown response code" do
+      mock(HipChat::Room).get(anything, anything) {
+        OpenStruct.new(:code => 407)
       }
 
       expect { room.history }.to raise_error(HipChat::UnknownResponseCode)
@@ -82,9 +90,17 @@ describe "HipChat (API V1)" do
       expect { room.topic "" }.to raise_error(HipChat::Unauthorized)
     end
 
-    it "fails if we get an unknown response code" do
+    it "fails when we've hit the API rate limit" do
       mock(HipChat::Room).post(anything, anything) {
         OpenStruct.new(:code => 403)
+      }
+
+      expect { room.topic "" }.to raise_error(HipChat::RateLimitExceeded)
+    end
+
+    it "fails if we get an unknown response code" do
+      mock(HipChat::Room).post(anything, anything) {
+        OpenStruct.new(:code => 407)
       }
 
       expect { room.topic "" }.to raise_error(HipChat::UnknownResponseCode)
@@ -137,9 +153,17 @@ describe "HipChat (API V1)" do
       expect { room.send "a very long username here", "a message" }.to raise_error(HipChat::UsernameTooLong)
     end
 
-    it "but fails if we get an unknown response code" do
+    it "fails when we've hit the API rate limit" do
       mock(HipChat::Room).post(anything, anything) {
         OpenStruct.new(:code => 403)
+      }
+
+      expect { room.send "", "" }.to raise_error(HipChat::RateLimitExceeded)
+    end
+
+    it "but fails if we get an unknown response code" do
+      mock(HipChat::Room).post(anything, anything) {
+        OpenStruct.new(:code => 407)
       }
 
       expect { room.send "", "" }.to raise_error(HipChat::UnknownResponseCode)
