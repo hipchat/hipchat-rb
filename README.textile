@@ -26,6 +26,9 @@ h1. Usage
 h2. "API v1":https://www.hipchat.com/docs/api
 
 bc.. client = HipChat::Client.new(api_token)
+# Set http proxy
+client = HipChat::Client.new(api_token, :http_proxy => 'http://proxy_host:proxy_port')
+
 # 'username' is the name for which the message will be presented as from
 client['my room'].send('username', 'I talk')
 
@@ -34,9 +37,6 @@ client['my room'].send('username', 'I quit!', :notify => true)
 
 # Color it red. or "yellow", "green", "purple", "random" (default "yellow")
 client['my room'].send('username', 'Build failed!', :color => 'red')
-
-# Set http proxy
-client['my room'].send('username', 'Set proxy!', :http_proxy => 'http://proxy_host:proxy_port')
 
 # Have your message rendered as text in HipChat (see https://www.hipchat.com/docs/api/method/rooms/message)
 client['my room'].send('username', '@coworker Build faild!', :message_format => 'text')
@@ -59,6 +59,9 @@ client.create_room("Name", :owner_user_id => 'user_id')
 h2. "API v2":https://www.hipchat.com/docs/apiv2
 
 bc.. client = HipChat::Client.new(api_token, :api_version => 'v2')
+# Set http proxy
+client = HipChat::Client.new(api_token, :api_version => 'v2', :http_proxy => 'http://proxy_host:proxy_port')
+
 # 'username' is the name for which the message will be presented as from
 client['my room'].send('username', 'I talk')
 
