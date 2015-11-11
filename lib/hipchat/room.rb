@@ -86,6 +86,24 @@ module HipChat
       end
     end
 
+    # Add member to this room
+    def member(user)
+      response = self.class.put(@api.member_config[:url]+"/#{user}",
+        :query => { :auth_token => @token },
+        :body => {}.to_json,
+        :headers => @api.headers)
+
+      case response.code
+      when 200, 204; true
+      when 404
+        raise UnknownRoom,  "Unknown room: `#{room_id}'"
+      when 401
+        raise Unauthorized, "Access denied to room `#{room_id}'"
+      else
+        raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
+      end
+    end
+
 
     # Send a message to this room.
     #

@@ -197,6 +197,18 @@ shared_context "HipChatV2" do
                    :headers => {})
   end
 
+  def mock_successful_member(options={})
+    options = {:user_id => "1234"}.merge(options)
+    stub_request(:put, "https://api.hipchat.com/v2/room/Hipchat/member/#{options[:user_id]}").with(
+      :query => {:auth_token => "blah"},
+      :body  => {}.to_json,
+      :headers => {'Accept' => 'application/json',
+                   'Content-Type' => 'application/json'}).to_return(
+                   :status => 204,
+                   :body => "",
+                   :headers => {})
+  end
+
   def mock_successful_user_send(message)
     stub_request(:post, "https://api.hipchat.com/v2/user/12345678/message").with(
                                    :query   => {:auth_token => "blah"},

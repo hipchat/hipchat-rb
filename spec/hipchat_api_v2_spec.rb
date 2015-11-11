@@ -341,6 +341,16 @@ describe "HipChat (API V2)" do
     end
   end
 
+  describe "#member" do
+    include_context "HipChatV2"
+
+    it "successfully with user_id" do
+      mock_successful_member()
+
+      expect(room.member("1234")).to be_truthy
+    end
+  end
+
   describe "#send user message" do
     include_context "HipChatV2"
     it "successfully with a standard message" do
