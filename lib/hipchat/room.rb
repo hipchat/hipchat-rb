@@ -87,10 +87,12 @@ module HipChat
     end
 
     # Add member to this room
-    def member(user)
-      response = self.class.put(@api.member_config[:url]+"/#{user}",
+    def add_member(user, room_roles=['room_member'])
+      response = self.class.put(@api.add_member_config[:url]+"/#{user}",
         :query => { :auth_token => @token },
-        :body => {}.to_json,
+        :body => {
+          :room_roles => room_roles
+        }.to_json,
         :headers => @api.headers)
 
       case response.code

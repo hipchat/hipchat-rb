@@ -341,13 +341,19 @@ describe "HipChat (API V2)" do
     end
   end
 
-  describe "#member" do
+  describe "#add_member" do
     include_context "HipChatV2"
 
     it "successfully with user_id" do
-      mock_successful_member()
+      mock_successful_add_member()
 
-      expect(room.member("1234")).to be_truthy
+      expect(room.add_member("1234")).to be_truthy
+    end
+
+    it "successfully with custom parameters" do
+      mock_successful_add_member({:user_id => "321", :room_roles => ["room_admin","room_member"]})
+
+      expect(room.add_member("321", ["room_admin","room_member"])).to be_truthy
     end
   end
 
