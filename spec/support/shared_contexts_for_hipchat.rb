@@ -67,6 +67,15 @@ end
 
 shared_context "HipChatV2" do
   before { @api_version = 'v2'}
+  def mock_successful_send_message(message, options={})
+    options = {:color => 'yellow', :notify => false, :message_format => 'html'}.merge(options)
+    stub_request(:post, "https://api.hipchat.com/v2/room/Hipchat/message").with(
+                             :query => {:auth_token => "blah"},
+                             :body  => {:room_id => "Hipchat",
+                                        :message => "Hello world"}.to_json,
+                                        :headers => {'Accept' => 'application/json',
+                                                    'Content-Type' => 'application/json'}).to_return(:status => 200, :body => "", :headers => {})
+  end
   # Helper for mocking room message post requests
   def mock_successful_send(from, message, options={})
     options = {:color => 'yellow', :notify => false, :message_format => 'html'}.merge(options)

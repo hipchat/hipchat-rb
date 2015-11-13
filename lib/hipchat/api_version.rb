@@ -134,6 +134,15 @@ module HipChat
         }[version]
       end
 
+      def send_message_config
+        {
+          'v2' => {
+            :url => URI::escape("/#{room_id}/message"),
+            :body_format => :to_json
+          }
+        }[version]
+      end
+
       def send_config
         {
           'v1' => {

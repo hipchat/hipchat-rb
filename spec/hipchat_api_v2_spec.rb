@@ -133,6 +133,39 @@ describe "HipChat (API V2)" do
     end
   end
 
+  describe "#send_message" do
+    include_context "HipChatV2"
+    it "successfully without custom options" do
+      mock_successful_send_message 'Hello world'
+
+      expect(room.send_message("Hello world")).to be_truthy
+    end
+
+    it "but fails when the room doesn't exist" do
+      mock(HipChat::Room).post(anything, anything) {
+        OpenStruct.new(:code => 404)
+      }
+
+      expect { room.send_message "" }.to raise_error(HipChat::UnknownRoom)
+    end
+
+    it "but fails when we're not allowed to do so" do
+      mock(HipChat::Room).post(anything, anything) {
+        OpenStruct.new(:code => 401)
+      }
+
+      expect { room.send_message "" }.to raise_error(HipChat::Unauthorized)
+    end
+
+    it "but fails if we get an unknown response code" do
+      mock(HipChat::Room).post(anything, anything) {
+        OpenStruct.new(:code => 403)
+      }
+
+      expect { room.send_message "" }.to raise_error(HipChat::UnknownResponseCode)
+    end
+  end
+
   describe "#send" do
     include_context "HipChatV2"
     it "successfully without custom options" do
