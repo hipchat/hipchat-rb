@@ -56,6 +56,19 @@ module HipChat
         }[version]
       end
 
+      def create_user_config
+        {
+          'v1' => {
+            :url => '/users/create',
+            :body_format => :to_hash
+          },
+          'v2' => {
+            :url => '/user',
+            :body_format => :to_json
+          }
+        }[version]
+      end
+
       def users_config
         {
           'v1' => {

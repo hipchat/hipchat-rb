@@ -63,6 +63,17 @@ shared_context "HipChatV1" do
                                           :body => '{"room": {"room_id": "1234", "name" : "A Room"}}',
                                           :headers => {})
   end
+
+  def mock_successful_user_creation(name, email, options={})
+    stub_request(:post, "https://api.hipchat.com/v1/users/create").with(
+                             :query => {:auth_token => "blah"},
+                             :body  => { :name => "A User", :email => "email@example.com" }.merge(options),
+                             :headers => {'Accept' => 'application/json',
+                                          'Content-Type' => 'application/x-www-form-urlencoded'}).to_return(
+                                          :status => 200,
+                                          :body => '{"user": {"user_id": "1234", "A User" : "A User", "email" : "email@example.com"}}',
+                                          :headers => {})
+  end
 end
 
 shared_context "HipChatV2" do
@@ -165,6 +176,18 @@ shared_context "HipChatV2" do
                                           :body => '{"id": "12345", "links": {"self": "https://api.hipchat.com/v2/room/12345"}}',
                                           :headers => {})
   end
+
+  def mock_successful_user_creation(name, email, options={})
+    stub_request(:post, "https://api.hipchat.com/v2/user").with(
+                             :query => {:auth_token => "blah"},
+                             :body  => { :name => name, :email => email }.merge(options).to_json,
+                             :headers => {'Accept' => 'application/json',
+                                          'Content-Type' => 'application/json'}).to_return(
+                                          :status => 201,
+                                          :body => '{"id": "12345", "links": {"self": "https://api.hipchat.com/v2/user/12345"}}',
+                                          :headers => {})
+  end
+
 
   def mock_successful_get_room(room_id="1234")
     stub_request(:get, "https://api.hipchat.com/v2/room/#{room_id}").with(
