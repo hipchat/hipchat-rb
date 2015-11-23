@@ -63,10 +63,30 @@ shared_context "HipChatV1" do
                                           :body => '{"room": {"room_id": "1234", "name" : "A Room"}}',
                                           :headers => {})
   end
+
+  def mock_successful_user_creation(name, email, options={})
+    stub_request(:post, "https://api.hipchat.com/v1/users/create").with(
+                             :query => {:auth_token => "blah"},
+                             :body  => { :name => "A User", :email => "email@example.com" }.merge(options),
+                             :headers => {'Accept' => 'application/json',
+                                          'Content-Type' => 'application/x-www-form-urlencoded'}).to_return(
+                                          :status => 200,
+                                          :body => '{"user": {"user_id": "1234", "A User" : "A User", "email" : "email@example.com"}}',
+                                          :headers => {})
+  end
 end
 
 shared_context "HipChatV2" do
   before { @api_version = 'v2'}
+  def mock_successful_send_message(message, options={})
+    options = {:color => 'yellow', :notify => false, :message_format => 'html'}.merge(options)
+    stub_request(:post, "https://api.hipchat.com/v2/room/Hipchat/message").with(
+                             :query => {:auth_token => "blah"},
+                             :body  => {:room_id => "Hipchat",
+                                        :message => "Hello world"}.to_json,
+                                        :headers => {'Accept' => 'application/json',
+                                                    'Content-Type' => 'application/json'}).to_return(:status => 200, :body => "", :headers => {})
+  end
   # Helper for mocking room message post requests
   def mock_successful_send(from, message, options={})
     options = {:color => 'yellow', :notify => false, :message_format => 'html'}.merge(options)
@@ -78,6 +98,17 @@ shared_context "HipChatV2" do
                                         :message_format => options[:message_format],
                                         :color   => options[:color],
                                         :notify  => options[:notify]}.to_json,
+                                        :headers => {'Accept' => 'application/json',
+                                                    'Content-Type' => 'application/json'}).to_return(:status => 200, :body => "", :headers => {})
+  end
+
+  def mock_successful_link_share(from, message, link)
+    stub_request(:post, "https://api.hipchat.com/v2/room/Hipchat/share/link").with(
+                             :query => {:auth_token => "blah"},
+                             :body  => {:room_id => "Hipchat",
+                                        :from    => "Dude",
+                                        :message => message,
+                                        :link    => link}.to_json,
                                         :headers => {'Accept' => 'application/json',
                                                     'Content-Type' => 'application/json'}).to_return(:status => 200, :body => "", :headers => {})
   end
@@ -146,6 +177,18 @@ shared_context "HipChatV2" do
                                           :headers => {})
   end
 
+  def mock_successful_user_creation(name, email, options={})
+    stub_request(:post, "https://api.hipchat.com/v2/user").with(
+                             :query => {:auth_token => "blah"},
+                             :body  => { :name => name, :email => email }.merge(options).to_json,
+                             :headers => {'Accept' => 'application/json',
+                                          'Content-Type' => 'application/json'}).to_return(
+                                          :status => 201,
+                                          :body => '{"id": "12345", "links": {"self": "https://api.hipchat.com/v2/user/12345"}}',
+                                          :headers => {})
+  end
+
+
   def mock_successful_get_room(room_id="1234")
     stub_request(:get, "https://api.hipchat.com/v2/room/#{room_id}").with(
       :query => {:auth_token => "blah"},
@@ -186,6 +229,20 @@ shared_context "HipChatV2" do
                    :headers => {})
   end
 
+  def mock_successful_add_member(options={})
+    options = {:user_id => "1234"}.merge(options)
+    stub_request(:put, "https://api.hipchat.com/v2/room/Hipchat/member/#{options[:user_id]}").with(
+      :query => {:auth_token => "blah"},
+      :body  => {
+        :room_roles => options[:room_roles] || ["room_member"]
+      }.to_json,
+      :headers => {'Accept' => 'application/json',
+                   'Content-Type' => 'application/json'}).to_return(
+                   :status => 204,
+                   :body => "",
+                   :headers => {})
+  end
+
   def mock_successful_user_send(message)
     stub_request(:post, "https://api.hipchat.com/v2/user/12345678/message").with(
                                    :query   => {:auth_token => "blah"},
@@ -209,5 +266,45 @@ shared_context "HipChatV2" do
                                    :body    => "--sendfileboundary\nContent-Type: application/json; charset=UTF-8\nContent-Disposition: attachment; name=\"metadata\"\n\n{\"message\":\"Equal bytes for everyone\"}\n--sendfileboundary\nContent-Type: ; charset=UTF-8\nContent-Transfer-Encoding: base64\nContent-Disposition: attachment; name=\"file\"; filename=\"#{File.basename(file)}\"\n\ndGhlIGNvbnRlbnQ=\n\n--sendfileboundary--",
                                    :headers => {'Accept' => 'application/json',
                                                 'Content-Type' => 'multipart/related; boundary=sendfileboundary'}).to_return(:status => 200, :body => "", :headers => {})
+  end
+
+  def mock_successful_create_webhook(room_id, url, event, options = {})
+    options = {:pattern => '', :name => ''}.merge(options)
+    stub_request(:post, "https://api.hipchat.com/v2/room/#{room_id}/webhook").with(
+                                   :query   => {:auth_token => "blah"},
+                                   :body => {:url => url,
+                                             :pattern => options[:pattern],
+                                             :event => event,
+                                             :name => options[:name]}.to_json,
+                                   :headers => {'Accept' => 'application/json',
+                                                'Content-Type' => 'application/json'}).to_return(:status => 201,
+                                                                                                 :body => {:id => '1234', :links => {:self => "https://api.hipchat.com/v2/room/#{room_id}/webhook/1234"}}.to_json,
+                                                                                                 :headers => {})
+  end
+
+  def mock_successful_delete_webhook(room_id, webhook_id)
+    stub_request(:delete, "https://api.hipchat.com/v2/room/#{room_id}/webhook/#{webhook_id}").with(
+                                   :query   => {:auth_token => "blah"},
+                                   :headers => {'Accept' => 'application/json',
+                                                'Content-Type' => 'application/json'}).to_return(:status => 204, :headers => {})
+  end
+
+  def mock_successful_get_all_webhooks(room_id, options = {})
+    options = {:'start-index' => 0, :'max-results' => 100}.merge(options)
+    stub_request(:get, "https://api.hipchat.com/v2/room/#{room_id}/webhook").with(
+                                   :query   => {:auth_token => "blah", :'start-index' => options[:'start-index'], :'max-results' => options[:'max-results']},
+                                   :headers => {'Accept' => 'application/json',
+                                                'Content-Type' => 'application/json'}).to_return(:status => 200,
+                                                                                                 :body => {:items => [], :startIndex => 0, :maxResults => 100, :links => {:self => "https://api.hipchat.com/v2/room/#{room_id}/webhook"}}.to_json,
+                                                                                                 :headers => {})
+  end
+
+  def mock_successful_get_webhook(room_id, webhook_id)
+    stub_request(:get, "https://api.hipchat.com/v2/room/#{room_id}/webhook/#{webhook_id}").with(
+                                   :query   => {:auth_token => "blah"},
+                                   :headers => {'Accept' => 'application/json',
+                                                'Content-Type' => 'application/json'}).to_return(:status => 200,
+                                                                                                 :body => {:room => nil, :links => {:self => "https://api.hipchat.com/v2/room/#{room_id}/webhook/#{webhook_id}"}, :creator => nil, :url => 'http://example.org/webhook', :created => '2014-09-02T21:33:54+00:00', :event => 'room_deleted'}.to_json,
+                                                                                                 :headers => {})
   end
 end

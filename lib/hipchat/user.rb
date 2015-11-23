@@ -97,5 +97,30 @@ module HipChat
         raise UnknownResponseCode, "Unexpected #{response.code} for view private message history for `#{user_id}'"
       end
     end
+
+    #
+    # Get private message history
+    #
+    def delete(params = {})
+      case @api.version
+      when 'v1'
+        response = self.class.post(@api.delete_config[:url],
+                                  :query => { :auth_token => @token }.merge(params),
+                                  :headers => @api.headers
+        )
+      when 'v2'
+        response = self.class.delete(@api.delete_config[:url],
+                                  :query => { :auth_token => @token },
+                                  :headers => @api.headers
+        )
+      end
+
+      case response.code
+      when 200, 204
+        true
+      else
+        raise UnknownResponseCode, "Unexpected #{response.code} for delete user for `#{user_id}'"
+      end
+    end
   end
 end

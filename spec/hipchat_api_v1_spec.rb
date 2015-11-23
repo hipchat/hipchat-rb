@@ -166,11 +166,39 @@ describe "HipChat (API V1)" do
     end
   end
 
+  describe "#create_user" do
+    include_context "HipChatV1"
+
+    it "successfully with user name" do
+      mock_successful_user_creation("A User", "email@example.com")
+
+      expect(subject.create_user("A User", "email@example.com")).to be_truthy
+    end
+
+    it "successfully with custom parameters" do
+      mock_successful_user_creation("A User", "email@example.com", {:title => "Super user", :password => "password", :is_group_admin => "true"})
+
+      expect(subject.create_user("A User", "email@example.com", {:title => "Super user", :password => "password", :is_group_admin =>true})).to be_truthy
+    end
+
+    it "but fail is name is longer then 50 char" do
+      expect { subject.create_user("A User that is too long that I should fail right now", "email@example.com") }.
+        to raise_error(HipChat::UsernameTooLong)
+    end
+  end
+
   describe "#send user message" do
     it "fails because API V1 doesn't support user operations" do
 
       expect { HipChat::Client.new("blah", :api_version => @api_version).user('12345678').send('nope') }.
         to raise_error(HipChat::InvalidApiVersion)
     end
+  end
+
+  describe "#create_webhook"
+  it "fails because API V1 doesn't support webhooks" do
+
+    expect { room.create_webhook('https://example.org/hooks/awesome', 'room_enter') }.
+      to raise_error(HipChat::InvalidApiVersion)
   end
 end

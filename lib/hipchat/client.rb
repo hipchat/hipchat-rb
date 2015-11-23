@@ -56,6 +56,32 @@ module HipChat
       end
     end
 
+    def create_user(name, email, options={})
+      if name.length > 50
+        raise UsernameTooLong, "User name #{name} is #{name.length} characters long. Limit is 50."
+      end
+
+      response = self.class.post(@api.create_user_config[:url],
+        :query => { :auth_token => @token },
+        :body => {
+          :name => name,
+          :email => email
+          }.merge(options).send(@api.create_user_config[:body_format]),
+        :headers => @api.headers
+      )
+
+      case response.code
+      when 201, 200 #CREATED
+        response.parsed_response
+      when 400
+        raise UnknownUser,  "Error: #{response.message}"
+      when 401
+        raise Unauthorized, 'Access denied'
+      else
+        raise UnknownResponseCode, "Unexpected error #{response.code}"
+      end
+    end
+
     def user(name)
       HipChat::User.new(@token, { :user_id => name, :api_version => @api_version, :server_url => @options[:server_url] })
     end
