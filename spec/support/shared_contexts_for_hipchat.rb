@@ -63,10 +63,30 @@ shared_context "HipChatV1" do
                                           :body => '{"room": {"room_id": "1234", "name" : "A Room"}}',
                                           :headers => {})
   end
+
+  def mock_successful_user_creation(name, email, options={})
+    stub_request(:post, "https://api.hipchat.com/v1/users/create").with(
+                             :query => {:auth_token => "blah"},
+                             :body  => { :name => "A User", :email => "email@example.com" }.merge(options),
+                             :headers => {'Accept' => 'application/json',
+                                          'Content-Type' => 'application/x-www-form-urlencoded'}).to_return(
+                                          :status => 200,
+                                          :body => '{"user": {"user_id": "1234", "A User" : "A User", "email" : "email@example.com"}}',
+                                          :headers => {})
+  end
 end
 
 shared_context "HipChatV2" do
   before { @api_version = 'v2'}
+  def mock_successful_send_message(message, options={})
+    options = {:color => 'yellow', :notify => false, :message_format => 'html'}.merge(options)
+    stub_request(:post, "https://api.hipchat.com/v2/room/Hipchat/message").with(
+                             :query => {:auth_token => "blah"},
+                             :body  => {:room_id => "Hipchat",
+                                        :message => "Hello world"}.to_json,
+                                        :headers => {'Accept' => 'application/json',
+                                                    'Content-Type' => 'application/json'}).to_return(:status => 200, :body => "", :headers => {})
+  end
   # Helper for mocking room message post requests
   def mock_successful_send(from, message, options={})
     options = {:color => 'yellow', :notify => false, :message_format => 'html'}.merge(options)
@@ -157,6 +177,18 @@ shared_context "HipChatV2" do
                                           :headers => {})
   end
 
+  def mock_successful_user_creation(name, email, options={})
+    stub_request(:post, "https://api.hipchat.com/v2/user").with(
+                             :query => {:auth_token => "blah"},
+                             :body  => { :name => name, :email => email }.merge(options).to_json,
+                             :headers => {'Accept' => 'application/json',
+                                          'Content-Type' => 'application/json'}).to_return(
+                                          :status => 201,
+                                          :body => '{"id": "12345", "links": {"self": "https://api.hipchat.com/v2/user/12345"}}',
+                                          :headers => {})
+  end
+
+
   def mock_successful_get_room(room_id="1234")
     stub_request(:get, "https://api.hipchat.com/v2/room/#{room_id}").with(
       :query => {:auth_token => "blah"},
@@ -189,6 +221,20 @@ shared_context "HipChatV2" do
       :query => {:auth_token => "blah"},
       :body  => {
         :reason => options[:reason]||""
+      }.to_json,
+      :headers => {'Accept' => 'application/json',
+                   'Content-Type' => 'application/json'}).to_return(
+                   :status => 204,
+                   :body => "",
+                   :headers => {})
+  end
+
+  def mock_successful_add_member(options={})
+    options = {:user_id => "1234"}.merge(options)
+    stub_request(:put, "https://api.hipchat.com/v2/room/Hipchat/member/#{options[:user_id]}").with(
+      :query => {:auth_token => "blah"},
+      :body  => {
+        :room_roles => options[:room_roles] || ["room_member"]
       }.to_json,
       :headers => {'Accept' => 'application/json',
                    'Content-Type' => 'application/json'}).to_return(

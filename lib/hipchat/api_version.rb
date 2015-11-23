@@ -56,6 +56,19 @@ module HipChat
         }[version]
       end
 
+      def create_user_config
+        {
+          'v1' => {
+            :url => '/users/create',
+            :body_format => :to_hash
+          },
+          'v2' => {
+            :url => '/user',
+            :body_format => :to_json
+          }
+        }[version]
+      end
+
       def users_config
         {
           'v1' => {
@@ -120,6 +133,24 @@ module HipChat
         {
           'v2' => {
             :url => URI::escape("/#{room_id}/invite"),
+            :body_format => :to_json
+          }
+        }[version]
+      end
+
+      def add_member_config
+        {
+          'v2' => {
+            :url => URI::escape("/#{room_id}/member"),
+            :body_format => :to_json
+          }
+        }[version]
+      end
+
+      def send_message_config
+        {
+          'v2' => {
+            :url => URI::escape("/#{room_id}/message"),
             :body_format => :to_json
           }
         }[version]
@@ -243,6 +274,22 @@ module HipChat
         {
           'v1' => {
             :url => URI::escape('/show'),
+            :body_format => :to_json,
+            :query_params => { :user_id => user_id }
+          },
+          'v2' => {
+            :url => URI::escape("/#{user_id}"),
+            :body_format => :to_json,
+            :query_params => {}
+          }
+        }[version]
+      end
+
+
+      def delete_config
+        {
+          'v1' => {
+            :url => URI::escape('/delete'),
             :body_format => :to_json,
             :query_params => { :user_id => user_id }
           },
