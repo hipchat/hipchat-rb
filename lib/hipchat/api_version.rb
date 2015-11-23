@@ -189,6 +189,15 @@ module HipChat
           }
         }[version]
       end
+
+      def webhook_config
+        raise InvalidApiVersion, 'This functionality is not supported in API v1' unless version.eql?('v2')
+        {
+          'v2' => {
+            :url => URI::escape("/#{room_id}/webhook")
+          }
+        }[version]
+      end
     end
 
     class User
