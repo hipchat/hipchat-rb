@@ -5,7 +5,7 @@ A very basic wrapper for the HipChat HTTP API.
 h2. CI Status
 
 "!https://travis-ci.org/hipchat/hipchat-rb.png!":https://travis-ci.org/hipchat/hipchat-rb
-!https://coveralls.io/repos/hipchat/hipchat-rb/badge.png(Coverage Status)!:https://coveralls.io/r/hipchat/hipchat-rb
+!https://coveralls.io/repos/hipchat/hipchat-rb/badge.svg(Coverage Status)!:https://coveralls.io/r/hipchat/hipchat-rb
 
 h2. Requirements
 * Ruby 1.9.3 or higher
