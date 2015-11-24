@@ -48,7 +48,7 @@ describe "HipChat (API V1)" do
         OpenStruct.new(:code => 403)
       }
 
-      expect { room.history }.to raise_error(HipChat::UnknownResponseCode)
+      expect { room.history }.to raise_error(HipChat::Unauthorized)
     end
   end
 
@@ -87,7 +87,7 @@ describe "HipChat (API V1)" do
         OpenStruct.new(:code => 403)
       }
 
-      expect { room.topic "" }.to raise_error(HipChat::UnknownResponseCode)
+      expect { room.topic "" }.to raise_error(HipChat::Unauthorized)
     end
   end
 
@@ -142,7 +142,7 @@ describe "HipChat (API V1)" do
         OpenStruct.new(:code => 403)
       }
 
-      expect { room.send "", "" }.to raise_error(HipChat::UnknownResponseCode)
+      expect { room.send "", "" }.to raise_error(HipChat::Unauthorized)
     end
   end
 

@@ -29,16 +29,8 @@ module HipChat
                                  :headers => @api.headers
       )
 
-      case response.code
-      when 200, 204;
-        true
-      when 404
-        raise UnknownUser, "Unknown user: `#{user_id}'"
-      when 401
-        raise Unauthorized, "Access denied to user `#{user_id}'"
-      else
-        raise UnknownResponseCode, "Unexpected #{response.code} for private message to `#{user_id}'"
-      end
+      ErrorHandler.catch_and_raise_exception_for :user, user_id, response
+      true
     end
 
     #
@@ -51,15 +43,8 @@ module HipChat
         :headers => file_body_headers(@api.headers)
       )
 
-      case response.code
-      when 200, 204; true
-      when 404
-        raise UnknownUser,  "Unknown user: `#{user_id}'"
-      when 401
-        raise Unauthorized, "Access denied to user `#{user_id}'"
-      else
-        raise UnknownResponseCode, "Unexpected #{response.code} for private message to `#{user_id}'"
-      end
+      ErrorHandler.catch_and_raise_exception_for :user, user_id, response
+      true
     end
 
     #
@@ -71,12 +56,8 @@ module HipChat
                                 :headers => @api.headers
       )
 
-      case response.code
-      when 200
-        User.new(@token, response.merge(:api_version => @api.version))
-      else
-        raise UnknownResponseCode, "Unexpected #{response.code} for view message to `#{user_id}'"
-      end
+      ErrorHandler.catch_and_raise_exception_for :user, user_id, response
+      User.new(@token, response.merge(:api_version => @api.version))
     end
 
     #
@@ -90,12 +71,8 @@ module HipChat
                                 :headers => @api.headers
       )
 
-      case response.code
-      when 200
-        response.body
-      else
-        raise UnknownResponseCode, "Unexpected #{response.code} for view private message history for `#{user_id}'"
-      end
+      ErrorHandler.catch_and_raise_exception_for :user, user_id, response
+      response.body
     end
 
     #
@@ -115,12 +92,9 @@ module HipChat
         )
       end
 
-      case response.code
-      when 200, 204
-        true
-      else
-        raise UnknownResponseCode, "Unexpected #{response.code} for delete user for `#{user_id}'"
-      end
+      ErrorHandler.catch_and_raise_exception_for :user, user_id, response
+      true
     end
+
   end
 end
