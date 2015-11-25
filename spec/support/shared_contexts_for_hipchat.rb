@@ -215,6 +215,26 @@ shared_context "HipChatV2" do
                     :headers => {})
   end
 
+  def mock_successful_delete_room(room_id="1234")
+    stub_request(:delete, "https://api.hipchat.com/v2/room/#{room_id}").with(
+      :query => {:auth_token => "blah"},
+      :headers => {"Accept" => "application/json",
+                    "Content-Type" => "application/json"}).to_return(
+                    :status => 204,
+                    :body => "",
+                    :headers => {})
+  end
+
+  def mock_delete_missing_room(room_id="1234")
+    stub_request(:delete, "https://api.hipchat.com/v2/room/#{room_id}").with(
+      :query => {:auth_token => "blah"},
+      :headers => {"Accept" => "application/json",
+                    "Content-Type" => "application/json"}).to_return(
+                    :status => 404,
+                    :body => "",
+                    :headers => {})
+  end
+
   def mock_successful_invite(options={})
     options = {:user_id => "1234"}.merge(options)
     stub_request(:post, "https://api.hipchat.com/v2/room/Hipchat/invite/#{options[:user_id]}").with(

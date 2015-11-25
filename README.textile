@@ -99,6 +99,9 @@ client['my room'].get_room
 It's recommended to call client['my room'].get_room then pass in modified hash attributes to #update_room
 client['my room'].update_room(options = {})
 
+# Delete room (see https://www.hipchat.com/docs/apiv2/method/delete_room)
+client['my room'].delete_room
+
 # Invite user to room (see https://www.hipchat.com/docs/apiv2/method/invite_user)
 client['my room'].invite("USER_ID_OR_NAME", options = {})
 
