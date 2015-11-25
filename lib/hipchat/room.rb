@@ -23,16 +23,8 @@ module HipChat
         :headers => @api.headers
       )
 
-      case response.code
-      when 200
-        response.parsed_response
-      when 404
-        raise UnknownRoom,  "Unknown room: `#{room_id}'"
-      when 401
-        raise Unauthorized, "Access denied to room `#{room_id}'"
-      else
-        raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
-      end
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
+      response.parsed_response
     end
 
     # Update a room
@@ -55,15 +47,8 @@ module HipChat
         }.to_json,
         :headers => @api.headers)
 
-      case response.code
-      when 200, 204; true
-      when 404
-        raise Unknown Room, "Unknown room: `#{room_id}'"
-      when 401
-        raise Unauthorized, "Access denied to room `#{room_id}'"
-      else
-        raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
-      end
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
+      true
     end
 
     # Invite user to this room
@@ -75,15 +60,8 @@ module HipChat
         }.to_json,
         :headers => @api.headers)
 
-      case response.code
-      when 200, 204; true
-      when 404
-        raise UnknownRoom,  "Unknown room: `#{room_id}'"
-      when 401
-        raise Unauthorized, "Access denied to room `#{room_id}'"
-      else
-        raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
-      end
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
+      true
     end
 
     # Add member to this room
@@ -95,15 +73,8 @@ module HipChat
         }.to_json,
         :headers => @api.headers)
 
-      case response.code
-      when 200, 204; true
-      when 404
-        raise UnknownRoom,  "Unknown room: `#{room_id}'"
-      when 401
-        raise Unauthorized, "Access denied to room `#{room_id}'"
-      else
-        raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
-      end
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
+      true
     end
 
 
@@ -124,15 +95,8 @@ module HipChat
         :headers => @api.headers
       )
 
-      case response.code
-      when 200, 201; true
-      when 404
-        raise UnknownRoom,  "Unknown room: `#{room_id}'"
-      when 401
-        raise Unauthorized, "Access denied to room `#{room_id}'"
-      else
-        raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
-      end
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
+      true
     end
 
 
@@ -181,15 +145,8 @@ module HipChat
         :headers => @api.headers
       )
 
-      case response.code
-      when 200, 204; true
-      when 404
-        raise UnknownRoom,  "Unknown room: `#{room_id}'"
-      when 401
-        raise Unauthorized, "Access denied to room `#{room_id}'"
-      else
-        raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
-      end
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
+      true
     end
 
     def share_link(from, message, link)
@@ -208,15 +165,8 @@ module HipChat
         :headers => @api.headers
       )
 
-      case response.code
-      when 200, 204; true
-      when 404
-        raise UnknownRoom,  "Unknown room: `#{room_id}'"
-      when 401
-        raise Unauthorized, "Access denied to room `#{room_id}'"
-      else
-        raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
-      end
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
+      true
     end
 
     # Send a file to this room.
@@ -242,15 +192,8 @@ module HipChat
         :headers => file_body_headers(@api.headers)
       )
 
-      case response.code
-      when 200, 204; true
-      when 404
-        raise UnknownRoom,  "Unknown room: `#{room_id}'"
-      when 401
-        raise Unauthorized, "Access denied to room `#{room_id}'"
-      else
-        raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
-      end
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
+      true
     end
 
     # Change this room's topic
@@ -278,15 +221,8 @@ module HipChat
         :headers => @api.headers
       )
 
-      case response.code
-      when 204,200; true
-      when 404
-        raise UnknownRoom,  "Unknown room: `#{room_id}'"
-      when 401
-        raise Unauthorized, "Access denied to room `#{room_id}'"
-      else
-        raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
-      end
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
+      true
     end
 
     # Pull this room's history
@@ -327,16 +263,8 @@ module HipChat
         :headers => @api.headers
       )
 
-      case response.code
-      when 200
-        response.body
-      when 404
-        raise UnknownRoom,  "Unknown room: `#{room_id}'"
-      when 401
-        raise Unauthorized, "Access denied to room `#{room_id}'"
-      else
-        raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
-      end
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
+      response.body
     end
 
     # Pull this room's statistics
@@ -353,16 +281,8 @@ module HipChat
         :headers => @api.headers
       )
 
-      case response.code
-      when 200
-        response.body
-      when 404
-        raise UnknownRoom,  "Unknown room: `#{room_id}'"
-      when 401
-        raise Unauthorized, "Access denied to room `#{room_id}'"
-      else
-        raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
-      end
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
+      response.body
     end
 
     # Create a webhook for this room
@@ -401,17 +321,8 @@ module HipChat
         :headers => @api.headers
       )
 
-      case response.code
-      when 200, 201
-        response.body
-      when 404
-        raise UnknownRoom,  "Unknown room: `#{room_id}'"
-      when 401
-        raise Unauthorized, "Access denied to room `#{room_id}'"
-      else
-        raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
-      end
-
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
+      response.body
     end
 
     # Delete a webhook for this room
@@ -428,15 +339,8 @@ module HipChat
                                  :headers => @api.headers
       )
 
-      case response.code
-      when 200, 204; true
-      when 404
-        raise UnknownWebhook,  "Unknown webhook: `#{webhook_id}'"
-      when 401
-        raise Unauthorized, "Access denied to room `#{room_id}'"
-      else
-        raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
-      end
+      ErrorHandler.response_code_to_exception_for :webhook, webhook_id, response
+      true
     end
 
     # Gets all webhooks for this room
@@ -464,16 +368,8 @@ module HipChat
                                    :headers => @api.headers
       )
 
-      case response.code
-      when 200
-        response.body
-      when 404
-        raise UnknownRoom,  "Unknown room: `#{room_id}'"
-      when 401
-        raise Unauthorized, "Access denied to room `#{room_id}'"
-      else
-        raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
-      end
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
+      response.body
     end
 
     # Get a webhook for this room
@@ -490,16 +386,8 @@ module HipChat
                                 :headers => @api.headers
       )
 
-      case response.code
-      when 200
-        response.body
-      when 404
-        raise UnknownWebhook,  "Unknown webhook: `#{webhook_id}'"
-      when 401
-        raise Unauthorized, "Access denied to room `#{room_id}'"
-      else
-        raise UnknownResponseCode, "Unexpected #{response.code} for room `#{room_id}'"
-      end
+      ErrorHandler.response_code_to_exception_for :webhook, webhook_id, response
+      response.body
     end
 
     private

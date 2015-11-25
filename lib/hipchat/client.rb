@@ -44,16 +44,8 @@ module HipChat
         :headers => @api.headers
       )
 
-      case response.code
-      when 201, 200 #CREATED
-        response.parsed_response
-      when 400
-        raise UnknownRoom,  "Error: #{response.message}"
-      when 401
-        raise Unauthorized, 'Access denied'
-      else
-        raise UnknownResponseCode, "Unexpected error #{response.code}"
-      end
+      ErrorHandler.response_code_to_exception_for :room, name, response
+      response.parsed_response
     end
 
     def create_user(name, email, options={})
@@ -70,16 +62,8 @@ module HipChat
         :headers => @api.headers
       )
 
-      case response.code
-      when 201, 200 #CREATED
-        response.parsed_response
-      when 400
-        raise UnknownUser,  "Error: #{response.message}"
-      when 401
-        raise Unauthorized, 'Access denied'
-      else
-        raise UnknownResponseCode, "Unexpected error #{response.code}"
-      end
+      ErrorHandler.response_code_to_exception_for :user, email, response
+      response.parsed_response
     end
 
     def user(name)
@@ -118,13 +102,10 @@ module HipChat
         },
         :headers => @api.headers
       )
-      case response.code
-      when 200
-        response[@api.rooms_config[:data_key]].map do |r|
-          HipChat::Room.new(@token, r.merge(:api_version => @api_version, :server_url => @options[:server_url]))
-        end
-      else
-        raise UnknownResponseCode, "Unexpected #{response.code} for room"
+
+      ErrorHandler.response_code_to_exception_for :room, nil, response
+      response[@api.rooms_config[:data_key]].map do |r|
+        HipChat::Room.new(@token, r.merge(:api_version => @api_version, :server_url => @options[:server_url]))
       end
     end
 
@@ -136,13 +117,10 @@ module HipChat
         },
         :headers => @api.headers
       )
-      case response.code
-      when 200
-        response[@api.users_config[:data_key]].map do |u|
-          HipChat::User.new(@token, u.merge(:api_version => @api_version, :server_url => @options[:server_url]))
-        end
-      else
-        raise UnknownResponseCode, "Unexpected #{response.code} for user"
+
+      ErrorHandler.response_code_to_exception_for :user, nil, response
+      response[@api.users_config[:data_key]].map do |u|
+        HipChat::User.new(@token, u.merge(:api_version => @api_version, :server_url => @options[:server_url]))
       end
     end
   end
