@@ -44,7 +44,7 @@ module HipChat
         :headers => @api.headers
       )
 
-      ErrorHandler.catch_and_raise_exception_for :room, name, response
+      ErrorHandler.response_code_to_exception_for :room, name, response
       response.parsed_response
     end
 
@@ -62,7 +62,7 @@ module HipChat
         :headers => @api.headers
       )
 
-      ErrorHandler.catch_and_raise_exception_for :user, email, response
+      ErrorHandler.response_code_to_exception_for :user, email, response
       response.parsed_response
     end
 
@@ -103,7 +103,7 @@ module HipChat
         :headers => @api.headers
       )
 
-      ErrorHandler.catch_and_raise_exception_for :room, nil, response
+      ErrorHandler.response_code_to_exception_for :room, nil, response
       response[@api.rooms_config[:data_key]].map do |r|
         HipChat::Room.new(@token, r.merge(:api_version => @api_version, :server_url => @options[:server_url]))
       end
@@ -118,7 +118,7 @@ module HipChat
         :headers => @api.headers
       )
 
-      ErrorHandler.catch_and_raise_exception_for :user, nil, response
+      ErrorHandler.response_code_to_exception_for :user, nil, response
       response[@api.users_config[:data_key]].map do |u|
         HipChat::User.new(@token, u.merge(:api_version => @api_version, :server_url => @options[:server_url]))
       end

@@ -23,7 +23,7 @@ module HipChat
         :headers => @api.headers
       )
 
-      ErrorHandler.catch_and_raise_exception_for :room, room_id, response
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
       response.parsed_response
     end
 
@@ -47,7 +47,7 @@ module HipChat
         }.to_json,
         :headers => @api.headers)
 
-      ErrorHandler.catch_and_raise_exception_for :room, room_id, response
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
       true
     end
 
@@ -60,7 +60,7 @@ module HipChat
         }.to_json,
         :headers => @api.headers)
 
-      ErrorHandler.catch_and_raise_exception_for :room, room_id, response
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
       true
     end
 
@@ -73,7 +73,7 @@ module HipChat
         }.to_json,
         :headers => @api.headers)
 
-      ErrorHandler.catch_and_raise_exception_for :room, room_id, response
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
       true
     end
 
@@ -95,7 +95,7 @@ module HipChat
         :headers => @api.headers
       )
 
-      ErrorHandler.catch_and_raise_exception_for :room, room_id, response
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
       true
     end
 
@@ -145,7 +145,7 @@ module HipChat
         :headers => @api.headers
       )
 
-      ErrorHandler.catch_and_raise_exception_for :room, room_id, response
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
       true
     end
 
@@ -165,7 +165,7 @@ module HipChat
         :headers => @api.headers
       )
 
-      ErrorHandler.catch_and_raise_exception_for :room, room_id, response
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
       true
     end
 
@@ -192,7 +192,7 @@ module HipChat
         :headers => file_body_headers(@api.headers)
       )
 
-      ErrorHandler.catch_and_raise_exception_for :room, room_id, response
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
       true
     end
 
@@ -221,7 +221,7 @@ module HipChat
         :headers => @api.headers
       )
 
-      ErrorHandler.catch_and_raise_exception_for :room, room_id, response
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
       true
     end
 
@@ -263,7 +263,7 @@ module HipChat
         :headers => @api.headers
       )
 
-      ErrorHandler.catch_and_raise_exception_for :room, room_id, response
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
       response.body
     end
 
@@ -281,7 +281,7 @@ module HipChat
         :headers => @api.headers
       )
 
-      ErrorHandler.catch_and_raise_exception_for :room, room_id, response
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
       response.body
     end
 
@@ -321,7 +321,7 @@ module HipChat
         :headers => @api.headers
       )
 
-      ErrorHandler.catch_and_raise_exception_for :room, room_id, response
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
       response.body
     end
 
@@ -339,7 +339,7 @@ module HipChat
                                  :headers => @api.headers
       )
 
-      ErrorHandler.catch_and_raise_exception_for :webhook, webhook_id, response
+      ErrorHandler.response_code_to_exception_for :webhook, webhook_id, response
       true
     end
 
@@ -368,7 +368,7 @@ module HipChat
                                    :headers => @api.headers
       )
 
-      ErrorHandler.catch_and_raise_exception_for :room, room_id, response
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
       response.body
     end
 
@@ -386,7 +386,7 @@ module HipChat
                                 :headers => @api.headers
       )
 
-      ErrorHandler.catch_and_raise_exception_for :webhook, webhook_id, response
+      ErrorHandler.response_code_to_exception_for :webhook, webhook_id, response
       response.body
     end
 

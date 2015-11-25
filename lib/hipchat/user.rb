@@ -29,7 +29,7 @@ module HipChat
                                  :headers => @api.headers
       )
 
-      ErrorHandler.catch_and_raise_exception_for :user, user_id, response
+      ErrorHandler.response_code_to_exception_for :user, user_id, response
       true
     end
 
@@ -43,7 +43,7 @@ module HipChat
         :headers => file_body_headers(@api.headers)
       )
 
-      ErrorHandler.catch_and_raise_exception_for :user, user_id, response
+      ErrorHandler.response_code_to_exception_for :user, user_id, response
       true
     end
 
@@ -56,7 +56,7 @@ module HipChat
                                 :headers => @api.headers
       )
 
-      ErrorHandler.catch_and_raise_exception_for :user, user_id, response
+      ErrorHandler.response_code_to_exception_for :user, user_id, response
       User.new(@token, response.merge(:api_version => @api.version))
     end
 
@@ -71,7 +71,7 @@ module HipChat
                                 :headers => @api.headers
       )
 
-      ErrorHandler.catch_and_raise_exception_for :user, user_id, response
+      ErrorHandler.response_code_to_exception_for :user, user_id, response
       response.body
     end
 
@@ -92,7 +92,7 @@ module HipChat
         )
       end
 
-      ErrorHandler.catch_and_raise_exception_for :user, user_id, response
+      ErrorHandler.response_code_to_exception_for :user, user_id, response
       true
     end
 
