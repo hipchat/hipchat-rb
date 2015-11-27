@@ -54,6 +54,11 @@ describe HipChat do
         client = HipChat::Client.new("blah", :api_version => 'v2')
         expect(client[:example].api_version).to eql('v2')
       end
+
+      it "when given '2' it raises an exception" do
+        expect { HipChat::Client.new("blah", :api_version => '2') }.
+          to raise_error(HipChat::InvalidApiVersion)
+      end
     end
 
     context "server_url" do
