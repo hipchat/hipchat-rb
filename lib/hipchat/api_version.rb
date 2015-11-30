@@ -20,10 +20,12 @@ module HipChat
           @base_uri = "#{options[:server_url]}/v1"
           @headers = {'Accept' => 'application/json',
              'Content-Type' => 'application/x-www-form-urlencoded'}
-        else
+        elsif @version.eql?('v2')
           @base_uri = "#{options[:server_url]}/v2"
           @headers = {'Accept' => 'application/json',
              'Content-Type' => 'application/json'}
+        else
+          raise InvalidApiVersion, 'Couldn\'t recognize API version'
         end
       end
 
