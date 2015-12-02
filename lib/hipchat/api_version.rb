@@ -131,6 +131,21 @@ module HipChat
         }[version]
       end
 
+      def delete_room_config
+        {
+          'v1' => {
+            :url => URI::escape("/delete"),
+            :method => :post,
+            :query_params => { :room_id => room_id }
+          },
+          'v2' => {
+            :url => URI::escape("/#{room_id}"),
+            :method => :delete,
+            :query_params => {}
+          }
+        }[version]
+      end
+
       def invite_config
         {
           'v2' => {

@@ -51,6 +51,15 @@ module HipChat
       true
     end
 
+    # Delete a room
+    def delete_room
+      response = self.class.send(@api.delete_room_config[:method], @api.delete_room_config[:url],
+        :query => {:auth_token => @token }.merge(@api.get_room_config[:query_params]),
+        :headers => @api.headers)
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
+      true
+    end
+
     # Invite user to this room
     def invite(user, reason='')
       response = self.class.post(@api.invite_config[:url]+"/#{user}",

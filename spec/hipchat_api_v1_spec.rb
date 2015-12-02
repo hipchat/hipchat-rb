@@ -91,6 +91,22 @@ describe "HipChat (API V1)" do
     end
   end
 
+  describe "#delete_room" do
+    include_context "HipChatV1"
+
+    it "successfully" do
+      mock_successful_delete_room("Hipchat")
+      expect(room.delete_room).to be_truthy
+    end
+
+    it "missing room" do
+      mock_delete_missing_room("Hipchat")
+      expect do
+        room.delete_room
+      end.to raise_exception(HipChat::UnknownRoom)
+    end
+  end
+
   describe "#send" do
     include_context "HipChatV1"
     it "successfully without custom options" do

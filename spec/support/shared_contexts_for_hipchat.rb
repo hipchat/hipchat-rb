@@ -74,6 +74,27 @@ shared_context "HipChatV1" do
                                           :body => '{"user": {"user_id": "1234", "A User" : "A User", "email" : "email@example.com"}}',
                                           :headers => {})
   end
+
+  def mock_successful_delete_room(room_id="1234")
+    stub_request(:post, "https://api.hipchat.com/v1/rooms/delete").with(
+      :query => {:auth_token => "blah", :room_id => room_id},
+      :headers => {"Accept" => "application/json",
+                    "Content-Type" => "application/x-www-form-urlencoded"}).to_return(
+                    :status => 204,
+                    :body => "",
+                    :headers => {})
+  end
+
+  def mock_delete_missing_room(room_id="1234")
+    stub_request(:post, "https://api.hipchat.com/v1/rooms/delete").with(
+      :query => {:auth_token => "blah", :room_id => room_id},
+      :headers => {"Accept" => "application/json",
+                    "Content-Type" => "application/x-www-form-urlencoded"}).to_return(
+                    :status => 404,
+                    :body => "",
+                    :headers => {})
+
+  end
 end
 
 shared_context "HipChatV2" do
@@ -211,6 +232,26 @@ shared_context "HipChatV2" do
       :headers => {"Accept" => "application/json",
                     "Content-Type" => "application/json"}).to_return(
                     :status => 204,
+                    :body => "",
+                    :headers => {})
+  end
+
+  def mock_successful_delete_room(room_id="1234")
+    stub_request(:delete, "https://api.hipchat.com/v2/room/#{room_id}").with(
+      :query => {:auth_token => "blah"},
+      :headers => {"Accept" => "application/json",
+                    "Content-Type" => "application/json"}).to_return(
+                    :status => 204,
+                    :body => "",
+                    :headers => {})
+  end
+
+  def mock_delete_missing_room(room_id="1234")
+    stub_request(:delete, "https://api.hipchat.com/v2/room/#{room_id}").with(
+      :query => {:auth_token => "blah"},
+      :headers => {"Accept" => "application/json",
+                    "Content-Type" => "application/json"}).to_return(
+                    :status => 404,
                     :body => "",
                     :headers => {})
   end
