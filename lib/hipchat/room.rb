@@ -129,8 +129,8 @@ module HipChat
     # +notify+:: true or false
     #            (default false)
     def send(from, message, options_or_notify = {})
-      if from.length > 15
-        raise UsernameTooLong, "Username #{from} is `#{from.length} characters long. Limit is 15'"
+      if from.length > 20
+        raise UsernameTooLong, "Username #{from} is `#{from.length} characters long. Limit is 20'"
       end
       options = if options_or_notify == true or options_or_notify == false
         warn 'DEPRECATED: Specify notify flag as an option (e.g., :notify => true)'
@@ -159,8 +159,8 @@ module HipChat
     end
 
     def share_link(from, message, link)
-      if from.length > 15
-        raise UsernameTooLong, "Username #{from} is `#{from.length} characters long. Limit is 15'"
+      if from.length > 20
+        raise UsernameTooLong, "Username #{from} is `#{from.length} characters long. Limit is 20'"
       end
 
       response = self.class.post(@api.share_link_config[:url],
@@ -185,8 +185,8 @@ module HipChat
     #   # Default
     #   send_file 'nickname', 'some message', File.open("/path/to/file")
     def send_file(from, message, file)
-      if from.length > 15
-        raise UsernameTooLong, "Username #{from} is `#{from.length} characters long. Limit is 15'"
+      if from.length > 20
+        raise UsernameTooLong, "Username #{from} is `#{from.length} characters long. Limit is 20'"
       end
 
       response = self.class.post(@api.send_file_config[:url],
