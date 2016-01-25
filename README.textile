@@ -257,8 +257,8 @@ bc..    require 'hipchat/chef'
 h3. With HipChat Server Beta
 
 Add an "options" hash to set api v2 and your URL:
-* arguments ['API_KEY', 'HIPCHAT_ROOM', options={api_version: "v2", server_url: "https://hipchat.example.com"}]
-* hipchat_handler = HipChat::NotifyRoom.new("API_KEY", "HIPCHAT_ROOM", options={api_version: "v2", server_url: "https://hipchat.example.com"})
+* arguments ['API_KEY', 'HIPCHAT_ROOM', options={hipchat_options: {api_version: "v2", server_url: "https://hipchat.example.com"}}]
+* hipchat_handler = HipChat::NotifyRoom.new("API_KEY", "HIPCHAT_ROOM", options={hipchat_options: {api_version: "v2", server_url: "https://hipchat.example.com"}})
 
 h2. Copyright
 
