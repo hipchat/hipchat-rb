@@ -142,6 +142,21 @@ shared_context "HipChatV2" do
                                           'Content-Type' => 'multipart/related; boundary=sendfileboundary'}).to_return(:status => 200, :body => "", :headers => {})
   end
 
+  def mock_successful_send_card(from, message, card)
+    stub_request(:post, "https://api.hipchat.com/v2/room/Hipchat/notification").with(
+                            :query => {:auth_token => "blah"},
+                            :body  => {:room_id         => "Hipchat",
+                                       :from            => "Dude",
+                                       :message         => message,
+                                       :message_format  => 'html',
+                                       :color           => 'yellow',
+                                       :card            => card,
+                                       :notify          => false}.to_json,
+                                       :headers => {'Accept' => 'application/json',
+                                                   'Content-Type' => 'application/json'}).to_return(:status => 200, :body => "", :headers => {})
+
+  end
+
   def mock_successful_topic_change(topic, options={})
     options = {:from => 'API'}.merge(options)
     stub_request(:put, "https://api.hipchat.com/v2/room/Hipchat/topic").with(
