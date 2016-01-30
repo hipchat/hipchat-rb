@@ -49,6 +49,7 @@ shared_context "HipChatV1" do
                                    :timezone      => options[:timezone],
                                    :'max-results' => options[:'max-results'],
                                    :'start-index' => options[:'start-index'],
+                                   :'end-date'    => options[:'end-date'],
                                    :format        => options[:format]}).to_return(canned_response)
   end
 
@@ -173,6 +174,7 @@ shared_context "HipChatV2" do
                                    :timezone   => options[:timezone],
                                    :'max-results' => options[:'max-results'],
                                    :'start-index' => options[:'start-index'],
+                                   :'end-date'    => options[:'end-date'],
                                    :format     => options[:format]}).to_return(canned_response)
   end
 

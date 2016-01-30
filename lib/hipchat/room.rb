@@ -256,7 +256,8 @@ module HipChat
         :timezone => 'UTC',
         :format => 'JSON',
         :'max-results' => 100,
-        :'start-index' => 0
+        :'start-index' => 0,
+        :'end-date' => nil
       }.merge options
 
       response = self.class.get(@api.history_config[:url],
@@ -267,6 +268,7 @@ module HipChat
           :format     => options[:format],
           :'max-results' => options[:'max-results'],
           :'start-index' => options[:'start-index'],
+          :'end-date' => options[:'end-date'],
           :auth_token => @token
         },
         :headers => @api.headers

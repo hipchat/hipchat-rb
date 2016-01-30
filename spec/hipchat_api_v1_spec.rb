@@ -15,8 +15,8 @@ describe "HipChat (API V1)" do
     end
 
     it "is successful with custom options" do
-      mock_successful_history(:timezone => 'America/Los_Angeles', :date => '2010-11-19', :'max-results' => 10, :'start-index' => 10)
-      expect(room.history(:timezone => 'America/Los_Angeles', :date => '2010-11-19', :'max-results' => 10, :'start-index' => 10)).to be_truthy
+      mock_successful_history(:timezone => 'America/Los_Angeles', :date => '2010-11-19', :'max-results' => 10, :'start-index' => 10, :'end-date' => '2010-11-19')
+      expect(room.history(:timezone => 'America/Los_Angeles', :date => '2010-11-19', :'max-results' => 10, :'start-index' => 10, :'end-date' => '2010-11-19')).to be_truthy
     end
 
     it "is successful from fetched room" do
