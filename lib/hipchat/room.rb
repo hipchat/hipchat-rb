@@ -139,19 +139,21 @@ module HipChat
         options_or_notify || {}
       end
 
-      options = { :color => 'yellow', :notify => false }.merge options
+      options = { :color => 'yellow', :notify => false, :message_format => 'html' }.merge options
+
+      body = {
+        :room_id        => room_id,
+        :from           => from,
+        :message        => message,
+        :message_format => options[:message_format],
+        :color          => options[:color],
+        :card           => options[:card],
+        :notify         => @api.bool_val(options[:notify])
+      }.delete_if { |_k, v| v.nil? }
 
       response = self.class.post(@api.send_config[:url],
         :query => { :auth_token => @token },
-        :body  => {
-          :room_id        => room_id,
-          :from           => from,
-          :message        => message,
-          :message_format => options[:message_format] || 'html',
-          :color          => options[:color],
-          :card           => options[:card],
-          :notify         => @api.bool_val(options[:notify])
-        }.send(@api.send_config[:body_format]),
+        :body  => body.send(@api.send_config[:body_format]),
         :headers => @api.headers
       )
 

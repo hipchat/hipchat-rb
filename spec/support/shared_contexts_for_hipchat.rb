@@ -99,8 +99,7 @@ end
 
 shared_context "HipChatV2" do
   before { @api_version = 'v2'}
-  def mock_successful_send_message(message, options={})
-    options = {:color => 'yellow', :notify => false, :message_format => 'html'}.merge(options)
+  def mock_successful_send_message(message)
     stub_request(:post, "https://api.hipchat.com/v2/room/Hipchat/message").with(
                              :query => {:auth_token => "blah"},
                              :body  => {:room_id => "Hipchat",
@@ -143,18 +142,18 @@ shared_context "HipChatV2" do
   end
 
   def mock_successful_send_card(from, message, card)
+    options = {:color => 'yellow', :notify => false, :message_format => 'html'}
     stub_request(:post, "https://api.hipchat.com/v2/room/Hipchat/notification").with(
-                            :query => {:auth_token => "blah"},
-                            :body  => {:room_id         => "Hipchat",
-                                       :from            => "Dude",
-                                       :message         => message,
-                                       :message_format  => 'html',
-                                       :color           => 'yellow',
-                                       :card            => card,
-                                       :notify          => false}.to_json,
-                                       :headers => {'Accept' => 'application/json',
-                                                   'Content-Type' => 'application/json'}).to_return(:status => 200, :body => "", :headers => {})
-
+                             :query => {:auth_token => "blah"},
+                             :body  => {:room_id => "Hipchat",
+                                        :from    => "Dude",
+                                        :message => "Hello world",
+                                        :message_format => options[:message_format],
+                                        :color   => options[:color],
+                                        :card    => card,
+                                        :notify  => options[:notify]}.to_json,
+                                        :headers => {'Accept' => 'application/json',
+                                                    'Content-Type' => 'application/json'}).to_return(:status => 200, :body => "", :headers => {})
   end
 
   def mock_successful_topic_change(topic, options={})
