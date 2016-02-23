@@ -290,7 +290,8 @@ shared_context "HipChatV2" do
     stub_request(:post, "https://api.hipchat.com/v2/user/12345678/message").with(
                                    :query   => {:auth_token => "blah"},
                                    :body    => {:message => "Equal bytes for everyone",
-                                                :message_format => "text"},
+                                                :message_format => "text",
+                                                :notify => false},
                                    :headers => {'Accept' => 'application/json',
                                                 'Content-Type' => 'application/json'}).to_return(:status => 200, :body => "", :headers => {})
   end
