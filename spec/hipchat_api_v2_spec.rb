@@ -186,6 +186,17 @@ describe "HipChat (API V2)" do
       expect(room.send("Dude", "Hello world", :color => 'red')).to be_truthy
     end
 
+    it "successfully creates a card in the room" do
+      card = {
+        :style => 'application',
+        :title => 'My Awesome Card',
+        :id => 12345
+      }
+      mock_successful_send_card 'Dude', 'Hello world', card
+
+      expect(room.send("Dude", "Hello world", :card => card)).to be_truthy
+    end
+
     it "successfully with text message_format" do
       mock_successful_send 'Dude', 'Hello world', :message_format => 'text'
 

@@ -100,8 +100,7 @@ end
 
 shared_context "HipChatV2" do
   before { @api_version = 'v2'}
-  def mock_successful_send_message(message, options={})
-    options = {:color => 'yellow', :notify => false, :message_format => 'html'}.merge(options)
+  def mock_successful_send_message(message)
     stub_request(:post, "https://api.hipchat.com/v2/room/Hipchat/message").with(
                              :query => {:auth_token => "blah"},
                              :body  => {:room_id => "Hipchat",
@@ -141,6 +140,21 @@ shared_context "HipChatV2" do
                              :body  => "--sendfileboundary\nContent-Type: application/json; charset=UTF-8\nContent-Disposition: attachment; name=\"metadata\"\n\n{\"room_id\":\"Hipchat\",\"from\":\"Dude\",\"message\":\"Hello world\"}\n--sendfileboundary\nContent-Type: ; charset=UTF-8\nContent-Transfer-Encoding: base64\nContent-Disposition: attachment; name=\"file\"; filename=\"#{File.basename(file.path)}\"\n\ndGhlIGNvbnRlbnQ=\n\n--sendfileboundary--",
                              :headers => {'Accept' => 'application/json',
                                           'Content-Type' => 'multipart/related; boundary=sendfileboundary'}).to_return(:status => 200, :body => "", :headers => {})
+  end
+
+  def mock_successful_send_card(from, message, card)
+    options = {:color => 'yellow', :notify => false, :message_format => 'html'}
+    stub_request(:post, "https://api.hipchat.com/v2/room/Hipchat/notification").with(
+                             :query => {:auth_token => "blah"},
+                             :body  => {:room_id => "Hipchat",
+                                        :from    => "Dude",
+                                        :message => "Hello world",
+                                        :message_format => options[:message_format],
+                                        :color   => options[:color],
+                                        :card    => card,
+                                        :notify  => options[:notify]}.to_json,
+                                        :headers => {'Accept' => 'application/json',
+                                                    'Content-Type' => 'application/json'}).to_return(:status => 200, :body => "", :headers => {})
   end
 
   def mock_successful_topic_change(topic, options={})
