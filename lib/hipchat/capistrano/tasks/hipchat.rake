@@ -65,16 +65,19 @@ namespace :hipchat do
 
   def deployment_name
     if fetch(:branch, nil)
-      application = fetch(:application)
       branch = fetch(:branch)
       real_revision = fetch(:real_revision)
 
-      name = "#{application}/#{branch}"
+      name = "#{application_name}/#{branch}"
       name += " (revision #{real_revision[0..7]})" if real_revision
       name
     else
-      application
+      application_name
     end
+  end
+
+  def application_name
+    alt_application_name.nil? ? fetch(:application) : alt_application_name
   end
 
   def message_color
@@ -99,6 +102,10 @@ namespace :hipchat do
 
   def deploy_user
     fetch(:hipchat_deploy_user, 'Deploy')
+  end
+
+  def alt_application_name
+    fetch(:hipchat_app_name, nil)
   end
 
   def human
