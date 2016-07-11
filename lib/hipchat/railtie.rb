@@ -1,5 +1,3 @@
-require 'hipchat'
-
 module HipChat
   class Railtie < Rails::Railtie
     rake_tasks do
