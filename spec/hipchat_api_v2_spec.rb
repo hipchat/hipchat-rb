@@ -208,30 +208,29 @@ describe "HipChat (API V2)" do
     it "successfully" do
       mock_successful_link_share 'Dude', 'Sloth love Chunk!', link
 
-      room.share_link("Dude", "Sloth love Chunk!", link).should be_truthy
+      expect(room.share_link("Dude", "Sloth love Chunk!", link)).to be_truthy
     end
 
     it "but fails when the room doesn't exist" do
       allow(room.class).to receive(:post).with(anything, anything).and_return(OpenStruct.new(:code => 404))
 
-      lambda { room.share_link "", "", link }.should raise_error(HipChat::UnknownRoom)
+      expect(lambda { room.share_link "", "", link }).to raise_error(HipChat::UnknownRoom)
     end
 
     it "but fails when we're not allowed to do so" do
       allow(room.class).to receive(:post).with(anything, anything).and_return(OpenStruct.new(:code => 401))
 
-      lambda { room.share_link "", "", link }.should raise_error(HipChat::Unauthorized)
+      expect(lambda { room.share_link "", "", link }).to raise_error(HipChat::Unauthorized)
     end
 
     it "but fails if the username is more than 15 chars" do
-      lambda { room.share_link "a very long username here", "a message", link }.should raise_error(HipChat::UsernameTooLong)
+      expect(lambda { room.share_link "a very long username here", "a message", link }).to raise_error(HipChat::UsernameTooLong)
     end
 
     it "but fails if we get an unknown response code" do
       allow(room.class).to receive(:post).with(anything, anything).and_return(OpenStruct.new(:code => 403))
 
-      lambda { room.share_link "", "", link }.
-        should raise_error(HipChat::Unauthorized)
+      expect(lambda { room.share_link "", "", link }).to raise_error(HipChat::Unauthorized)
     end
   end
 
@@ -250,30 +249,29 @@ describe "HipChat (API V2)" do
     it "successfully" do
       mock_successful_file_send 'Dude', 'Hello world', file
 
-      room.send_file("Dude", "Hello world", file).should be_truthy
+      expect(room.send_file("Dude", "Hello world", file)).to be_truthy
     end
 
     it "but fails when the room doesn't exist" do
       allow(room.class).to receive(:post).with(anything, anything).and_return(OpenStruct.new(:code => 404))
 
-      lambda { room.send_file "", "", file }.should raise_error(HipChat::UnknownRoom)
+      expect(lambda { room.send_file "", "", file }).to raise_error(HipChat::UnknownRoom)
     end
 
     it "but fails when we're not allowed to do so" do
       allow(room.class).to receive(:post).with(anything, anything).and_return(OpenStruct.new(:code => 401))
 
-      lambda { room.send_file "", "", file }.should raise_error(HipChat::Unauthorized)
+      expect(lambda { room.send_file "", "", file }).to raise_error(HipChat::Unauthorized)
     end
 
     it "but fails if the username is more than 15 chars" do
-      lambda { room.send_file "a very long username here", "a message", file }.should raise_error(HipChat::UsernameTooLong)
+      expect(lambda { room.send_file "a very long username here", "a message", file }).to raise_error(HipChat::UsernameTooLong)
     end
 
     it "but fails if we get an unknown response code" do
       allow(room.class).to receive(:post).with(anything, anything).and_return(OpenStruct.new(:code => 403))
 
-      lambda { room.send_file "", "", file }.
-        should raise_error(HipChat::Unauthorized)
+      expect(lambda { room.send_file "", "", file }).to raise_error(HipChat::Unauthorized)
     end
   end
 
@@ -422,7 +420,7 @@ describe "HipChat (API V2)" do
 
     it 'successfully returns history' do
       mock_successful_user_history
-      user.history.should be_truthy
+      expect(user.history).to be_truthy
     end
 
     it 'has allowed params' do
@@ -443,19 +441,19 @@ describe "HipChat (API V2)" do
     it "successfully with a standard file" do
       mock_successful_user_send_file 'Equal bytes for everyone', file
 
-      user.send_file('Equal bytes for everyone', file).should be_truthy
+      expect(user.send_file('Equal bytes for everyone', file)).to be_truthy
     end
 
     it "but fails when the user doesn't exist" do
       allow(user.class).to receive(:post).with(anything, anything).and_return(OpenStruct.new(:code => 404))
 
-      lambda { user.send_file "", file }.should raise_error(HipChat::UnknownUser)
+      expect(lambda { user.send_file "", file }).to raise_error(HipChat::UnknownUser)
     end
 
     it "but fails when we're not allowed to do so" do
       allow(user.class).to receive(:post).with(anything, anything).and_return(OpenStruct.new(:code => 401))
 
-      lambda { user.send_file "", file }.should raise_error(HipChat::Unauthorized)
+      expect(lambda { user.send_file "", file }).to raise_error(HipChat::Unauthorized)
     end
   end
 
@@ -471,28 +469,27 @@ describe "HipChat (API V2)" do
     it "but fails when the room doesn't exist" do
       allow(room.class).to receive(:post).with(anything, anything).and_return(OpenStruct.new(:code => 404))
 
-      lambda { room.create_webhook('https://example.org/hooks/awesome', 'room_enter') }.should raise_error(HipChat::UnknownRoom)
+      expect(lambda { room.create_webhook('https://example.org/hooks/awesome', 'room_enter') }).to raise_error(HipChat::UnknownRoom)
     end
 
     it "but fails when we're not allowed to do so" do
       allow(room.class).to receive(:post).with(anything, anything).and_return(OpenStruct.new(:code => 401))
 
-      lambda { room.create_webhook('https://example.org/hooks/awesome', 'room_enter') }.should raise_error(HipChat::Unauthorized)
+      expect(lambda { room.create_webhook('https://example.org/hooks/awesome', 'room_enter') }).to raise_error(HipChat::Unauthorized)
     end
 
     it "but fails if the url is invalid" do
-      lambda { room.create_webhook('foo://bar.baz/', 'room_enter') }.should raise_error(HipChat::InvalidUrl)
+      expect(lambda { room.create_webhook('foo://bar.baz/', 'room_enter') }).to raise_error(HipChat::InvalidUrl)
     end
 
     it "but fails if the event is invalid" do
-      lambda { room.create_webhook('https://example.org/hooks/awesome', 'room_vandalize') }.should raise_error(HipChat::InvalidEvent)
+      expect(lambda { room.create_webhook('https://example.org/hooks/awesome', 'room_vandalize') }).to raise_error(HipChat::InvalidEvent)
     end
 
     it "but fails if we get an unknown response code" do
       allow(room.class).to receive(:post).with(anything, anything).and_return(OpenStruct.new(:code => 403))
 
-      lambda { room.create_webhook('https://example.org/hooks/awesome', 'room_enter') }.
-        should raise_error(HipChat::Unauthorized)
+      expect(lambda { room.create_webhook('https://example.org/hooks/awesome', 'room_enter') }).to raise_error(HipChat::Unauthorized)
     end
   end
 
@@ -508,20 +505,19 @@ describe "HipChat (API V2)" do
     it "but fails when the webhook doesn't exist" do
       allow(room.class).to receive(:delete).with(anything, anything).and_return(OpenStruct.new(:code => 404))
 
-      lambda { room.delete_webhook('my_awesome_webhook') }.should raise_error(HipChat::UnknownWebhook)
+      expect(lambda { room.delete_webhook('my_awesome_webhook') }).to raise_error(HipChat::UnknownWebhook)
     end
 
     it "but fails when we're not allowed to do so" do
       allow(room.class).to receive(:delete).with(anything, anything).and_return(OpenStruct.new(:code => 401))
 
-      lambda { room.delete_webhook('my_awesome_webhook') }.should raise_error(HipChat::Unauthorized)
+      expect(lambda { room.delete_webhook('my_awesome_webhook') }).to raise_error(HipChat::Unauthorized)
     end
 
     it "but fails if we get an unknown response code" do
       allow(room.class).to receive(:delete).with(anything, anything).and_return(OpenStruct.new(:code => 403))
 
-      lambda { room.delete_webhook('my_awesome_webhook') }.
-        should raise_error(HipChat::Unauthorized)
+      expect(lambda { room.delete_webhook('my_awesome_webhook') }).to raise_error(HipChat::Unauthorized)
     end
   end
 
@@ -537,20 +533,19 @@ describe "HipChat (API V2)" do
     it "but fails when the room doesn't exist" do
       allow(room.class).to receive(:get).with(anything, anything).and_return(OpenStruct.new(:code => 404))
 
-      lambda { room.get_all_webhooks }.should raise_error(HipChat::UnknownRoom)
+      expect(lambda { room.get_all_webhooks }).to raise_error(HipChat::UnknownRoom)
     end
 
     it "but fails when we're not allowed to do so" do
       allow(room.class).to receive(:get).with(anything, anything).and_return(OpenStruct.new(:code => 401))
 
-      lambda { room.get_all_webhooks }.should raise_error(HipChat::Unauthorized)
+      expect(lambda { room.get_all_webhooks }).to raise_error(HipChat::Unauthorized)
     end
 
     it "but fails if we get an unknown response code" do
       allow(room.class).to receive(:get).with(anything, anything).and_return(OpenStruct.new(:code => 403))
 
-      lambda { room.get_all_webhooks }.
-        should raise_error(HipChat::Unauthorized)
+      expect(lambda { room.get_all_webhooks }).to raise_error(HipChat::Unauthorized)
     end
   end
 
@@ -566,20 +561,19 @@ describe "HipChat (API V2)" do
     it "but fails when the webhook doesn't exist" do
       allow(room.class).to receive(:get).with(anything, anything).and_return(OpenStruct.new(:code => 404))
 
-      lambda { room.get_webhook('5678') }.should raise_error(HipChat::UnknownWebhook)
+      expect(lambda { room.get_webhook('5678') }).to raise_error(HipChat::UnknownWebhook)
     end
 
     it "but fails when we're not allowed to do so" do
       allow(room.class).to receive(:get).with(anything, anything).and_return(OpenStruct.new(:code => 401))
 
-      lambda { room.get_webhook('5678') }.should raise_error(HipChat::Unauthorized)
+      expect(lambda { room.get_webhook('5678') }).to raise_error(HipChat::Unauthorized)
     end
 
     it "but fails if we get an unknown response code" do
       allow(room.class).to receive(:get).with(anything, anything).and_return(OpenStruct.new(:code => 403))
 
-      lambda { room.get_webhook('5678') }.
-        should raise_error(HipChat::Unauthorized)
+      expect(lambda { room.get_webhook('5678') }).to raise_error(HipChat::Unauthorized)
     end
   end
 end
