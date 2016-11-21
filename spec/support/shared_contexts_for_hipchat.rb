@@ -326,6 +326,25 @@ shared_context "HipChatV2" do
                                                 'Content-Type' => 'multipart/related; boundary=sendfileboundary'}).to_return(:status => 200, :body => "", :headers => {})
   end
 
+  def mock_succesful_user_update_status(options={})
+    options = { :name => 'foo', :presence => nil, :status=>nil, :show=>nil, :timezone => 'UTC', :email=>'foo@bar.org'}
+     stub_request(:put, "https://api.hipchat.com/v2/12345678").with(
+      :query => {:auth_token => "blah"},
+      :body => {
+        :name => options[:name],
+        :presence => {:status=>options[:status], :show=>options[:show]},
+        :mention_name =>options[:mention_name],
+        :email => options[:email]
+      }.to_json,
+      :headers => {"Accept" => "application/json",
+                    "Content-Type" => "application/json"}).to_return(
+                    :status => 204,
+                    :body => "",
+                    :headers => {})
+
+
+  end
+
   def mock_successful_create_webhook(room_id, url, event, options = {})
     options = {:pattern => '', :name => ''}.merge(options)
     stub_request(:post, "https://api.hipchat.com/v2/room/#{room_id}/webhook").with(

@@ -32,7 +32,6 @@ module HipChat
                                  }.send(@api.send_config[:body_format]),
                                  :headers => @api.headers
       )
-
       ErrorHandler.response_code_to_exception_for :user, user_id, response
       true
     end
@@ -98,6 +97,37 @@ module HipChat
 
       ErrorHandler.response_code_to_exception_for :user, user_id, response
       true
+    end
+
+    #
+    # Update status.
+    # API: https://www.hipchat.com/docs/apiv2/method/update_user
+    # Request body
+    # name - User's full name.  Valid length range: 1-50
+    # status - string may be null
+    # show - string - the status to show for the user. Available options 'away', 'chat', 'dnd', 'xa'
+    # mention_name - User's @mention name without the @
+    # email - User's email
+    def status(message, options = {})
+      name  = options[:name]    ? options[:name] : 'test user'
+      status        = options[:status]  ? options[:status] : 'Away'
+      show          = options[:show]    ? options[:show] : 'dnd' 
+      mention_name  = options[:mention_name] ? options[:mention_name] : 'testuser'
+      email         = options[:email] ? options[:email] : 'testuser'
+
+
+      response = self.class.put(@api.view_config[:url],
+                                 :query => { :auth_token => @token },
+                                 :body => {
+                                     :name => name,
+                                     :presence => {:status=>status, :show=>show},
+                                     :mention_name =>mention_name,
+                                     :email => email
+                                 }.send(@api.view_config[:body_format]),
+                                 :headers => @api.headers
+      )
+      
+      ErrorHandler.response_code_to_exception_for :user, user_id, response
     end
 
   end

@@ -115,6 +115,8 @@ describe "HipChat (API V2)" do
     end
   end
 
+  
+
   describe "#send_message" do
     include_context "HipChatV2"
     it "successfully without custom options" do
@@ -314,6 +316,24 @@ describe "HipChat (API V2)" do
     it "but fail is name is longer then 50 char" do
       expect { subject.create_user("A User that is too long that I should fail right now", "email@example.com") }.
         to raise_error(HipChat::UsernameTooLong)
+    end
+  end
+
+  describe "#update_user_status" do
+    include_context "HipChatV2"
+
+  let(:user_status) {
+      {
+        "name" => "Foo Bar",
+        "presence" => {"status" => "Away", "show"=>"away"},
+        "mention_name" => "foo",
+        "email" => "foo@bar.org"
+      }
+    }
+  
+    
+    it "successfull" do
+      mock_succesful_user_update_status(user_status)
     end
   end
 
