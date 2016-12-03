@@ -80,7 +80,7 @@ module HipChat
     end
 
     #
-    # Get private message history
+    # Delete a user
     #
     def delete(params = {})
       case @api.version
