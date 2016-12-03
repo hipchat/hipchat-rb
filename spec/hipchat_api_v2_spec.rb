@@ -415,6 +415,27 @@ describe "HipChat (API V2)" do
     end
   end
 
+  describe "#update user" do
+    include_context "HipChatV2"
+    let(:user_fields) do
+      {
+        :name => "Jane Doe",
+        :roles => ["user"],
+        :title => "Programmer",
+        :mention_name => "JaneDoe",
+        :is_group_admin => false,
+        :timezone => "UTC",
+        :email => "jane@doe.org",
+        :presence => {'show' => "dnd", 'status' => nil}
+      }
+    end
+    it "successfully" do
+      mock_successful_user_update(user, Hash[user_fields.map { |k, v| [k.to_s, v] }])
+
+      expect(user.update(user_fields)).to be_truthy
+    end
+  end
+
   describe '#get_user_history' do
     include_context 'HipChatV2'
 
