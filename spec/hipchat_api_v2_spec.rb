@@ -319,10 +319,10 @@ describe "HipChat (API V2)" do
     end
   end
 
-  describe "#update_user_status" do
+  describe "#user_update" do
     include_context "HipChatV2"
 
-  let(:user_status) {
+  let(:user_update) {
       {
         "name" => "Foo Bar",
         "presence" => {"status" => "Away", "show"=>"away"},
@@ -333,7 +333,7 @@ describe "HipChat (API V2)" do
   
     
     it "successfull" do
-      mock_succesful_user_update_status(user_status)
+      mock_succesful_user_update(user_update)
     end
   end
 

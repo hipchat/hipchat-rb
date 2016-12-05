@@ -100,30 +100,51 @@ module HipChat
     end
 
     #
-    # Update status.
+    # User update.
     # API: https://www.hipchat.com/docs/apiv2/method/update_user
     # Request body
-    # name - User's full name.  Valid length range: 1-50
+    # name - REQUIRED - User's full name.  Valid length range: 1-50
+    # roles - The list of roles for the user. For example "owner", "administrator", "user", "delegated administrator"
+    # title - User's title
     # status - string may be null
-    # show - string - the status to show for the user. Available options 'away', 'chat', 'dnd', 'xa'
-    # mention_name - User's @mention name without the @
-    # email - User's email
-    def status(message, options = {})
-      name  = options[:name]    ? options[:name] : 'test user'
+    # show - REQUIRED -  string - the status to show for the user. Available options 'away', 'chat', 'dnd', 'xa'
+    # mention_name - REQUIRED - User's @mention name without the @
+    # is_group_admin - Whether or not this user is an administrator
+    # timezone - User's timezone. Must be a supported timezone.  Defaults to 'UTC'
+    # password - User's password.  If not provided, the existing password is kept
+    # email - REQUIRED - User's email
+    def update(message, options = {})
+      name          = options[:name]    ? options[:name] : 'test user'
+      roles         = options[:roles]   ? options[:roles] : nil
+      title         = options[:title]   ? options[:title] : nil
       status        = options[:status]  ? options[:status] : 'Away'
       show          = options[:show]    ? options[:show] : 'dnd' 
       mention_name  = options[:mention_name] ? options[:mention_name] : 'testuser'
+      is_group_admin = options[:is_group_admin] ? options[:is_group_admin] : nil
+      timezone      = options[:timeszone] ? options[:timezone] : 'UTC'
+      password      = options[:password] ? options[:password] : nil
       email         = options[:email] ? options[:email] : 'testuser'
+
+      #create body format
+      body = {
+        
+      }
 
 
       response = self.class.put(@api.view_config[:url],
                                  :query => { :auth_token => @token },
                                  :body => {
-                                     :name => name,
-                                     :presence => {:status=>status, :show=>show},
-                                     :mention_name =>mention_name,
-                                     :email => email
-                                 }.send(@api.view_config[:body_format]),
+                                     :name            => name,
+                                     :presence        => {:status=>status, :show=>show},
+                                     :mention_name    => mention_name,
+                                     :timezone        => timezone,
+                                     :email           => email
+                                 }
+                                 .merge(title ? {:title =>title} : {})
+                                 .merge(password ? {:password => password} : {})
+                                 .merge(is_group_admin ? {:is_group_admin => is_group_admin} : {})
+                                 .merge(roles ? {:roles => roles} : {})
+                                 .send(@api.view_config[:body_format]),
                                  :headers => @api.headers
       )
       
