@@ -1,4 +1,4 @@
-require 'uri'
+require 'addressable/uri'
 
 module HipChat
   class ApiVersion
@@ -111,11 +111,11 @@ module HipChat
       def get_room_config
         {
           'v1' => {
-            :url => URI::escape('/show'),
+            :url => Addressable::URI.escape('/show'),
             :query_params => { :room_id => room_id }
         },
           'v2' => {
-            :url => URI::escape("/#{room_id}"),
+            :url => Addressable::URI.escape("/#{room_id}"),
             :query_params => { }
           }
         }[version]
@@ -124,7 +124,7 @@ module HipChat
       def update_room_config
         {
           'v2' => {
-            :url => URI::escape("/#{room_id}"),
+            :url => Addressable::URI.escape("/#{room_id}"),
             :method => :put,
             :body_format => :to_json
           }
@@ -134,12 +134,12 @@ module HipChat
       def delete_room_config
         {
           'v1' => {
-            :url => URI::escape("/delete"),
+            :url => Addressable::URI.escape("/delete"),
             :method => :post,
             :query_params => { :room_id => room_id }
           },
           'v2' => {
-            :url => URI::escape("/#{room_id}"),
+            :url => Addressable::URI.escape("/#{room_id}"),
             :method => :delete,
             :query_params => {}
           }
@@ -149,7 +149,7 @@ module HipChat
       def invite_config
         {
           'v2' => {
-            :url => URI::escape("/#{room_id}/invite"),
+            :url => Addressable::URI.escape("/#{room_id}/invite"),
             :body_format => :to_json
           }
         }[version]
@@ -158,7 +158,7 @@ module HipChat
       def add_member_config
         {
           'v2' => {
-            :url => URI::escape("/#{room_id}/member"),
+            :url => Addressable::URI.escape("/#{room_id}/member"),
             :body_format => :to_json
           }
         }[version]
@@ -167,7 +167,7 @@ module HipChat
       def send_message_config
         {
           'v2' => {
-            :url => URI::escape("/#{room_id}/message"),
+            :url => Addressable::URI.escape("/#{room_id}/message"),
             :body_format => :to_json
           }
         }[version]
@@ -180,7 +180,7 @@ module HipChat
             :body_format => :to_hash
           },
           'v2' => {
-            :url => URI::escape("/#{room_id}/notification"),
+            :url => Addressable::URI.escape("/#{room_id}/notification"),
             :body_format => :to_json
           }
         }[version]
@@ -189,7 +189,7 @@ module HipChat
       def send_file_config
         {
           'v2' => {
-            :url => URI::escape("/#{room_id}/share/file"),
+            :url => Addressable::URI.escape("/#{room_id}/share/file"),
             :body_format => :to_json
           }
         }[version]
@@ -198,7 +198,7 @@ module HipChat
       def share_link_config
         {
           'v2' => {
-            :url => URI::escape("/#{room_id}/share/link"),
+            :url => Addressable::URI.escape("/#{room_id}/share/link"),
             :body_format => :to_json
           }
         }[version]
@@ -212,7 +212,7 @@ module HipChat
             :body_format => :to_hash
           },
           'v2' => {
-            :url => URI::escape("/#{room_id}/topic"),
+            :url => Addressable::URI.escape("/#{room_id}/topic"),
             :method => :put,
             :body_format => :to_json
           }
@@ -225,7 +225,7 @@ module HipChat
             :url => '/history'
           },
           'v2' => {
-            :url => URI::escape("/#{room_id}/history")
+            :url => Addressable::URI.escape("/#{room_id}/history")
           }
         }[version]
       end
@@ -233,7 +233,7 @@ module HipChat
       def statistics_config
         {
           'v2' => {
-            :url => URI::escape("/#{room_id}/statistics")
+            :url => Addressable::URI.escape("/#{room_id}/statistics")
           }
         }[version]
       end
@@ -242,7 +242,7 @@ module HipChat
         raise InvalidApiVersion, 'This functionality is not supported in API v1' unless version.eql?('v2')
         {
           'v2' => {
-            :url => URI::escape("/#{room_id}/webhook")
+            :url => Addressable::URI.escape("/#{room_id}/webhook")
           }
         }[version]
       end
@@ -275,14 +275,14 @@ module HipChat
         raise InvalidApiVersion, 'This functionality is not supported in API v1' unless version.eql?('v2')
 
         {
-          :url => URI::escape("/#{user_id}/message"),
+          :url => Addressable::URI.escape("/#{user_id}/message"),
           :body_format => :to_json
         }
       end
 
       def send_file_config
         {
-          :url => URI::escape("/#{user_id}/share/file"),
+          :url => Addressable::URI.escape("/#{user_id}/share/file"),
           :body_format => :to_json
         }
       end
@@ -290,12 +290,12 @@ module HipChat
       def view_config
         {
           'v1' => {
-            :url => URI::escape('/show'),
+            :url => Addressable::URI.escape('/show'),
             :body_format => :to_json,
             :query_params => { :user_id => user_id }
           },
           'v2' => {
-            :url => URI::escape("/#{user_id}"),
+            :url => Addressable::URI.escape("/#{user_id}"),
             :body_format => :to_json,
             :query_params => {}
           }
@@ -306,12 +306,12 @@ module HipChat
       def delete_config
         {
           'v1' => {
-            :url => URI::escape('/delete'),
+            :url => Addressable::URI.escape('/delete'),
             :body_format => :to_json,
             :query_params => { :user_id => user_id }
           },
           'v2' => {
-            :url => URI::escape("/#{user_id}"),
+            :url => Addressable::URI.escape("/#{user_id}"),
             :body_format => :to_json,
             :query_params => {}
           }
@@ -322,7 +322,7 @@ module HipChat
         raise InvalidApiVersion, 'This functionality is not supported in API v1' unless version.eql?('v2')
 
         {
-          :url => URI::escape("/#{user_id}/history/latest"),
+          :url => Addressable::URI.escape("/#{user_id}/history/latest"),
           :body_format => :to_json,
           :allowed_params => [:'max-results', :timezone, :'not-before']
         }

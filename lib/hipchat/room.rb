@@ -1,5 +1,6 @@
 require 'httparty'
 require 'ostruct'
+require 'addressable/uri'
 
 module HipChat
 
@@ -346,7 +347,7 @@ module HipChat
     #   # Default
     #   delete_webhook 'webhook_id'
     def delete_webhook(webhook_id)
-      response = self.class.delete("#{@api.webhook_config[:url]}/#{URI::escape(webhook_id)}",
+      response = self.class.delete("#{@api.webhook_config[:url]}/#{Addressable::URI.escape(webhook_id)}",
                                  :query => {
                                    :auth_token => @token
                                  },
@@ -393,7 +394,7 @@ module HipChat
     #   # Default
     #   get_webhook 'webhook_id'
     def get_webhook(webhook_id)
-      response = self.class.get("#{@api.webhook_config[:url]}/#{URI::escape(webhook_id)}",
+      response = self.class.get("#{@api.webhook_config[:url]}/#{Addressable::URI.escape(webhook_id)}",
                                 :query => {
                                   :auth_token => @token
                                 },
