@@ -80,7 +80,7 @@ module HipChat
     end
 
     #
-    # Get private message history
+    # Delete a user
     #
     def delete(params = {})
       case @api.version
@@ -100,5 +100,26 @@ module HipChat
       true
     end
 
+    #
+    # Update a user
+    #
+    def update(params)
+      case @api.version
+      when 'v1'
+        response = self.class.post(@api.update_config[:url],
+                                  :query => { :auth_token => @token }.merge(params),
+                                  :headers => @api.headers
+        )
+      when 'v2'
+        response = self.class.put(@api.update_config[:url],
+                                  :query => { :auth_token => @token }.merge(@api.update_config[:query_params]),
+                                  :body => params.send(@api.update_config[:body_format]),
+                                  :headers => @api.headers
+        )
+      end
+
+      ErrorHandler.response_code_to_exception_for :user, user_id, response
+      true
+    end
   end
 end

@@ -225,6 +225,16 @@ shared_context "HipChatV2" do
                                           :headers => {})
   end
 
+  def mock_successful_user_update(user, options={})
+    stub_request(:put, "https://api.hipchat.com/v2/user/#{user.user_id}").with(
+                             :query => {:auth_token => "blah"},
+                             :body  => options.to_json,
+                             :headers => {'Accept' => 'application/json',
+                                          'Content-Type' => 'application/json'}).to_return(
+                                          :status => 204,
+                                          :body => '',
+                                          :headers => {})
+  end
 
   def mock_successful_get_room(room_id="1234")
     stub_request(:get, "https://api.hipchat.com/v2/room/#{room_id}").with(
