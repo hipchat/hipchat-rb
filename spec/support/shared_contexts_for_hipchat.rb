@@ -326,7 +326,7 @@ shared_context "HipChatV2" do
                                                 'Content-Type' => 'multipart/related; boundary=sendfileboundary'}).to_return(:status => 200, :body => "", :headers => {})
   end
 
-  def mock_succesful_user_update(options={})
+  def mock_successful_user_update(options={})
     options = { :name => 'foo', :presence => nil, :status=>nil, :show=>nil, :timezone => 'UTC', :email=>'foo@bar.org'}
      stub_request(:put, "https://api.hipchat.com/v2/12345678").with(
       :query => {:auth_token => "blah"},

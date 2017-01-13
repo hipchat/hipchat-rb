@@ -114,16 +114,16 @@ module HipChat
     # password - User's password.  If not provided, the existing password is kept
     # email - REQUIRED - User's email
     def update(message, options = {})
-      name          = options[:name]    ? options[:name] : 'test user'
+      name          = options[:name]    
       roles         = options[:roles]   ? options[:roles] : nil
       title         = options[:title]   ? options[:title] : nil
-      status        = options[:status]  ? options[:status] : 'Away'
-      show          = options[:show]    ? options[:show] : 'dnd' 
-      mention_name  = options[:mention_name] ? options[:mention_name] : 'testuser'
+      status        = options[:status]  ? options[:status] : nil
+      show          = options[:show]    ? options[:show] : nil 
+      mention_name  = options[:mention_name] 
       is_group_admin = options[:is_group_admin] ? options[:is_group_admin] : nil
       timezone      = options[:timeszone] ? options[:timezone] : 'UTC'
       password      = options[:password] ? options[:password] : nil
-      email         = options[:email] ? options[:email] : 'testuser'
+      email         = options[:email] 
 
       #create body format
       body = {
@@ -144,7 +144,7 @@ module HipChat
                                  .merge(password ? {:password => password} : {})
                                  .merge(is_group_admin ? {:is_group_admin => is_group_admin} : {})
                                  .merge(roles ? {:roles => roles} : {})
-                                 .send(@api.view_config[:body_format]),
+                                 .send(@api.user_update_config[:body_format]),
                                  :headers => @api.headers
       )
       

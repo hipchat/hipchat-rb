@@ -333,7 +333,7 @@ describe "HipChat (API V2)" do
   
     
     it "successfull" do
-      mock_succesful_user_update(user_update)
+      mock_successful_user_update(user_update)
     end
   end
 
