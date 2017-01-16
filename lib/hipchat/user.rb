@@ -121,7 +121,7 @@ module HipChat
       show          = options[:show]    ? options[:show] : nil 
       mention_name  = options[:mention_name] 
       is_group_admin = options[:is_group_admin] ? options[:is_group_admin] : nil
-      timezone      = options[:timeszone] ? options[:timezone] : 'UTC'
+      timezone      = options[:timezone] ? options[:timezone] : 'UTC'
       password      = options[:password] ? options[:password] : nil
       email         = options[:email] 
 
