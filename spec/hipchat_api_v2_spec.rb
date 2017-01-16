@@ -322,18 +322,25 @@ describe "HipChat (API V2)" do
   describe "#user_update" do
     include_context "HipChatV2"
 
-  let(:user_update) {
+    let(:user_update) {
       {
-        "name" => "Foo Bar",
-        "presence" => {"status" => "Away", "show"=>"away"},
-        "mention_name" => "foo",
-        "email" => "foo@bar.org"
+        :name => "Foo Bar",
+        :presence => { status: "Away", show: "away" },
+        :mention_name => "foo",
+        :timezone => "GMT",
+        :email => "foo@bar.org",
+        :title => "mister",
+        :is_group_admin => 0,
+        :roles => []
       }
     }
-  
-    
+
     it "successfull" do
       mock_successful_user_update(user_update)
+
+      user_update.delete(:presence)
+                 .each { |key, value| user_update[key] = value }
+      expect(user.update(user_update))
     end
   end
 

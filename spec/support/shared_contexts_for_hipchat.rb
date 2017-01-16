@@ -326,17 +326,10 @@ shared_context "HipChatV2" do
                                                 'Content-Type' => 'multipart/related; boundary=sendfileboundary'}).to_return(:status => 200, :body => "", :headers => {})
   end
 
-  def mock_successful_user_update(options={})
-    options = { :name => 'foo', :presence => nil, :status=>nil, :show=>nil, :timezone => 'UTC', :email=>'foo@bar.org'}
-     stub_request(:put, "https://api.hipchat.com/v2/12345678").with(
+  def mock_successful_user_update(options)
+     stub_request(:put, "https://api.hipchat.com/v2/user/12345678").with(
       :query => {:auth_token => "blah"},
-      :body => {
-        :name => options[:name],
-        :presence => {:status=>options[:status], :show=>options[:show]},
-        :mention_name =>options[:mention_name],
-        :email => options[:email],
-        :timezone => options[:timezone]
-      }.to_json,
+      :body => options.to_json,
       :headers => {"Accept" => "application/json",
                     "Content-Type" => "application/json"}).to_return(
                     :status => 204,
