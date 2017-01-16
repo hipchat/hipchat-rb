@@ -131,7 +131,7 @@ module HipChat
       }
 
 
-      response = self.class.put(@api.view_config[:url],
+      response = self.class.put(@api.user_update_config[:url],
                                  :query => { :auth_token => @token },
                                  :body => {
                                      :name            => name,
