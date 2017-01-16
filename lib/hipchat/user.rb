@@ -113,7 +113,7 @@ module HipChat
     # timezone - User's timezone. Must be a supported timezone.  Defaults to 'UTC'
     # password - User's password.  If not provided, the existing password is kept
     # email - REQUIRED - User's email
-    def update(message, options = {})
+    def update(options = {})
       name          = options[:name]    
       roles         = options[:roles]   ? options[:roles] : nil
       title         = options[:title]   ? options[:title] : nil
