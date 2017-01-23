@@ -7,7 +7,7 @@ module HipChat
 
     def initialize(token, options={})
       @token = token
-      default_options = { api_version: 'v1', server_url: 'https://api.hipchat.com' }
+      default_options = { api_version: 'v2', server_url: 'https://api.hipchat.com' }
       @options = default_options.merge options
       @api_version = @options[:api_version]
       @api = HipChat::ApiVersion::Client.new(@options)
