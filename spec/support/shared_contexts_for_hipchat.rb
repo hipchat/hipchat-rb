@@ -50,7 +50,7 @@ shared_context "HipChatV1" do
                                    :'max-results' => options[:'max-results'],
                                    :'start-index' => options[:'start-index'],
                                    :'end-date'    => options[:'end-date'],
-                                   :format        => options[:format]}).to_return(canned_response)
+                                   :format        => options[:format]}.reject!{|k,v| v.nil?}).to_return(canned_response)
   end
 
   def mock_successful_room_creation(name, options={})
@@ -189,7 +189,7 @@ shared_context "HipChatV2" do
                                    :'max-results' => options[:'max-results'],
                                    :'start-index' => options[:'start-index'],
                                    :'end-date'    => options[:'end-date'],
-                                   :format     => options[:format]}).to_return(canned_response)
+                                   :format     => options[:format]}.reject!{|k,v| v.nil?}).to_return(canned_response)
   end
 
   def mock_successful_statistics(options={})
@@ -197,7 +197,7 @@ shared_context "HipChatV2" do
                                    :room_id    => "Hipchat",
                                    :date       => options[:date],
                                    :timezone   => options[:timezone],
-                                   :format     => options[:format]}).to_return(
+                                   :format     => options[:format]}.reject!{|k,v| v.nil?}).to_return(
                                           :status => 200,
                                           :body => '{"last_active": "2014-09-02T21:33:54+00:00", "links": {"self": "https://api.hipchat.com/v2/room/12345/statistics"},  "messages_sent": 10}',
                                           :headers => {})
