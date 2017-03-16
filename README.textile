@@ -231,7 +231,7 @@ end
 h2. Chef Handler
 
 *APIv1 ONLY, use APIv1 Key*
-NOTE: APIv2 required for HipChatServer Beta
+NOTE: APIv2 required for HipChat Server
 
 Report on Chef runs.
 
@@ -254,7 +254,7 @@ bc..    require 'hipchat/chef'
    hipchat_handler = HipChat::NotifyRoom.new("API_KEY", "HIPCHAT_ROOM")
    exception_handlers << hipchat_handler
 
-h3. With HipChat Server Beta
+h3. With HipChat Server
 
 Add an "options" hash to set api v2 and your URL:
 * arguments ['API_KEY', 'HIPCHAT_ROOM', options={hipchat_options: {api_version: "v2", server_url: "https://hipchat.example.com"}}]
@@ -262,4 +262,4 @@ Add an "options" hash to set api v2 and your URL:
 
 h2. Copyright
 
-Copyright (c) 2012 Atlassian. See LICENSE for details.
+Copyright (c) 2017 Atlassian. See LICENSE for details.

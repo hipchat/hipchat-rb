@@ -1,3 +1,4 @@
+require 'json'
 require 'hipchat'
 
 Capistrano::Configuration.instance(:must_exist).load do
