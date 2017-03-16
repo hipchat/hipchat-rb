@@ -108,6 +108,15 @@ client['my room'].invite("USER_ID_OR_NAME", options = {})
 # Sends a user a private message. Valid value for user are user id or email address
 client.user('foo@bar.org').send('I can send private messages')
 
+# Update a user status.  Available options for show are 'away', 'chat', 'dnd', 'xa'
+client.user('foo@bar.org').status('this is my status',  
+        :name=>'Foo Bar',
+        :status=>'Doing very important stuff',
+        :show=>'xa',
+        :mention_name=>'foo',
+        :email=>'foo@barr.org')
+
+
 h2. Custom Server URL
 
 bc.. client = HipChat::Client.new(api_token, :api_version => 'v2', :server_url => 'https://domain.com')
