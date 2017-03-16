@@ -8,7 +8,7 @@ h2. CI Status
 !https://coveralls.io/repos/hipchat/hipchat-rb/badge.svg(Coverage Status)!:https://coveralls.io/r/hipchat/hipchat-rb
 
 h2. Requirements
-* Ruby 1.9.3 or higher
+* Ruby 2.0.0 or higher
 * HipChat Account, sign up "here!":https://hipchat.com/
 
 h2. Installation

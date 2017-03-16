@@ -273,7 +273,7 @@ module HipChat
           :'start-index' => merged_options[:'start-index'],
           :'end-date' => merged_options[:'end-date'],
           :auth_token => @token
-        },
+        }.reject!{|k,v| v.nil?},
         :headers => @api.headers
       )
 
@@ -291,7 +291,7 @@ module HipChat
           :timezone   => options[:timezone],
           :format     => options[:format],
           :auth_token => @token,
-        },
+        }.reject!{|k,v| v.nil?},
         :headers => @api.headers
       )
 
