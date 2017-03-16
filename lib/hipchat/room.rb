@@ -30,7 +30,7 @@ module HipChat
 
     # Update a room
     def update_room(options = {})
-      options = {
+      merged_options = {
         :privacy => 'public',
         :is_archived => false,
         :is_guest_accessible => false
@@ -39,12 +39,12 @@ module HipChat
       response = self.class.send(@api.topic_config[:method], @api.update_room_config[:url],
         :query => { :auth_token => @token },
         :body => {
-          :name => options[:name],
-          :topic => options[:topic],
-          :privacy => options[:privacy],
-          :is_archived => @api.bool_val(options[:is_archived]),
-          :is_guest_accessible => @api.bool_val(options[:is_guest_accessible]),
-          :owner => options[:owner]
+          :name => merged_options[:name],
+          :topic => merged_options[:topic],
+          :privacy => merged_options[:privacy],
+          :is_archived => @api.bool_val(merged_options[:is_archived]),
+          :is_guest_accessible => @api.bool_val(merged_options[:is_guest_accessible]),
+          :owner => merged_options[:owner]
         }.to_json,
         :headers => @api.headers)
 
@@ -133,23 +133,23 @@ module HipChat
       if from.length > 20
         raise UsernameTooLong, "Username #{from} is `#{from.length} characters long. Limit is 20'"
       end
-      options = if options_or_notify == true or options_or_notify == false
+      if options_or_notify == true or options_or_notify == false
         warn 'DEPRECATED: Specify notify flag as an option (e.g., :notify => true)'
-        { :notify => options_or_notify }
+        options = { :notify => options_or_notify }
       else
-        options_or_notify || {}
+        options = options_or_notify
       end
 
-      options = { :color => 'yellow', :notify => false, :message_format => 'html' }.merge options
+      merged_options = { :color => 'yellow', :notify => false, :message_format => 'html' }.merge options
 
       body = {
         :room_id        => room_id,
         :from           => from,
         :message        => message,
-        :message_format => options[:message_format],
-        :color          => options[:color],
-        :card           => options[:card],
-        :notify         => @api.bool_val(options[:notify])
+        :message_format => merged_options[:message_format],
+        :color          => merged_options[:color],
+        :card           => merged_options[:card],
+        :notify         => @api.bool_val(merged_options[:notify])
       }.delete_if { |_k, v| v.nil? }
 
       response = self.class.post(@api.send_config[:url],
@@ -222,13 +222,13 @@ module HipChat
     #            (default "API")
     def topic(new_topic, options = {})
 
-      options = { :from => 'API' }.merge options
+      merged_options = { :from => 'API' }.merge options
 
       response = self.class.send(@api.topic_config[:method], @api.topic_config[:url],
         :query => { :auth_token => @token },
         :body  => {
           :room_id        => room_id,
-          :from           => options[:from],
+          :from           => merged_options[:from],
           :topic          => new_topic
         }.send(@api.topic_config[:body_format]),
         :headers => @api.headers
@@ -255,7 +255,7 @@ module HipChat
     #                (default "JSON")
     def history(options = {})
 
-      options = {
+      merged_options = {
         :date => 'recent',
         :timezone => 'UTC',
         :format => 'JSON',
@@ -267,14 +267,14 @@ module HipChat
       response = self.class.get(@api.history_config[:url],
         :query => {
           :room_id    => room_id,
-          :date       => options[:date],
-          :timezone   => options[:timezone],
-          :format     => options[:format],
-          :'max-results' => options[:'max-results'],
-          :'start-index' => options[:'start-index'],
-          :'end-date' => options[:'end-date'],
+          :date       => merged_options[:date],
+          :timezone   => merged_options[:timezone],
+          :format     => merged_options[:format],
+          :'max-results' => merged_options[:'max-results'],
+          :'start-index' => merged_options[:'start-index'],
+          :'end-date' => merged_options[:'end-date'],
           :auth_token => @token
-        },
+        }.reject!{|k,v| v.nil?},
         :headers => @api.headers
       )
 
@@ -292,7 +292,7 @@ module HipChat
           :timezone   => options[:timezone],
           :format     => options[:format],
           :auth_token => @token,
-        },
+        }.reject!{|k,v| v.nil?},
         :headers => @api.headers
       )
 
@@ -323,7 +323,7 @@ module HipChat
         raise InvalidUrl
       end
 
-      options = {
+      merged_options = {
         :pattern => '',
         :name => ''
       }.merge options
@@ -332,7 +332,7 @@ module HipChat
         :query => {
           :auth_token => @token
         },
-        :body => {:url => url, :pattern => options[:pattern], :event => event, :name => options[:name]}.send(@api.send_config[:body_format]),
+        :body => {:url => url, :pattern => merged_options[:pattern], :event => event, :name => merged_options[:name]}.send(@api.send_config[:body_format]),
         :headers => @api.headers
       )
 
@@ -372,13 +372,13 @@ module HipChat
     # +max-results+::     The label for this webhook
     #                (default "")
     def get_all_webhooks(options = {})
-      options = {:'start-index' => 0, :'max-results' => 100}.merge(options)
+      merged_options = {:'start-index' => 0, :'max-results' => 100}.merge(options)
 
       response = self.class.get(@api.webhook_config[:url],
                                    :query => {
                                      :auth_token => @token,
-                                     :'start-index' => options[:'start-index'],
-                                     :'max-results' => options[:'max-results']
+                                     :'start-index' => merged_options[:'start-index'],
+                                     :'max-results' => merged_options[:'max-results']
                                    },
                                    :headers => @api.headers
       )

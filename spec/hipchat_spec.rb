@@ -40,9 +40,9 @@ describe HipChat do
 
     context "api_version" do
 
-      it "defaults to a v1 client" do
+      it "defaults to a v2 client" do
         client = HipChat::Client.new("blah")
-        expect(client[:example].api_version).to eql('v1')
+        expect(client[:example].api_version).to eql('v2')
       end
 
       it "when given 'v1' it registers a v1 client" do
