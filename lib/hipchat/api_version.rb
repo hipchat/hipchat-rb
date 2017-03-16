@@ -302,6 +302,22 @@ module HipChat
         }[version]
       end
 
+      #Same signature as view_config but separating code to keep any future changes safe
+      def user_update_config
+        {
+          'v1' => {
+            :url => URI::escape('/show'),
+            :body_format => :to_json,
+            :query_params => { :user_id => user_id }
+          },
+          'v2' => {
+            :url => URI::escape("/#{user_id}"),
+            :body_format => :to_json,
+            :query_params => {}
+          }
+        }[version]
+      end
+
 
       def delete_config
         {
