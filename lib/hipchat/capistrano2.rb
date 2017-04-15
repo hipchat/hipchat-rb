@@ -88,11 +88,34 @@ Capistrano::Configuration.instance(:must_exist).load do
     def deployment_name
       if fetch(:branch, nil)
         name = "#{application}/#{branch}"
+        name = github_name(name) if fetch(:scm, nil) == :git
         name += " (revision #{real_revision[0..7]})" if real_revision
         name
       else
         application
       end
+    end
+
+    def github_name(name)
+      match_data = /@(.*):(.*).git/.match(repository)
+      domain = match_data[1]
+      user_repo = match_data[2]
+
+      if /github\.com/.match(domain)
+        if branch != "master"
+          name = "<a href=\"https://github.com/#{user_repo}/compare/#{branch}\">#{name}</a>"
+        end
+
+        if real_revision
+          message = `git log --oneline -n 1 #{real_revision}`
+          match_data = /pull request #(\d*)/.match(message)
+          unless match_data.nil?
+            pull_request = match_data[1]
+            name += " (<a href=\"https://github.com/#{user_repo}/pull/#{pull_request}\">pull #{pull_request}</a>)"
+          end
+        end
+      end
+      name
     end
 
     def message_color
