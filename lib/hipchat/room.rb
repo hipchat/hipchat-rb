@@ -313,13 +313,13 @@ module HipChat
     # +name+::     The label for this webhook
     #                (default "")
     def create_webhook(url, event, options = {})
-      raise InvalidEvent unless %w(room_message room_notification room_exit room_enter room_topic_change room_archived room_deleted room_unarchived).include? event
+      raise InvalidEvent.new("Invalid event: #{event}") unless %w(room_message room_notification room_exit room_enter room_topic_change room_archived room_deleted room_unarchived).include? event
 
       begin
         u = URI::parse(url)
-        raise InvalidUrl unless %w(http https).include? u.scheme
+        raise InvalidUrl.new("Invalid Scheme: #{url}") unless %w(http https).include? u.scheme
       rescue URI::InvalidURIError
-        raise InvalidUrl
+        raise InvalidUrl.new("Invalid URL: #{url}")
       end
 
       merged_options = {
