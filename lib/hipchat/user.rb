@@ -151,7 +151,9 @@ module HipChat
       ErrorHandler.response_code_to_exception_for :user, user_id, response
     end
 
+    #
     # Getting all rooms details in which user is present
+    #
     def rooms
       response = self.class.get(@api.user_joined_rooms_config[:url],
                                 :query => { :auth_token => @token }.merge(@api.user_joined_rooms_config[:query_params]),
