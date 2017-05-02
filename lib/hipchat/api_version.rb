@@ -308,7 +308,8 @@ module HipChat
         {
           'v2' => {
             :url => URI::escape("/#{user_id}/preference/auto-join"),
-            :body_format => :to_json
+            :body_format => :to_json,
+            :query_params => {}
           }
         }[version]
       end
