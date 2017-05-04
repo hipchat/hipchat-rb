@@ -302,6 +302,18 @@ module HipChat
         }[version]
       end
 
+      def user_joined_rooms_config
+        raise InvalidApiVersion, 'This functionality is not supported in API v1' unless version.eql?('v2')
+        
+        {
+          'v2' => {
+            :url => URI::escape("/#{user_id}/preference/auto-join"),
+            :body_format => :to_json,
+            :query_params => {}
+          }
+        }[version]
+      end
+
       #Same signature as view_config but separating code to keep any future changes safe
       def user_update_config
         {
