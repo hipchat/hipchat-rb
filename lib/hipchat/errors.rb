@@ -8,7 +8,7 @@ module HipChat
     end
 
     def message
-      if @response.present?
+      if @response.respond_to? :body
         "#{@msg}:\nResponse: #{@response.body}"
       else
         @msg
