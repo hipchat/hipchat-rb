@@ -179,6 +179,29 @@ shared_context "HipChatV2" do
                                             :headers => {})
   end
 
+  def mock_successful_scopes(room: nil)
+    token_room = room ? { id: room.room_id, name: 'example' } : nil
+    stub_request(:get, 'https://api.hipchat.com/v2/oauth/token/blah').with(
+      :query => { :auth_token => 'blah' },
+      :body => '',
+      :headers => {
+        'Accept' => 'application/json',
+        'Content-Type' => 'application/json'
+      }
+    ).to_return(
+      :status => 200,
+      :body => {
+        client: {
+          allowed_scopes: [:view_room, :send_notification],
+          name: 'All perms',
+          room: token_room
+        },
+        scopes: [:view_room, :send_notification]
+      }.to_json,
+      :headers => {}
+    )
+  end
+
   def mock_successful_history(options={})
     options = { :date => 'recent', :timezone => 'UTC', :format => 'JSON', :'max-results' => 100, :'start-index' => 0 }.merge(options)
     canned_response = File.new(HISTORY_JSON_PATH)

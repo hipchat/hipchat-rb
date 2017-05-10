@@ -83,6 +83,15 @@ module HipChat
           }
         }[version]
       end
+
+      def scopes_config
+        raise InvalidApiVersion, 'This functionality is not supported in API v1' unless version.eql?('v2')
+        {
+          'v2' => {
+            :url => URI::escape("/oauth/token")
+          }
+        }[version]
+      end
     end
 
     class Room < ApiVersion
@@ -304,7 +313,7 @@ module HipChat
 
       def user_joined_rooms_config
         raise InvalidApiVersion, 'This functionality is not supported in API v1' unless version.eql?('v2')
-        
+
         {
           'v2' => {
             :url => URI::escape("/#{user_id}/preference/auto-join"),

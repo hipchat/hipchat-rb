@@ -8,6 +8,62 @@ describe "HipChat (API V2)" do
   let(:room) { subject["Hipchat"] }
   let(:user) { subject.user "12345678" }
 
+  describe "#scopes" do
+    include_context "HipChatV2"
+    let(:token_room) { nil }
+    before { mock_successful_scopes room: token_room }
+
+    context 'with a global API token' do
+      context 'room parameter given' do
+        it 'returns an array of global scopes' do
+          expect(subject.scopes(room: room))
+            .to match_array(['view_room', 'send_notification'])
+        end
+      end
+
+      context 'no room parameter given' do
+        it 'returns an array of global scopes' do
+          expect(subject.scopes)
+            .to match_array(['view_room', 'send_notification'])
+        end
+      end
+    end
+
+    context 'with a room API token' do
+      let(:token_room) { room }
+
+      context 'room parameter given' do
+        context 'room parameter matches API token room' do
+          it 'returns an array of global scopes' do
+            expect(subject.scopes(room: room))
+              .to match_array(['view_room', 'send_notification'])
+          end
+        end
+
+        context 'room parameter does not match API token room' do
+          let(:token_room) { double(room_id: 'Not-Hipchat') }
+          it 'returns nil' do
+            expect(subject.scopes(room: room)).to eq nil
+          end
+        end
+      end
+
+      context 'no room parameter given' do
+        it 'returns nil' do
+          expect(subject.scopes).to eq nil
+        end
+      end
+    end
+
+    it "fails if we get an unknown response code" do
+      allow(subject.class)
+        .to receive(:get).with(anything, anything)
+        .and_return(OpenStruct.new(:code => 403))
+
+      expect { subject.scopes }.to raise_error(HipChat::Unauthorized)
+    end
+  end
+
   describe "#history" do
     include_context "HipChatV2"
     it "is successful without custom options" do
@@ -116,7 +172,7 @@ describe "HipChat (API V2)" do
     end
   end
 
-  
+
 
   describe "#send_message" do
     include_context "HipChatV2"
