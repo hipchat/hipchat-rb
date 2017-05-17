@@ -128,8 +128,8 @@ shared_context "HipChatV2" do
         .with(query:  { auth_token:        'blah' },
               body:   { parent_message_id: parent_message_id,
                         message:           message },
-              headers:           { 'Accept':       'application/json',
-                                   'Content-Type': 'application/json' })
+              headers:           { 'Accept' =>       'application/json',
+                                   'Content-Type' => 'application/json' })
         .to_return(status: 200, body: '', headers: {})
   end
 
