@@ -29,7 +29,7 @@ describe "HipChat (API V2)" do
       expect(subject.rooms.first.history).to be_truthy
     end
 
-    it "fails when the room doen't exist" do
+    it "fails when the room doesn't exist" do
       allow(room.class).to receive(:get).with(anything, anything).and_return(OpenStruct.new(:code => 404))
 
       expect { room.history }.to raise_error(HipChat::UnknownRoom)
@@ -64,7 +64,7 @@ describe "HipChat (API V2)" do
       expect(subject.rooms.first.statistics).to be_truthy
     end
 
-    it "fails when the room doen't exist" do
+    it "fails when the room doesn't exist" do
       allow(room.class).to receive(:get).with(anything, anything).and_return(OpenStruct.new(:code => 404))
 
       expect { room.statistics }.to raise_error(HipChat::UnknownRoom)
@@ -202,6 +202,36 @@ describe "HipChat (API V2)" do
       allow(room.class).to receive(:post).with(anything, anything).and_return(OpenStruct.new(:code => 403))
 
       expect { room.send "", "" }.to raise_error(HipChat::Unauthorized)
+    end
+  end
+
+  describe '#reply' do
+    include_context 'HipChatV2'
+    let(:parent_id) { '100000' }
+    let(:message)   { 'Hello world' }
+
+    it 'successfully' do
+      mock_successful_reply parent_id, message
+
+      expect(room.reply(parent_id, message))
+    end
+
+    it "but fails when the parent_id doesn't exist" do
+      allow(room.class).to receive(:post).and_return(OpenStruct.new(:code => 404))
+
+      expect { room.reply parent_id, message }.to raise_error(HipChat::UnknownRoom)
+    end
+
+    it "but fails when we're not allowed to do so" do
+      allow(room.class).to receive(:post).and_return(OpenStruct.new(:code => 401))
+
+      expect { room.reply parent_id, message }.to raise_error(HipChat::Unauthorized)
+    end
+
+    it 'but fails if we get an unknown response code' do
+      allow(room.class).to receive(:post).and_return(OpenStruct.new(:code => 403))
+
+      expect { room.reply parent_id, message }.to raise_error(HipChat::Unauthorized)
     end
   end
 

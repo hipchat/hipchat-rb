@@ -96,12 +96,7 @@ module HipChat
     end
 
     def _rooms
-      response = self.class.get(@api.rooms_config[:url],
-        :query => {
-          :auth_token => @token
-        },
-        :headers => @api.headers
-      )
+      response = self.class.get(@api.rooms_config[:url], query: { auth_token: @token }, headers: @api.headers)
 
       ErrorHandler.response_code_to_exception_for :room, nil, response
       response[@api.rooms_config[:data_key]].map do |r|
