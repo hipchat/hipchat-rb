@@ -123,6 +123,16 @@ shared_context "HipChatV2" do
                                                     'Content-Type' => 'application/json'}).to_return(:status => 200, :body => "", :headers => {})
   end
 
+  def mock_successful_reply(parent_message_id, message)
+    stub_request(:post, 'https://api.hipchat.com/v2/room/Hipchat/reply?auth_token=blah')
+        .with(query:  { auth_token:        'blah' },
+              body:   { parent_message_id: parent_message_id,
+                        message:           message },
+              headers:           { 'Accept' =>       'application/json',
+                                   'Content-Type' => 'application/json' })
+        .to_return(status: 200, body: '', headers: {})
+  end
+
   def mock_successful_link_share(from, message, link)
     stub_request(:post, "https://api.hipchat.com/v2/room/Hipchat/share/link").with(
                              :query => {:auth_token => "blah"},

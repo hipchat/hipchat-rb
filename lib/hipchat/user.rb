@@ -60,7 +60,7 @@ module HipChat
       )
 
       ErrorHandler.response_code_to_exception_for :user, user_id, response
-      User.new(@token, response.merge(:api_version => @api.version))
+      User.new(@token, response.merge(:api_version => @api.version, :server_url => server_url))
     end
 
     #
