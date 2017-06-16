@@ -133,26 +133,31 @@ module HipChat
     end
 
     def _rooms
-      response = self.class.get(@api.rooms_config[:url], query: { auth_token: @token }, headers: @api.headers)
+      response = self.class.get(@api.rooms_config[:url],
+        query: {
+          auth_token: @token
+        },
+        headers: @api.headers
+      )
 
       ErrorHandler.response_code_to_exception_for :room, nil, response
       response[@api.rooms_config[:data_key]].map do |r|
-        HipChat::Room.new(@token, r.merge(:api_version => @api_version, :server_url => @options[:server_url]))
+        HipChat::Room.new(@token, r.merge(api_version: @api_version, server_url: @options[:server_url]))
       end
     end
 
     def _users
       response = self.class.get(@api.users_config[:url],
-        :query => {
-          :auth_token => @token,
-          :expand => 'items'
+        query: {
+          auth_token: @token,
+          expand: 'items'
         },
-        :headers => @api.headers
+        headers: @api.headers
       )
 
       ErrorHandler.response_code_to_exception_for :user, nil, response
       response[@api.users_config[:data_key]].map do |u|
-        HipChat::User.new(@token, u.merge(:api_version => @api_version, :server_url => @options[:server_url]))
+        HipChat::User.new(@token, u.merge(api_version: @api_version, server_url: @options[:server_url]))
       end
     end
   end
