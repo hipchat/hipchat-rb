@@ -16,8 +16,9 @@ module HipChat
       setup_proxy(http_proxy) if http_proxy
     end
 
-    def rooms
-      @rooms ||= _rooms
+    def rooms(options = {})
+      @rooms ||= {}
+      @rooms[options] ||= _rooms(options)
     end
 
     def [](name)
@@ -107,8 +108,9 @@ module HipChat
       HipChat::User.new(@token, { :user_id => name, :api_version => @api_version, :server_url => @options[:server_url] })
     end
 
-    def users
-      @users ||= _users
+    def users(options = {})
+      @users ||= {}
+      @users[options] ||= _users(options)
     end
 
     private
@@ -132,32 +134,40 @@ module HipChat
                                proxy_url.user, proxy_url.password)
     end
 
-    def _rooms
-      response = self.class.get(@api.rooms_config[:url],
-        query: {
-          auth_token: @token
-        },
-        headers: @api.headers
+    def _rooms(options)
+      wrapped_results(
+        config:         @api.rooms_config,
+        query_options:  options,
+        error_key:      :user,
+        wrapping_class: HipChat::Room
       )
-
-      ErrorHandler.response_code_to_exception_for :room, nil, response
-      response[@api.rooms_config[:data_key]].map do |r|
-        HipChat::Room.new(@token, r.merge(api_version: @api_version, server_url: @options[:server_url]))
-      end
     end
 
-    def _users
-      response = self.class.get(@api.users_config[:url],
+    def _users(options)
+      wrapped_results(
+        config:         @api.users_config,
+        query_options:  { expand: 'items' }.merge(options),
+        error_key:      :user,
+        wrapping_class: HipChat::User
+      )
+    end
+
+    def wrapped_results(options)
+      config         = options.fetch(:config)
+      query_options  = options.fetch(:query_options, {})
+      error_key      = options.fetch(:error_key)
+      wrapping_class = options.fetch(:wrapping_class)
+
+      response = self.class.get(config[:url],
         query: {
           auth_token: @token,
-          expand: 'items'
-        },
+        }.merge(query_options),
         headers: @api.headers
       )
 
-      ErrorHandler.response_code_to_exception_for :user, nil, response
-      response[@api.users_config[:data_key]].map do |u|
-        HipChat::User.new(@token, u.merge(api_version: @api_version, server_url: @options[:server_url]))
+      ErrorHandler.response_code_to_exception_for error_key, nil, response
+      response[config[:data_key]].map do |u|
+        wrapping_class.new(@token, u.merge(api_version: @api_version, server_url: @options[:server_url]))
       end
     end
   end
