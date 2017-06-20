@@ -6,6 +6,21 @@ describe "HipChat (API V1)" do
 
   let(:room) { subject["Hipchat"] }
 
+  describe "#rooms" do
+    include_context "HipChatV1"
+
+    it "returns some rooms" do
+      mock_successful_rooms
+      expect(subject.rooms.first).to be_a HipChat::Room
+    end
+
+    it "accepts pagination params" do
+      mock_successful_second_thousand_rooms
+      expect(subject.rooms('max-results' => 1000, 'start-index' => 1000).first).
+        to be_a HipChat::Room
+    end
+  end
+
   describe "#history" do
     include_context "HipChatV1"
     it "is successful without custom options" do

@@ -40,6 +40,17 @@ shared_context "HipChatV1" do
                                             :headers => {})
   end
 
+  def mock_successful_second_thousand_rooms
+    stub_request(:get, "https://api.hipchat.com/v1/rooms/list").with(
+                             :query => {:auth_token => "blah", :'max-results' => 1000, :'start-index' => 1000},
+                             :body => "",
+                             :headers => {'Accept' => 'application/json',
+                                          'Content-Type' => 'application/x-www-form-urlencoded'}).to_return(
+                                            :status => 200,
+                                            :body => '{"rooms":[{"room_id": "Hipchat", "links": {"self": "https://api.hipchat.com/v2/room/12345"}}]}',
+                                            :headers => {})
+  end
+
   def mock_successful_history(options={})
     options = { :date => 'recent', :timezone => 'UTC', :format => 'JSON', :'max-results' => 100, :'start-index' => 0 }.merge(options)
     canned_response = File.new(HISTORY_JSON_PATH)
@@ -231,6 +242,17 @@ shared_context "HipChatV2" do
                                           'Content-Type' => 'application/json'}).to_return(
                                             :status => 200,
                                             :body => '{"items": [{"id": 123, "mention_name": "Blue", "name": "Blue Quinn", "room_roles": ["room_member"], "version": "3FC1A2D6"}], "links": {"self": "https://api.hipchat.com/v2/room/Hipchat/participant"}, "maxResults": 1000, "startIndex": 1000}',
+                                            :headers => {})
+  end
+
+  def mock_successful_second_thousand_rooms
+    stub_request(:get, "https://api.hipchat.com/v2/room").with(
+                             :query => {:auth_token => "blah", :'max-results' => 1000, :'start-index' => 1000},
+                             :body => "",
+                             :headers => {'Accept' => 'application/json',
+                                          'Content-Type' => 'application/json'}).to_return(
+                                            :status => 200,
+                                            :body => '{"items":[{"id": "Hipchat", "links": {"self": "https://api.hipchat.com/v2/room/12345"}}]}',
                                             :headers => {})
   end
 

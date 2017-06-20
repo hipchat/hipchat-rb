@@ -8,6 +8,21 @@ describe "HipChat (API V2)" do
   let(:room) { subject["Hipchat"] }
   let(:user) { subject.user "12345678" }
 
+  describe "#rooms" do
+    include_context "HipChatV2"
+
+    it "returns some rooms" do
+      mock_successful_rooms
+      expect(subject.rooms.first).to be_a HipChat::Room
+    end
+
+    it "accepts pagination params" do
+      mock_successful_second_thousand_rooms
+      expect(subject.rooms('max-results' => 1000, 'start-index' => 1000).first).
+        to be_a HipChat::Room
+    end
+  end
+
   describe "#scopes" do
     include_context "HipChatV2"
     let(:token_room) { nil }
