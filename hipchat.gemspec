@@ -13,6 +13,15 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/hipchat/hipchat-rb"
   spec.license       = "MIT"
 
+  if spec.respond_to?(:metadata=)
+    spec.metadata = {
+      "bug_tracker_uri" => "https://github.com/hipchat/hipchat-rb/issues",
+      "changelog_uri"   => "https://github.com/hipchat/hipchat-rb/releases",
+      "homepage_uri"    => "https://github.com/hipchat/hipchat-rb",
+      "source_code_uri" => "https://github.com/hipchat/hipchat-rb",
+    }
+  end
+
   spec.files         = `git ls-files`.split($/)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
