@@ -25,9 +25,9 @@ h1. Usage
 
 h2. "API v1":https://www.hipchat.com/docs/api
 
-bc.. client = HipChat::Client.new(api_token)
+bc.. client = HipChat::Client.new(api_token, :api_version => 'v1')
 # Set http proxy
-client = HipChat::Client.new(api_token, :http_proxy => 'http://proxy_host:proxy_port')
+client = HipChat::Client.new(api_token, :api_version => 'v1', :http_proxy => 'http://proxy_host:proxy_port')
 
 # 'username' is the name for which the message will be presented as from
 client['my room'].send('username', 'I talk')
@@ -58,9 +58,9 @@ client.create_room("Name", :owner_user_id => 'user_id')
 
 h2. "API v2":https://www.hipchat.com/docs/apiv2
 
-bc.. client = HipChat::Client.new(api_token, :api_version => 'v2')
+bc.. client = HipChat::Client.new(api_token)
 # Set http proxy
-client = HipChat::Client.new(api_token, :api_version => 'v2', :http_proxy => 'http://proxy_host:proxy_port')
+client = HipChat::Client.new(api_token, :http_proxy => 'http://proxy_host:proxy_port')
 
 # 'username' is the name for which the message will be presented as from
 client['my room'].send('username', 'I talk')
@@ -109,7 +109,7 @@ client['my room'].invite("USER_ID_OR_NAME", options = {})
 client.user('foo@bar.org').send('I can send private messages')
 
 # Update a user status.  Available options for show are 'away', 'chat', 'dnd', 'xa'
-client.user('foo@bar.org').status('this is my status',  
+client.user('foo@bar.org').status('this is my status',
         :name=>'Foo Bar',
         :status=>'Doing very important stuff',
         :show=>'xa',
@@ -119,7 +119,7 @@ client.user('foo@bar.org').status('this is my status',
 
 h2. Custom Server URL
 
-bc.. client = HipChat::Client.new(api_token, :api_version => 'v2', :server_url => 'https://domain.com')
+bc.. client = HipChat::Client.new(api_token, :server_url => 'https://domain.com')
 # 'username' is the name for which the message will be presented as from
 client['my room'].send('username', 'I talk')
 
@@ -240,7 +240,7 @@ end
 h2. Chef Handler
 
 *APIv1 ONLY, use APIv1 Key*
-NOTE: APIv2 required for HipChatServer Beta
+NOTE: APIv2 required for HipChat Server & HipChat Data Center
 
 Report on Chef runs.
 
@@ -263,12 +263,12 @@ bc..    require 'hipchat/chef'
    hipchat_handler = HipChat::NotifyRoom.new("API_KEY", "HIPCHAT_ROOM")
    exception_handlers << hipchat_handler
 
-h3. With HipChat Server Beta
+h3. With HipChat Data Center and HipChat Server
 
-Add an "options" hash to set api v2 and your URL:
-* arguments ['API_KEY', 'HIPCHAT_ROOM', options={hipchat_options: {api_version: "v2", server_url: "https://hipchat.example.com"}}]
-* hipchat_handler = HipChat::NotifyRoom.new("API_KEY", "HIPCHAT_ROOM", options={hipchat_options: {api_version: "v2", server_url: "https://hipchat.example.com"}})
+Add an "options" hash to set your URL:
+* arguments ['API_KEY', 'HIPCHAT_ROOM', options={hipchat_options: {server_url: "https://hipchat.example.com"}}]
+* hipchat_handler = HipChat::NotifyRoom.new("API_KEY", "HIPCHAT_ROOM", options={hipchat_options: {server_url: "https://hipchat.example.com"}})
 
 h2. Copyright
 
-Copyright (c) 2012 Atlassian. See LICENSE for details.
+Copyright (c) 2017 Atlassian. See LICENSE for details.
