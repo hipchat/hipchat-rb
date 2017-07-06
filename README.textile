@@ -219,7 +219,7 @@ bc.. token: "<your token>"
 room: ["Room name(s) or id(s)"] # this is an array
 user: "Your name" # Default to `whoami`
 notify: true # Defaults to false
-api_version: "v2" # optional, defaults to v1
+api_version: "v2" # optional, defaults to v2
 color: "yellow"
 
 h2. Engine Yard
