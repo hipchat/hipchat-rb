@@ -104,6 +104,70 @@ describe "HipChat (API V2)" do
     end
   end
 
+  describe "#members" do
+    include_context "HipChatV2"
+    it "returns members" do
+      mock_successful_members
+
+      expect(room.members).to be_a String
+    end
+
+    it "accepts pagination params" do
+      mock_successful_second_thousand_members
+      expect(room.members('max-results' => 1000, 'start-index' => 1000)).
+        to be_a String
+    end
+
+    it "fails when the room doen't exist" do
+      allow(room.class).to receive(:get).with(anything, anything).and_return(OpenStruct.new(:code => 404))
+      expect { room.members }.to raise_error(HipChat::UnknownRoom)
+    end
+
+    it "fails when we're not allowed to do so" do
+      allow(room.class).to receive(:get).with(anything, anything).and_return(OpenStruct.new(:code => 401))
+
+      expect { room.members }.to raise_error(HipChat::Unauthorized)
+    end
+
+    it "fails if we get an unknown response code" do
+      allow(room.class).to receive(:get).with(anything, anything).and_return(OpenStruct.new(:code => 403))
+
+      expect { room.members }.to raise_error(HipChat::Unauthorized)
+    end
+  end
+
+  describe "#participants" do
+    include_context "HipChatV2"
+    it "returns participants" do
+      mock_successful_participants
+
+      expect(room.participants).to be_a String
+    end
+
+    it "accepts pagination params" do
+      mock_successful_second_thousand_participants
+      expect(room.participants('max-results' => 1000, 'start-index' => 1000)).
+        to be_a String
+    end
+
+    it "fails when the room doen't exist" do
+      allow(room.class).to receive(:get).with(anything, anything).and_return(OpenStruct.new(:code => 404))
+      expect { room.participants }.to raise_error(HipChat::UnknownRoom)
+    end
+
+    it "fails when we're not allowed to do so" do
+      allow(room.class).to receive(:get).with(anything, anything).and_return(OpenStruct.new(:code => 401))
+
+      expect { room.participants }.to raise_error(HipChat::Unauthorized)
+    end
+
+    it "fails if we get an unknown response code" do
+      allow(room.class).to receive(:get).with(anything, anything).and_return(OpenStruct.new(:code => 403))
+
+      expect { room.participants }.to raise_error(HipChat::Unauthorized)
+    end
+  end
+
   describe "#statistics" do
     include_context "HipChatV2"
     it "is successful without custom options" do
