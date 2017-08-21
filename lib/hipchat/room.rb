@@ -94,7 +94,7 @@ module HipChat
         :headers => @api.headers)
 
       ErrorHandler.response_code_to_exception_for :room, room_id, response
-      response.body
+      wrap_users(response)
     end
 
     # Get a list of participants in this room
@@ -105,7 +105,7 @@ module HipChat
         :headers => @api.headers)
 
       ErrorHandler.response_code_to_exception_for :room, room_id, response
-      response.body
+      wrap_users(response)
     end
 
     # Send a message to this room.
@@ -445,6 +445,12 @@ module HipChat
           memo << symbolize(v); memo
         end if obj.is_a? Array
         obj
+      end
+
+      def wrap_users(response)
+        response[HipChat::ApiVersion::Client.new(api_version: 'v2').users_config[:data_key]].map do |u|
+          HipChat::User.new(@token, u.merge(:api_version => @api.version, :server_url => @api.base_uri.split("/#{@api.version}")[0]))
+        end
       end
 
   end
