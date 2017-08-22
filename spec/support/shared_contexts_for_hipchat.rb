@@ -197,7 +197,7 @@ shared_context "HipChatV2" do
                              :headers => {'Accept' => 'application/json',
                                           'Content-Type' => 'application/json'}).to_return(
                                             :status => 200,
-                                            :body => '{"items": [{"id": 4643265, "mention_name": "Robert", "name": "Robert Ingrum", "room_roles": ["room_member"], "version": "3FC1A2D6"}, {"id": 4643276, "mention_name": "JonEvans", "name": "Jon Evans", "room_roles": ["room_member", "room_admin"], "version": "2E933CEB"}], "links": {"self": "https://api.hipchat.com/v2/room/4109461/member"}, "maxResults": 100, "startIndex": 0',
+                                            :body => '{"items": [{"id": 4643265, "mention_name": "Robert", "name": "Robert Ingrum", "room_roles": ["room_member"], "version": "3FC1A2D6"}, {"id": 4643276, "mention_name": "JonEvans", "name": "Jon Evans", "room_roles": ["room_member", "room_admin"], "version": "2E933CEB"}], "links": {"self": "https://api.hipchat.com/v2/room/4109461/member"}, "maxResults": 100, "startIndex": 0}',
                                             :headers => {})
   end
 
@@ -219,7 +219,7 @@ shared_context "HipChatV2" do
                              :headers => {'Accept' => 'application/json',
                                           'Content-Type' => 'application/json'}).to_return(
                                             :status => 200,
-                                            :body => '{"items": [{"id": 4643265, "mention_name": "Robert", "name": "Robert Ingrum", "room_roles": ["room_member"], "version": "3FC1A2D6"}, {"id": 4643276, "mention_name": "JonEvans", "name": "Jon Evans", "room_roles": ["room_member", "room_admin"], "version": "2E933CEB"}], "links": {"self": "https://api.hipchat.com/v2/room/Hipchat/participant"}, "maxResults": 100, "startIndex": 0',
+                                            :body => '{"items": [{"id": 4643265, "mention_name": "Robert", "name": "Robert Ingrum", "room_roles": ["room_member"], "version": "3FC1A2D6"}, {"id": 4643276, "mention_name": "JonEvans", "name": "Jon Evans", "room_roles": ["room_member", "room_admin"], "version": "2E933CEB"}], "links": {"self": "https://api.hipchat.com/v2/room/Hipchat/participant"}, "maxResults": 100, "startIndex": 0}',
                                             :headers => {})
   end
 

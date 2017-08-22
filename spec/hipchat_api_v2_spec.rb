@@ -109,13 +109,13 @@ describe "HipChat (API V2)" do
     it "returns members" do
       mock_successful_members
 
-      expect(room.members).to be_a String
+      expect(room.members.first).to be_a HipChat::User
     end
 
     it "accepts pagination params" do
       mock_successful_second_thousand_members
-      expect(room.members('max-results' => 1000, 'start-index' => 1000)).
-        to be_a String
+      expect(room.members('max-results' => 1000, 'start-index' => 1000).first).
+        to be_a HipChat::User
     end
 
     it "fails when the room doen't exist" do
@@ -141,13 +141,13 @@ describe "HipChat (API V2)" do
     it "returns participants" do
       mock_successful_participants
 
-      expect(room.participants).to be_a String
+      expect(room.participants.first).to be_a HipChat::User
     end
 
     it "accepts pagination params" do
       mock_successful_second_thousand_participants
-      expect(room.participants('max-results' => 1000, 'start-index' => 1000)).
-        to be_a String
+      expect(room.participants('max-results' => 1000, 'start-index' => 1000).first).
+        to be_a HipChat::User
     end
 
     it "fails when the room doen't exist" do
