@@ -189,6 +189,51 @@ shared_context "HipChatV2" do
                                             :headers => {})
   end
 
+
+  def mock_successful_members
+    stub_request(:get, "https://api.hipchat.com/v2/room/Hipchat/member").with(
+                             :query => {:auth_token => "blah"},
+                             :body => "",
+                             :headers => {'Accept' => 'application/json',
+                                          'Content-Type' => 'application/json'}).to_return(
+                                            :status => 200,
+                                            :body => '{"items": [{"id": 4643265, "mention_name": "Robert", "name": "Robert Ingrum", "room_roles": ["room_member"], "version": "3FC1A2D6"}, {"id": 4643276, "mention_name": "JonEvans", "name": "Jon Evans", "room_roles": ["room_member", "room_admin"], "version": "2E933CEB"}], "links": {"self": "https://api.hipchat.com/v2/room/4109461/member"}, "maxResults": 100, "startIndex": 0}',
+                                            :headers => {})
+  end
+
+  def mock_successful_second_thousand_members
+    stub_request(:get, "https://api.hipchat.com/v2/room/Hipchat/member").with(
+                             :query => {:auth_token => "blah", :'max-results' => 1000, :'start-index' => 1000},
+                             :body => "",
+                             :headers => {'Accept' => 'application/json',
+                                          'Content-Type' => 'application/json'}).to_return(
+                                            :status => 200,
+                                            :body => '{"items": [{"id": 123, "mention_name": "Blue", "name": "Blue Quinn", "room_roles": ["room_member"], "version": "3FC1A2D6"}], "links": {"self": "https://api.hipchat.com/v2/room/4109461/member"}, "maxResults": 1000, "startIndex": 1000}',
+                                            :headers => {})
+  end
+
+  def mock_successful_participants
+    stub_request(:get, "https://api.hipchat.com/v2/room/Hipchat/participant").with(
+                             :query => {:auth_token => "blah"},
+                             :body => "",
+                             :headers => {'Accept' => 'application/json',
+                                          'Content-Type' => 'application/json'}).to_return(
+                                            :status => 200,
+                                            :body => '{"items": [{"id": 4643265, "mention_name": "Robert", "name": "Robert Ingrum", "room_roles": ["room_member"], "version": "3FC1A2D6"}, {"id": 4643276, "mention_name": "JonEvans", "name": "Jon Evans", "room_roles": ["room_member", "room_admin"], "version": "2E933CEB"}], "links": {"self": "https://api.hipchat.com/v2/room/Hipchat/participant"}, "maxResults": 100, "startIndex": 0}',
+                                            :headers => {})
+  end
+
+  def mock_successful_second_thousand_participants
+    stub_request(:get, "https://api.hipchat.com/v2/room/Hipchat/participant").with(
+                             :query => {:auth_token => "blah", :'max-results' => 1000, :'start-index' => 1000},
+                             :body => "",
+                             :headers => {'Accept' => 'application/json',
+                                          'Content-Type' => 'application/json'}).to_return(
+                                            :status => 200,
+                                            :body => '{"items": [{"id": 123, "mention_name": "Blue", "name": "Blue Quinn", "room_roles": ["room_member"], "version": "3FC1A2D6"}], "links": {"self": "https://api.hipchat.com/v2/room/Hipchat/participant"}, "maxResults": 1000, "startIndex": 1000}',
+                                            :headers => {})
+  end
+
   def mock_successful_scopes(room: nil)
     token_room = room ? { id: room.room_id, name: 'example' } : nil
     stub_request(:get, 'https://api.hipchat.com/v2/oauth/token/blah').with(

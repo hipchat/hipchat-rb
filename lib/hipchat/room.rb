@@ -75,7 +75,7 @@ module HipChat
 
     # Add member to this room
     def add_member(user, room_roles=['room_member'])
-      response = self.class.put(@api.add_member_config[:url]+"/#{user}",
+      response = self.class.put(@api.member_config[:url]+"/#{user}",
         :query => { :auth_token => @token },
         :body => {
           :room_roles => room_roles
@@ -86,6 +86,27 @@ module HipChat
       true
     end
 
+    # Get a list of members in this room
+    # This is all people who have been added a to a private room
+    def members(options = {})
+      response = self.class.get(@api.member_config[:url],
+        :query => { :auth_token => @token }.merge(options),
+        :headers => @api.headers)
+
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
+      wrap_users(response)
+    end
+
+    # Get a list of participants in this room
+    # This is all people currently in the room
+    def participants(options = {})
+      response = self.class.get(@api.participant_config[:url],
+        :query => { :auth_token => @token }.merge(options),
+        :headers => @api.headers)
+
+      ErrorHandler.response_code_to_exception_for :room, room_id, response
+      wrap_users(response)
+    end
 
     # Send a message to this room.
     #
@@ -424,6 +445,12 @@ module HipChat
           memo << symbolize(v); memo
         end if obj.is_a? Array
         obj
+      end
+
+      def wrap_users(response)
+        response[HipChat::ApiVersion::Client.new(api_version: 'v2').users_config[:data_key]].map do |u|
+          HipChat::User.new(@token, u.merge(:api_version => @api.version, :server_url => @api.base_uri.split("/#{@api.version}")[0]))
+        end
       end
 
   end
